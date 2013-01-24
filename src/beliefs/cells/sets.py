@@ -163,8 +163,9 @@ class TypedSetCell(Cell):
         A set's hash is the aggregate XOR of its children's hashes
         """
         hashval = reduce(lambda x, y: hash(x) ^ hash(y), self.domain, 0)
-        for val in self.values:
-            hashval += hash(val)
+        if self.values:
+            for val in self.values:
+                hashval += hash(val)
         if hashval == -2:
             hashval = -1
         return hashval
