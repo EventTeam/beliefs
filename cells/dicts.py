@@ -1,8 +1,8 @@
 import networkx as nx
 from collections import OrderedDict
 from exterior.utils import list_diff
-#from beliefs.cells import Cell, BoolCell
-from .cell import *
+from beliefs.cells import Cell, BoolCell
+#from .cell import *
 import operator
 import datetime
 import time
@@ -158,6 +158,8 @@ class DictCell(Cell):
         Two DictCells are equal when they share ALL Keys,  and all of their 
         is_equal() methods return True.  This ensures substructure equality.
         """
+        if not isinstance(other, DictCell):
+            return False
         for (this, that) in zip(self, other):
             if this[0] != that[0]:
                 # compare key names
@@ -192,7 +194,7 @@ class DictCell(Cell):
             return self
         elif self.is_entailed_by(other):
             self.__dict__['p'] = other.__dict__['p'].copy()
-        elif self.is_contradictory(other):
+        elif not self.is_contradictory(other):
             # partial information in both, add from other
             for o_key, o_val in other:
                 if not o_key in self.__dict__['p']:
@@ -200,7 +202,7 @@ class DictCell(Cell):
                 else:
                     self.__dict__['p'][o_key].merge(o_val)
         else:
-            raise Exception("Dict merge error")
+            raise Contradiction("Dictionaries are contractory, cannot Merge")
         return self
 
     def __repr__(self, indent=0):
@@ -221,7 +223,6 @@ class DictCell(Cell):
     def to_dict(self):
         """
         For JSON serialization 
-        Code modified from http://stackoverflow.com/questions/1531501/json-serialization-of-google-app-engine-models
         """
         output = {}
         for key, value in self.__dict__['p'].iteritems():
@@ -238,8 +239,6 @@ class DictCell(Cell):
                 output[key] = int(ms)
             elif isinstance(value, dict):
                 output[key] = []
-            #elif isinstance(value, spatial.LatLonCell):
-            #    output[key] = {'lat': value.lat, 'lon': value.lon}
             else:
                 raise ValueError('cannot encode ' + repr(key))
 
@@ -250,13 +249,13 @@ class DictCell(Cell):
 
 
 if __name__ == '__main__':
-    
-    from tests.timer import Timer
+   
+    F = False
     print DictCell.HASATTR
-    with Timer() as t:
-        for _ in xrange(1000):
-            d2 = DictCell({'a2' : {'b2' : BoolCell(),
-                                   'b1' : BoolCell()},
-                           'a1' : {'b1' : {'c1' : BoolCell()}}})
-
-    print DictCell.HASATTR
+    d1 = DictCell({'a2' : {'b2' : BoolCell(F)}})
+    d2 = DictCell({'a2' : {'b2' : BoolCell(),
+                           'b1' : BoolCell()},
+                   'a1' : {'b1' : {'c1' : BoolCell()}}})
+    print d2.merge(d1)
+    print d1.merge(d2)
+    print hash(d1), hash(d2)

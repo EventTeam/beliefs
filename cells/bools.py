@@ -1,4 +1,4 @@
-from .cell import *
+from beliefs.cells import *
 # constants for 3-valued logic
 T = True
 F = False
@@ -62,6 +62,14 @@ class BoolCell(Cell):
     def to_dot(self):
         return "%s" % (self.value)
 
+    def to_json(self):
+        """ Returns JSON representation of BoolCell"""
+        return self.value
+
+    def from_json(self, other):
+        """ Initializes from JSON representation """
+        self.value = other
+
     def is_equal(self, other):
         try:
             other = BoolCell.coerce(other)
@@ -115,5 +123,8 @@ def test_bool_cell_hash_functions():
 
 if __name__ == '__main__':
     test_bool_cell_hash_functions()
-
+    bu = BoolCell()
+    print bu
+    bt = BoolCell(T)
+    bf = BoolCell(F)
 

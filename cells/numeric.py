@@ -6,18 +6,16 @@ class IntervalCell(Cell):
     Implements an interval cell along with interval algebra
     """
 
-    def __init__(self, low, high):
+    def __init__(self, low=None, high=None):
         """
         Creates a new IntervalCell with values restricted to between `low` and `high`.
         """
-        self._min = low #-np.inf
-        self._max = high #np.inf
+        self.low = low or -np.inf
+        self.high = high or np.inf
 
-        if high < low:
+        if self.high < self.low:
             raise CellConstructionFailure
-        self.low = low
-        self.high = high
-        self.increment = 1
+
 
     @staticmethod
     def coerce(value):
@@ -26,8 +24,9 @@ class IntervalCell(Cell):
         [low, high] in the standard interval form
         """
         is_number = lambda x: isinstance(x, (int, float, complex)) #is x an instance of those things
-        if isinstance(value, IntervalCell) or issubclass(value.__class__,IntervalCell): #if intervalcell or subclass
-            return value #return the subclass
+        if isinstance(value, IntervalCell) or issubclass(value.__class__,IntervalCell): 
+            #if intervalcell or subclass, return the subclass
+            return value
         elif is_number(value):
             return IntervalCell(value, value)
         elif hasattr(value, 'low') and hasattr(value, 'high'):
@@ -55,7 +54,7 @@ class IntervalCell(Cell):
         """
         Number of possible values in the interval.  Boundaries are inclusive
         """
-        return (self.high - self.low) + 1 / self.increment
+        return (self.high - self.low) + 1 
 
     def is_contradictory(self, other):
         """
@@ -156,8 +155,7 @@ class IntervalCell(Cell):
         
         Note:  we're overloading <= and >=, not < and >, because IntervalCell considers
         its boundaries as inclusive.   Removing the inequality requires setting the inclusive
-        boundary to 'one less' than the current boundary, and that is a function of spacing
-        of the interval cell (self.increment).
+        boundary to 'one less' than the current boundary
         """
         if isinstance(new_upper, IntervalCell):
             new_upper = new_upper.low
@@ -212,7 +210,12 @@ class IntervalCell(Cell):
         else:
             raise Exception("Cannot apply function of arity %i " % (arity))
 
+    def __contains__(self, other):
+        """ Allows the use of Python's 'in' syntax """
+        return self.low <= other <= self.high
+
     def __hash__(self):
+        """ Unqiue hash for interval """
         hval = 0
         hval = hash(self.low) + hash(self.high)
         return hval

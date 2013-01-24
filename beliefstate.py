@@ -36,10 +36,6 @@ class BeliefState(DictCell):
         The other, more common, way to create a belief state is to call bs.copy() on 
         a previous belief state.
         """
-        if not (contextset is None or contextset.__class__.__name__.endswith('ContextSet')):
-            raise Exception("Argument contextset must be a contextset not %s" % \
-                    (str(type(contextset))))
-
         self.__dict__['pos'] = 'S'  # syntactic state
         self.__dict__['contextset'] = contextset
         self.__dict__['environment_variable'] = {}
@@ -49,7 +45,8 @@ class BeliefState(DictCell):
                                   'is_in_commonground': BoolCell()}}
 
         DictCell.__init__(self, default_structure)
-     
+    
+
     def set_pos(self, pos):
         """
         Sets the BeliefState's part of speech 
@@ -312,7 +309,8 @@ class BeliefState(DictCell):
             if n == 1:
                 return 0
             return (2**n)-n-1
-        elif low == high and high > n:
+        elif low > n:
+            # inconsistent
             return 0
         elif low == high:
             # single arity constraint, return nCk
@@ -365,28 +363,18 @@ class BeliefState(DictCell):
         """
         Returns True if the belief state is consistent
         """
-        return self.is_arity_consistent() and self.is_syntax_valid()
+        return self.is_arity_consistent() and self.pos in ['NN', 'NNS', 'ASS']
         
     def is_arity_consistent(self):
         """ Returns True if the number of members is consistent with the arity"""
         n = self.number_of_targets()
         return not self['speaker_goals']['targetset_arity'].is_contradictory(n)
         
-    def is_syntax_valid(self):
-        """
-        Returns True if the belief state ends on the valid terminal nodes
-        """
-        return self.pos in ['NN', 'NNS', 'ASS']
-        
     def copy(self):
         """
         Copies the BeliefState by recursively deep-copying all of
         its parts.  Domains are not copied, as they do not change
         during the interpretation or generation.
-
-        self.__dict__['pos'] = 'S'  # syntactic state
-        self.__dict__['contextset'] = contextset
-        self.__dict__['environment_variable'] = contextset
         """
         copied = BeliefState(self.__dict__['contextset']) 
         copied.__dict__['p'].update(self.__dict__['p'])
