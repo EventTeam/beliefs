@@ -10,8 +10,13 @@ class IntervalCell(Cell):
         """
         Creates a new IntervalCell with values restricted to between `low` and `high`.
         """
-        self.low = low or -np.inf
-        self.high = high or np.inf
+        self.low = -np.inf
+        self.high = np.inf
+        
+        if low is not None:
+            self.low = low
+        if high is not None:
+            self.high = high
 
         if self.high < self.low:
             raise CellConstructionFailure
