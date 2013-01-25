@@ -143,7 +143,6 @@ class PartialOrderedCell(Cell):
         Computes whether two Partial Orderings have the same generalization
         structure.
         """
-        assert isinstance(other, PartialOrderedCell), "must coerce first"
         domain = self.get_domain()
         other_domain = other.get_domain()
         # if they share the same instance of memory for the domain
@@ -159,7 +158,7 @@ class PartialOrderedCell(Cell):
         """
         Computes whether two Partial Orderings contain the same information
         """
-        if not isinstance(other, PartialOrderedCell):
+        if not (hasattr(other, 'get_domain') or hasattr(other, 'upper') or hasattr(other, 'lower')):
             other = self.coerce(other)
         if self.is_domain_equal(other)  \
             and len(self.upper.symmetric_difference(other.upper)) == 0 \
@@ -265,7 +264,7 @@ class PartialOrderedCell(Cell):
         """
         Only copies a pointer to the new domain's cell
         """
-        if isinstance(other, PartialOrderedCell):
+        if hasattr(other, 'get_domain') and hasattr(other, 'lower') and hasattr(other, 'upper'):
             if self.is_domain_equal(other):
                 return other
             else:
@@ -292,7 +291,7 @@ class PartialOrderedCell(Cell):
                     " outside order's domain . (Other = %s) " % (str(other),))
 
     def merge(self, other, is_positive=True):
-
+        print "MERGE CALLED", self, other
         other = self.coerce(other, is_positive)
         # the above coercion forces equal domains, and raises an 
         # exception otherwise
@@ -405,3 +404,27 @@ if __name__ == '__main__':
     t.merge("person")
     print list(t.get_refinement_options())
     print list(t.get_relaxation_options())
+    print t
+
+
+class HumanActions(PartialOrderedCell):
+    """ Actions for the goal """
+    def __init__(self):
+        dag = None
+        if not self.has_domain():
+            # only initialize once
+            dag = nx.DiGraph()
+            dag.add_edge("human-action", "watch") # tv/movies
+            dag.add_edge("human-action", "play") # game
+            dag.add_edge("human-action", "listen") # music
+            dag.add_edge("watch", "watch-movie")
+            dag.add_edge("watch", "watch-tv")
+            dag.add_edge("play", "watch-movie")
+            dag.add_edge("play", "watch-tv")
+            dag.add_edge("play", "play-game")
+            dag.add_edge("play", "listen-song")
+            dag.add_edge("see", "watch-movie")
+            dag.add_edge("see", "watch-tv")
+            
+        PartialOrderedCell.__init__(self, dag)
+
