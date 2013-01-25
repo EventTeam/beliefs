@@ -1,8 +1,8 @@
 import networkx as nx
 from collections import OrderedDict
 from exterior.utils import list_diff
-#from beliefs.cells import Cell, BoolCell
-from .cell import *
+from beliefs.cells import Cell, BoolCell
+#from .cell import *
 import operator
 import datetime
 import time
@@ -25,7 +25,6 @@ class DictCell(Cell):
         their corresponding cells (values)
         """
         # check key names for conflicts with the classes own attributes
-        # (both accessible through __getattr__ and __setattr__).
         # and verify that all values are subclasses of Cell
         if from_dict is None:
             from_dict = {}
@@ -39,34 +38,17 @@ class DictCell(Cell):
                             "an instance of Cell, not %s" % (type(val)))
         self.__dict__['p'] = from_dict
 
-
-    def __getattr__(self, k):
-        """
-        Get attribute method gives us the . operator
-        for accessing attributes of both self.p and
-        self
-        """
-        DictCell.HASATTR +=1
-        if not hasattr(self, 'p'):
-            raise AttributeError("No property attribute 'p'")
-        if k in self.__dict__['p']:
-            return self.__dict__['p'][k]
-        elif hasattr(self, k):
-            return self.__dict__[k]
-        else:
-            raise AttributeError("%s has no attribute %s" \
-                % (self, k))
-
     def __setattr__(self, k, v):
-        if not hasattr(self, 'p'):
-            raise AttributeError("No property attribute 'p'")
+        """ Merges or creates a new value for a property in the dictionary """
         if k in self.__dict__['p']:
-            return self.p[k].merge(v)
+            return self[k].merge(v)
         else:
-            self.__dict__[k] = v
+            self.__dict__['p'][k] = v
+            return self[k]
 
     def __getitem__(self, k):
-        """ Standard dictionary member access syntax """
+        """ Standard dictionary member access syntax.  Given a DictCell, `d`, to 
+        access property `size`, you would call: `d['size']` """
         if not hasattr(self, 'p'):
             raise AttributeError("No property attribute 'p'")
         if k in self.__dict__['p']:
@@ -77,7 +59,8 @@ class DictCell(Cell):
             raise AttributeError("No attribute '%s'" % (k,))
 
     def __setitem__(self, k, val):
-        """ Standard dictionary member update syntax """
+        """ Standard dictionary member update syntax Given a DictCell, `d`, to 
+        set property `size` to value 3, you would call: `d['size']` = 3 """
         if not hasattr(self, 'p'):
             raise AttributeError("No property attribute 'p'")
         if k in self.__dict__['p']:
@@ -247,15 +230,13 @@ class DictCell(Cell):
     __eq__ = is_equal
     __contains__ = contains
 
-
-if __name__ == '__main__':
-   
-    F = False
-    print DictCell.HASATTR
+def test_dict_merge():
     d1 = DictCell({'a2' : {'b2' : BoolCell(F)}})
     d2 = DictCell({'a2' : {'b2' : BoolCell(),
                            'b1' : BoolCell()},
                    'a1' : {'b1' : {'c1' : BoolCell()}}})
-    print d2.merge(d1)
-    print d1.merge(d2)
-    print hash(d1), hash(d2)
+    d3 = DictCell({'a2' : {'b2' : BoolCell(F)}})
+    assert d2.merge(d1) == d3.merge(d2)
+    assert hash(d2.merge(d1)) == hash(d3.merge(d2))
+
+
