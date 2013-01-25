@@ -1,6 +1,5 @@
 #from .cell import *
-from .lists import *
-from .cell import *
+from beliefs.cells import *
 import networkx as nx
 import logging
 from networkx.algorithms.shortest_paths.generic import has_path
@@ -240,6 +239,7 @@ class PartialOrderedCell(Cell):
         # if we got this far, we should have an entailment!
         return True
 
+    
     def is_contradictory(self, other):
         """
         Does the merge yield the empty set? 
@@ -365,3 +365,43 @@ class PartialOrderedCell(Cell):
     __str__ = __repr__  
     __len__ = size
 
+    def get_refinement_options(self):
+        """ Returns possible specializations for the upper values in the taxonomy """
+        domain = self.get_domain()
+        for upper_value in self.upper:
+            for suc in domain.successors(upper_value):
+                yield suc
+
+    def get_relaxation_options(self):
+        """ Returns possible generalizations for the upper values in the taxonomy """
+        domain = self.get_domain()
+        for upper_value in self.upper:
+            for suc in domain.predecessors(upper_value):
+                yield suc
+
+if __name__ == '__main__':
+
+    class TestPOC(PartialOrderedCell):
+        # partial ordered test
+        def __init__(self):
+            dag = None
+            if not self.has_domain():
+                # only initialize once
+                dag = nx.DiGraph()
+                dag.add_edge("thing", "person")
+                dag.add_edge("person", "actress")
+                dag.add_edge("person", "director")
+                dag.add_edge("director", "good-director")
+                dag.add_edge("director", "bad-director")
+                dag.add_edge("person", "writer")
+                dag.add_edge("person", "producer")
+                dag.add_edge("thing", "vehicle")
+                dag.add_edge("vehicle", "car")
+                dag.add_edge("vehicle", "truck")
+                
+            PartialOrderedCell.__init__(self, dag)
+
+    t = TestPOC()
+    t.merge("person")
+    print list(t.get_refinement_options())
+    print list(t.get_relaxation_options())
