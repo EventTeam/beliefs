@@ -18,7 +18,6 @@ def choose(n, k):
     else:
         return 0
 
-
 class BeliefState(DictCell):
     """
     Represents a belief state -- that is, a partial information object 
@@ -355,7 +354,7 @@ class BeliefState(DictCell):
         try:
             for member in self.__dict__['contextset'].cells:
                 if self['target'].is_entailed_by(member):
-                    yield member.num, member
+                    yield member['num'], member
         except KeyError:
             raise Exception("No contextset defined")
 

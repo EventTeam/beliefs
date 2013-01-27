@@ -291,7 +291,12 @@ class PartialOrderedCell(Cell):
                     " outside order's domain . (Other = %s) " % (str(other),))
 
     def merge(self, other, is_positive=True):
-        print "MERGE CALLED", self, other
+        """ Combines the partial order with either (1) a value in the partial 
+        order's domain, or (2) another partial order with the same domain.
+
+        When combining with a value, an optional `is_positive` parameter can
+        be set to False, meaning that the merged value should be excluded.
+        """
         other = self.coerce(other, is_positive)
         # the above coercion forces equal domains, and raises an 
         # exception otherwise
