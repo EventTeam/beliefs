@@ -31,9 +31,6 @@ class LazyCell(Cell):
         if not isinstance(prototype, DictCell):
             raise Exception("Error: prototype must be a DictCell")
 
-        self.__dict__['filters'] = []
-        self.__dict__['orderings'] = []
-
         self.__dict__['include'] = {}  # additional members (hash -> members)
         self.__dict__['exclude'] = set()  # hash ids to exclude
 
@@ -122,11 +119,7 @@ class LazyCell(Cell):
         raise NotImplemented
 
     def merge(self, other):
-        """
-        There can be several types of values for other
-            - A parameter that is responsible for generating the instances
-            - A constraint that filters the possible values of the instances
-            - A (negated) instance of the class
+        """ Other is some description of a parameter that is responsible for generating the instances
         """
         raise NotImplemented
 

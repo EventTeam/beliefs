@@ -75,39 +75,24 @@ class DictCell(Cell):
         if k in self.__dict__['p']:
             del self.__dict__['p'][k]
 
-    def contains(self, key):
-        """ Allows the 'in' operator to work for checking for members """
-        if isinstance(key, list):
-            if len(key) == 0:
+    def contains(self, key_or_keypath):
+        """ Allows the 'in' operator to work for checking if a particular key (or keypath)
+        is inside the dictionary. """
+        if isinstance(key_or_keypath, list):
+            if len(key_or_keypath) == 0:
                 # empty list is root
                 return False
             val = self 
             next_key = None
-            for next_key in key:
+            for next_key in key_or_keypath:
                 if next_key in val:
                     val = val[next_key]
                 else:
                     return False
             return True
         else:
-            return key in self.__dict__['p']
-
-    def __iter__(self):
-        """ Iterate through sorted keys and values """
-        return iter(sorted(self.__dict__['p'].items(), key=operator.itemgetter(0)))
-
-    def is_entailed_by(self, other):
-        """
-        Whether all of self's keys (and values) are in (and within) other's
-        """
-        for (s_key, s_val) in self:
-            if s_key in other:
-                if not other[s_key].entails(s_val):
-                    return False
-            else:
-                return False
-        return True
-
+            return key_or_keypath in self.__dict__['p']
+            
     def get_value_from_path(self, keypath):
         """
         Returns the value at the end of keypath (or None)
@@ -123,6 +108,19 @@ class DictCell(Cell):
             return val
         else:
             return self.__dict__['p'][keypath]
+
+    def is_entailed_by(self, other):
+        """
+        Whether all of self's keys (and values) are in (and within) other's
+        """
+        for (s_key, s_val) in self:
+            if s_key in other:
+                if not other[s_key].entails(s_val):
+                    return False
+            else:
+                return False
+        return True
+
 
     def entails(self, other):
         return other.is_entailed_by(self)
@@ -151,6 +149,11 @@ class DictCell(Cell):
                 # compare cells
                 return False
         return True
+        
+
+    def __iter__(self):
+        """ Iterate through first-level of sorted keys and values """
+        return iter(sorted(self.__dict__['p'].items(), key=operator.itemgetter(0)))
 
     def __hash__(self):
         """
@@ -205,7 +208,8 @@ class DictCell(Cell):
 
     def to_dict(self):
         """
-        For JSON serialization 
+        This method converts the DictCell into a python `dict`.  This is useful
+        for JSON serialization.
         """
         output = {}
         for key, value in self.__dict__['p'].iteritems():
@@ -226,17 +230,19 @@ class DictCell(Cell):
                 raise ValueError('cannot encode ' + repr(key))
 
         return output
+        
+    def __sub__(self, other):
+        """ Represnets the *information that needs to be added* to transform
+        `self` into `other`.  This only works if `self` is entailed by `other`."""
+        
+        if self.is_entailed_by(other):
+            differences = []
+            for key in self:
+                print key
+            
+        
 
     __eq__ = is_equal
     __contains__ = contains
-
-def test_dict_merge():
-    d1 = DictCell({'a2' : {'b2' : BoolCell(F)}})
-    d2 = DictCell({'a2' : {'b2' : BoolCell(),
-                           'b1' : BoolCell()},
-                   'a1' : {'b1' : {'c1' : BoolCell()}}})
-    d3 = DictCell({'a2' : {'b2' : BoolCell(F)}})
-    assert d2.merge(d1) == d3.merge(d2)
-    assert hash(d2.merge(d1)) == hash(d3.merge(d2))
 
 

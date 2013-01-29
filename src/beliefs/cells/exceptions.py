@@ -10,3 +10,6 @@ class Contradiction(Exception):
 
 class CoercionFailure(Exception):
     pass
+
+class NotDifferentiable(Exception):
+    pass

@@ -148,6 +148,15 @@ assert x.is_contradictory(w) == False
 assert v.is_contradictory(x) == True
 
 assert v.merge(w) == DictCell({"name":StringCell("name"), "color" : RGBColorCell(0,128,0)})
+# test merges
+d1 = DictCell({'a2' : {'b2' : BoolCell(F)}})
+d2 = DictCell({'a2' : {'b2' : BoolCell(),
+                       'b1' : BoolCell()},
+               'a1' : {'b1' : {'c1' : BoolCell()}}})
+d3 = DictCell({'a2' : {'b2' : BoolCell(F)}})
+assert d2.merge(d1) == d3.merge(d2)
+assert hash(d2.merge(d1)) == hash(d3.merge(d2))
+
 assert_raises(Exception, lambda x: v.merge(z), "Merge fail")
 
 assert_raises(Exception, lambda x: x.merge(y), "Merge fail")

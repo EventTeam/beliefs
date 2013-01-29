@@ -383,6 +383,13 @@ class PartialOrderedCell(Cell):
             for suc in domain.predecessors(upper_value):
                 yield suc
 
+    def to_dot(self):
+        """ Writes a DOT graphviz file of the domain structure, and returns the filename"""
+        domain = self.get_domain()
+        filename = "%s.dot" % (self.__class__.__name__)
+        nx.write_dot(domain, filename)
+        return filename
+
 if __name__ == '__main__':
 
     class TestPOC(PartialOrderedCell):

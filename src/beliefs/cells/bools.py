@@ -95,6 +95,18 @@ class BoolCell(Cell):
             raise Exception
         return self
 
+    def __sub__(self, other):
+        """
+        Returns a difference structure
+        """
+        if self.is_equal(other):
+            return None
+        if self.is_entailed_by(other):
+            # other has more info
+            return [other.value]
+        else:
+            raise NotDifferentiable
+
     def __repr__(self):
         return "%r" % (self.value,)
 
