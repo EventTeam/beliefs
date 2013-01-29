@@ -229,17 +229,18 @@ class DictCell(Cell):
                 raise ValueError('cannot encode ' + repr(key))
 
         return output
+
+    def keys(self):
+        """ Returns a list of the top-level keys in the DictCell"""
+        return [k for k, _ in self]
         
-    def __sub__(self, other):
-        """ Represnets the *information that needs to be added* to transform
-        `self` into `other`.  This only works if `self` is entailed by `other`."""
-        
-        if self.is_entailed_by(other):
-            differences = []
-            for key in self:
-                print key
-            
-        
+    def values(self):
+        """ Returns a list of the top-level values in the DictCell"""
+        return [v for _, v in self]
+
+    def items(self):
+        """ Returns both keys and values in dictionary """
+        return [(k,v) for k, v in self]
 
     __eq__ = is_equal
     __contains__ = contains
