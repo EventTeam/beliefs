@@ -1,22 +1,8 @@
 from copy import copy
 from collections import OrderedDict, defaultdict, deque
 from beliefs.cells import *
+from beliefs.exterior.utils import choose
 from math import factorial
-
-def choose(n, k):
-    """
-    A fast way to calculate binomial coefficients by Andrew Dalke (contrib).
-    """
-    if 0 <= k <= n:
-        ntok = 1
-        ktok = 1
-        for t in xrange(1, min(k, n - k) + 1):
-            ntok *= n
-            ktok *= t
-            n -= 1
-        return ntok // ktok
-    else:
-        return 0
 
 class BeliefState(DictCell):
     """
@@ -386,17 +372,21 @@ class BeliefState(DictCell):
         This is the all-important hash method that recursively computes a hash
         value from the components of the beliefstate.  The search process treats
         two beliefstates as equal if their hash values are the same.
-    
-        Ignores the 'context' variables.
         """
         hashval = 0
+
         hashval += hash(self.__dict__['pos'])
-        hashval += reduce(lambda y,x: hash(x[0]) ^ hash(x[1]) ^ hash(y), self.__dict__['environment_variable'].items(), 0)
+
+        for ekey, kval in self.__dict__['environment_variable'].items():
+            hashval += hash(key) + hash(kval)
+               
         for value in self.__dict__['p']:
             hashval += hash(self.__dict__['p'][value])
+
         if hashval == -2:
             # -2 is a reserved value 
             hashval = -1
+
         return hashval
 
     __eq__ = is_equal
