@@ -1,7 +1,6 @@
 import networkx as nx
 from collections import OrderedDict
-from exterior.utils import list_diff
-#from beliefs.cells import Cell, BoolCell
+from beliefs.exterior.utils import list_diff
 from .cell import *
 import operator
 import datetime
