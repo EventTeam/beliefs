@@ -132,7 +132,7 @@ class SetIntersectionCell(Cell):
             return self
         elif self.is_entailed_by(other):
             # self is a subset of other.
-            self.values = other.values
+            self.values = other.values.copy()
         elif self.is_contradictory(other):
             raise Contradiction("Cannot merge set with %s" % (str(other)))
         else:
@@ -167,12 +167,8 @@ class SetIntersectionCell(Cell):
 
 
 class SetUnionCell(SetIntersectionCell):
-   
-    def is_entailed_by(self, other):
-        """ Returns True iff self is a proper subset of other """
-        sval = self.get_values()
-        oval = other.get_values()
-        return sval.issubset(oval)
+    """ SetUnionCell breaks monotonicity.
+    Initially, its values are equal to its domain, and then after 1 or more updates, its values become the UNION of all of the updates"""
 
     def merge(self, other):
         """
@@ -183,15 +179,11 @@ class SetUnionCell(SetIntersectionCell):
         if self.is_equal(other):
             # pick among dependencies
             return self
-        elif other.is_entailed_by(self):
-            # other is a subset of self
-            return self
-        elif self.is_entailed_by(other):
-            # self is a subset of other.
-            self.values = other.values
         elif self.is_contradictory(other):
             raise Contradiction("Cannot merge set with %s" % (str(other)))
         else:
+            # self may be a subset of other 
+            # or other may be a subset of self
             # merge mutual information
             if self.values:
                 self.values = self.values.union(other.values)
@@ -205,7 +197,7 @@ class SetUnionCell(SetIntersectionCell):
         if self.values:
             return self.values
         else:
-            return set()
+            return self.domain
 
 
 class TypedSetCell(SetIntersectionCell):
@@ -227,33 +219,68 @@ class TypedSingletonCell(SetIntersectionCell):
 if __name__ == '__main__':  
 
     # SetIntersectionCell starts from all possibilities and new options are added
+    two = SetIntersectionCell([1,2,3,4])
+    two.merge(2)
+    three = SetIntersectionCell([1,2,3,4])
+    three.merge(3)
+    four = SetIntersectionCell([1,2,3,4])
+    four.merge(4)
+
     x = SetIntersectionCell([1,2,3,4])
+    assert x.is_entailed_by(two)
     assert len(x) == 4
     h1 = hash(x)
     x.merge([2,3])
+    assert x.is_entailed_by(two)
+    assert x.is_entailed_by(three)
+    assert not x.is_entailed_by(four)
+    assert not x.entails(two)
+    assert not x.entails(three)
+    assert not x.entails(four)
     assert len(x) == 2
     h2 = hash(x)
     x.merge(2)
+    assert not 1 in x
+    assert 2 in x
+    assert not 3 in x
+    assert not 4 in x
+    assert not 5 in x
+    assert x.entails(two)
+    assert two.entails(x)
+    assert x.is_entailed_by(two)
+    assert two.is_entailed_by(x)
+    assert not x.entails(three)
+    assert not x.entails(four)
     assert len(x) == 1
     h3 = hash(x)
     assert h2 != h3 != h1
 
     x = SetUnionCell([1,2,3,4])
-    print x
-    #assert len(x) == 0
+    assert 1 in x
+    assert 2 in x
+    assert 3 in x
+    assert 4 in x
+    assert len(x) == 4
     h1 = hash(x)
     x.merge([2,3])
+    print x
+    assert 2 in x
+    assert 3 in x
     assert len(x) == 2
     h2 = hash(x)
     x.merge(2)
+    print x
     assert len(x) == 2
     h3 = hash(x)
     assert h2 == h3
     assert h1 != h2
 
     x = SetUnionCell([1,2,3,4], [2])
+    h0 = hash(x)
     assert len(x) == 1
     x.merge([2,3,4])
+    h1 = hash(x)
+    assert h1 != h0
     assert len(x) == 3
     x.merge([2])
     assert len(x) == 3
