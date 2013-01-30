@@ -1,6 +1,3 @@
-import networkx as nx
-from collections import OrderedDict
-from beliefs.exterior.utils import list_diff
 from .cell import *
 import operator
 import datetime

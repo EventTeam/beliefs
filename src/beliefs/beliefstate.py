@@ -1,8 +1,7 @@
 from copy import copy
-from collections import OrderedDict, defaultdict, deque
+from collections import OrderedDict, defaultdict
 from beliefs.cells import *
-from beliefs.exterior.utils import choose
-from math import factorial
+from beliefs_utils import choose
 
 class BeliefState(DictCell):
     """
@@ -362,7 +361,7 @@ class BeliefState(DictCell):
         during the interpretation or generation.
         """
         copied = BeliefState(self.__dict__['contextset']) 
-        copied.__dict__['p'].update(self.__dict__['p'])
+        #copied.__dict__['p'].update(self.__dict__['p'])
         for key in ['environment_variable', 'pos', 'p']:
             copied.__dict__[key] = copy.deepcopy(self.__dict__[key])
         return copied
