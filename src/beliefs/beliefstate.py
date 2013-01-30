@@ -1,7 +1,7 @@
 from copy import copy
 from collections import OrderedDict, defaultdict
 from beliefs.cells import *
-from beliefs_utils import choose
+from belief_utils import choose
 
 class BeliefState(DictCell):
     """
