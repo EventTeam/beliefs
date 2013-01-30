@@ -203,17 +203,15 @@ class SetUnionCell(SetIntersectionCell):
 class TypedSetCell(SetIntersectionCell):
 
     def __init__(self, *args, **kwargs):
-        print "TypedSetCell is deprecated. Please use either"
-        print " 1) IntersectionCell"
-        print " 2) UnionCell"
+        logging.info("TypedSetCell is deprecated. Please use either" +
+                "1) IntersectionCell or 2) UnionCell")
         SetIntersectionCell.__init__(self, *args, **kwargs)
 
 class TypedSingletonCell(SetIntersectionCell):
 
     def __init__(self, *args, **kwargs):
-        print "TypedSetCell is deprecated. Please use either"
-        print " 1) IntersectionCell"
-        print " 2) UnionCell"
+        logging.info("TypedSingletonCell is deprecated. Please use either" +\
+                "1) IntersectionCell or 2) UnionCell")
         SetIntersectionCell.__init__(self, *args, **kwargs)
 
 if __name__ == '__main__':  
