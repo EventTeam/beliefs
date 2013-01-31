@@ -374,16 +374,19 @@ class BeliefState(DictCell):
         """
         hashval = 0
 
+        # hash part of speech
         hashval += hash(self.__dict__['pos'])
 
+        # hash environment variables
         for ekey, kval in self.__dict__['environment_variable'].items():
-            hashval += hash(key) + hash(kval)
-               
+            hashval += hash(ekey) + hash(kval)
+
+        # hash dictionary
         for value in self.__dict__['p']:
             hashval += hash(self.__dict__['p'][value])
 
+        # -2 is a reserved value 
         if hashval == -2:
-            # -2 is a reserved value 
             hashval = -1
 
         return hashval

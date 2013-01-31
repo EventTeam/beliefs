@@ -62,6 +62,7 @@ class PartialOrderedCell(Cell):
             self.upper = set()
             self.lower = set()
 
+
     @classmethod
     def set_domain(clz, dag):
         """ Sets the domain.  Should only be called once per class instantiation. """
@@ -382,6 +383,13 @@ class PartialOrderedCell(Cell):
         for upper_value in self.upper:
             for suc in domain.predecessors(upper_value):
                 yield suc
+
+    def most_specific_members(self):
+        """ Returns the upper nodes or, if they are empty, the root nodes """
+        if len(self.upper) == 0: 
+            return self.roots
+        else:
+            return self.upper
 
     def to_dot(self):
         """ Writes a DOT graphviz file of the domain structure, and returns the filename"""
