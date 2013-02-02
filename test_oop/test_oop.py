@@ -1,6 +1,6 @@
-from beliefs import *
+from beliefs.referent import *
 
-class SpatialObject(DictCell):
+class SpatialObject(Referent):
     """ Represents the properties of an object located in 3D space """
     def __init__(self):
         super(SpatialObject, self).__init__()
@@ -14,7 +14,7 @@ class PhysicalObject(SpatialObject):
         self.height = IntervalCell()
         self.width = IntervalCell()
 
-class Musical(DictCell):
+class Musical(Referent):
     """"""
     def __init__(self):
         super(Musical, self).__init__()
@@ -26,23 +26,6 @@ class MusicalThing(PhysicalObject, Musical):
 
 
 
-import sys
-import inspect
-import networkx as nx
-
-
-def build_class_graph(klass=None, graph=None):
-    if klass is None:
-        class_graph = nx.DiGraph()
-        for classmember in inspect.getmembers(sys.modules[__name__], inspect.isclass):
-            print classmember
-            build_class_graph(classmember, class_graph)
-    parents = getattr(klass, '__bases__')
-    for parent in parents:
-        if parent != DictCell:
-            print parent, "->", klass
-            graph.add_edge(parent, klass)
-            build_class_graph(parent, graph)
 
 
 
