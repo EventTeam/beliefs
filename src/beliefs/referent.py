@@ -62,7 +62,6 @@ class TaxonomyCell(PartialOrderedCell):
                         TaxonomyCell.build_class_graph(modules, parent, graph)
 
 
-
 class Referent(DictCell):
     """ Thin DictCell subclass to inject the TaxonomyCell property after 
     initialization """
@@ -70,10 +69,10 @@ class Referent(DictCell):
     def __init__(self, *args, **kwargs):
         DictCell.__init__(self, *args, **kwargs)
         self.kind = TaxonomyCell(self.__class__.__name__)
-        self.num = IntervalCell(0, 9999999999)
+        self.num = IntervalCell(0, 100)
 
     @classmethod
-    def cells_from_json(clz, jsonobj):
+    def cells_from_defaults(clz, jsonobj):
         """ Creates a referent instance of type `json.kind` and 
         initializes it to default values.
         """
@@ -85,27 +84,43 @@ class Referent(DictCell):
        
         domain = TaxonomyCell.get_domain()
         cells = []
-        for cell_dna in jsonobj['cells']:
+        for num, cell_dna in enumerate(jsonobj['cells']):
             assert 'kind' in cell_dna, "No type definition"
             classgenerator = domain.node[cell_dna['kind']]['class']
             cell = classgenerator()
+            cell['num'].merge(num)
             for attr, val in cell_dna.items():
                 if not attr in ['kind']:
                     cell[attr].merge(val)
                     cells.append(cell)
-
         return cells
 
 
     @classmethod
-    def from_dict(clz, defaults):
+    def from_defaults(clz, defaults):
         """ Given a dictionary of defaults, ie {attribute: value},
         this classmethod constructs a new instance of the class and
         merges the defaults"""
+        if isinstance(defaults, (str, unicode)):
+            defaults = json.loads(defaults)
+        
         c = clz()
         for attribute in defaults.keys():
             if attribute in c:
                 value = defaults[attribute]
                 c[attribute].merge(value)
+        # in case any values were not specified, attempt to merge them with 
+        # the settings provided by clz.random()
+        cr = clz.random()
+        for attribute, value in cr:
+            try:
+                c[attribute].merge(value)
+            except Contradiction:
+                pass
         return c
 
+class Nameable(Referent):
+    """ A referent with a name """
+    def __init__(self):
+        Referent.__init__(self)
+        self.name = NameCell()
