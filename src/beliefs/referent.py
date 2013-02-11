@@ -19,6 +19,7 @@ domain:
 """
 import inspect
 import networkx as nx
+import numpy as np
 from beliefs.cells import *
 
 class TaxonomyCell(PartialOrderedCell):
@@ -69,9 +70,10 @@ class Referent(DictCell):
     def __init__(self, *args, **kwargs):
         DictCell.__init__(self, *args, **kwargs)
         self.kind = TaxonomyCell(self.__class__.__name__)
+        self.num = IntervalCell(0, 9999999999)
 
     @classmethod
-    def from_json(clz, jsonobj):
+    def cells_from_json(clz, jsonobj):
         """ Creates a referent instance of type `json.kind` and 
         initializes it to default values.
         """
@@ -81,7 +83,7 @@ class Referent(DictCell):
         
         assert 'cells' in jsonobj, "No cells in object"
        
-        domain = clz.get_domain()
+        domain = TaxonomyCell.get_domain()
         cells = []
         for cell_dna in jsonobj['cells']:
             assert 'kind' in cell_dna, "No type definition"
@@ -94,4 +96,16 @@ class Referent(DictCell):
 
         return cells
 
+
+    @classmethod
+    def from_dict(clz, defaults):
+        """ Given a dictionary of defaults, ie {attribute: value},
+        this classmethod constructs a new instance of the class and
+        merges the defaults"""
+        c = clz()
+        for attribute in defaults.keys():
+            if attribute in c:
+                value = defaults[attribute]
+                c[attribute].merge(value)
+        return c
 

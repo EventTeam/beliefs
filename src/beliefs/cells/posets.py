@@ -67,6 +67,9 @@ class PartialOrderedCell(Cell):
     def set_domain(clz, dag):
         """ Sets the domain.  Should only be called once per class instantiation. """
         logging.info("Setting domain for poset %s" % clz.__name__)
+        if nx.number_of_nodes(dag) == 0:
+            raise CellConstructionFailure("Empty DAG structure.")
+            
         if not nx.is_directed_acyclic_graph(dag):
             raise CellConstructionFailure("Must be directed and acyclic")
 
