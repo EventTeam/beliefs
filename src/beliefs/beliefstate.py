@@ -2,12 +2,20 @@ from copy import copy
 from collections import OrderedDict, defaultdict
 from beliefs.cells import *
 from belief_utils import choose
+import itertools
 
 class BeliefState(DictCell):
     """
-    Represents a belief state -- that is, a partial information object 
-    that is a continuum between individual instances of a context set and
-    entire classes of members.
+    Represents a beliefstate, a partial information object *about* specific targets.
+    A beliefstate is a continuum between individual cells and entire classes of cells.
+        
+    Suppose the domain has entities/cells: 1,2,3.  A valid beliefstate represents the possible groupings 
+    of these entities; a single grouping is called a *referent*.  A beliefstate can be about
+    "all referents of size two", for example, and computing the beliefstate's contextset would 
+    yeild the targets {1,2}, {2,3}, and {1,3}.
+    
+    In addition to containing a description of the intended targets, a belief state contains information
+    about the relational constraints (such as arity size), and linguistic decisions.
     """
     def __init__(self, contextset=None):
         """ 
@@ -30,7 +38,6 @@ class BeliefState(DictCell):
 
         DictCell.__init__(self, default_structure)
     
-
     def set_pos(self, pos):
         """
         Sets the BeliefState's part of speech 
@@ -64,13 +71,13 @@ class BeliefState(DictCell):
         """
         return self.__dict__['contextset'] is not None
 
-    def iterate_breadth_first(self, root=None):
-        """ Traverses node breadth-first """
+    def iter_breadth_first(self, root=None):
+        """ Traverses the belief state's structure breadth-first """
         if root == None:
             root = self
         yield root
         last = root 
-        for node in self.iterate_breadth_first(root):
+        for node in self.iter_breadth_first(root):
             if isinstance(node, DictCell):
                 # recurse
                 for subpart in node:
@@ -103,7 +110,7 @@ class BeliefState(DictCell):
         if on_targets:
             # apply search to the first target
             results = []
-            for _, instance in self.evaluate_targetset():
+            for _, instance in self.iter_singleton_referents():
                 for part in instance:
                     for entry in find_path_inner(part, prefix[:]):
                         results.append(['target'] + entry)
@@ -126,7 +133,7 @@ class BeliefState(DictCell):
             # instances start with 'target' prefix, but 
             # don't contain it, so we remove it here.
             keypath = keypath[1:]
-        for _, instance in self.evaluate_targetset():
+        for _, instance in self.iter_singleton_referents():
             values[instance.get_value_from_path(keypath)] += 1
         # sort the values
         values_sorted = OrderedDict()
@@ -159,11 +166,11 @@ class BeliefState(DictCell):
         """
         return self.find_path(lambda x: isinstance(x[1], DictCell), on_targets=True)
 
-    def get_paths_for_attribute(self, target_name):
+    def get_paths_for_attribute(self, attribute_name):
         """
         Returns items with a particular name
         """
-        has_name = lambda name, structure:  name == target_name
+        has_name = lambda name, structure:  name == attribute_name
         return self.find_path(has_name, on_targets=True)
 
     def merge(self, keypath, value, op='set'):
@@ -177,12 +184,12 @@ class BeliefState(DictCell):
             first_instance = None
             if keypath[0] == 'target':
                 has_targets = False 
-                for _, instance in self.evaluate_targetset():
+                for _, referent in self.iter_singleton_referents():
                     has_targets = True
-                    if keypath[1:] in instance:
-                        first_instance = instance
+                    if keypath[1:] in referent:
+                        first_referent = referent
                         break
-                if first_instance is None:
+                if first_referent is None:
                     # this happens when none of the available targets have the
                     # path that is attempted to being merged to
                     if has_targets:
@@ -192,7 +199,7 @@ class BeliefState(DictCell):
                         # this will always happen when size is 0
                         raise CellConstructionFailure("Empty belief state")
                 # find the type and add it to the 
-                cell = first_instance.get_value_from_path(keypath[1:]).stem()
+                cell = first_referent.get_value_from_path(keypath[1:]).stem()
                 self.add_cell(keypath, cell)
             else:
                 # should we allow merging undefined components outside of target?
@@ -225,14 +232,9 @@ class BeliefState(DictCell):
 
     def entails(self, other):
         """
-        One belief state implies another iff the other state is equal or 
-        more general in all of its parts.  That means the other state must have at least 
-        all of the same keys/components.  
-        
-        Implies and entails are not commutative: `implies(x,y) != implies(y,x)`
-
-        Implies is the inverse of entails: `implies(x,y) == entails(y,x)` """
-        assert isinstance(other, BeliefState), "works only with beliefstates"
+        One beliefstate entails another beliefstate iff the other state's cells are all equal or 
+        more general than the caller's parts.  That means the other state must have at least 
+        all of the same keys/components.  """
         return other.is_entailed_by(self)
 
     def is_entailed_by(self, other):
@@ -240,8 +242,9 @@ class BeliefState(DictCell):
         Given two beliefstates, returns True iff the calling instance
         implies the other beliefstate, meaning it contains at least the same
         structure (for all structures) and all values (for all defined values).
+        
+        Inverse of `entails`.
         """
-        assert isinstance(other, BeliefState), "works only with beliefstates"
         for (s_key, s_val) in self:
             if s_key in other:
                 if not hasattr(other[s_key], 'implies'):
@@ -268,20 +271,22 @@ class BeliefState(DictCell):
         return True
         
     def is_contradictory(self, other):
-        """ This means that their values are not compatible, and the other belief
-        states are not accessible from the caller. """
+        """ Two beliefstates are incompatible if the other beliefstates's cells
+         are not consistent with or accessible from the caller. """
         for (s_key, s_val) in self:
             if s_key in other and s_val.is_contradictory(other[s_key]):
                 return True 
         return False 
 
     def size(self):
-        """ Returns the size of the belief state.   In general, if there are 
-        $n$ targets (the result of `self.number_of_targets()`) then there are 
-        2^{n}-1 valid belief states.
+        """ Returns the size of context set:  *the number of referents (sets of cells) with 
+        arities consistent with the beliefstate's airity constraint*.
+        
+        Initially, if there are $n$ targets (the result of `self.number_of_singleton_referents()`) 
+        then there are $2^{n}-1$ valid belief states.
         """
         low, high = self['speaker_goals']['targetset_arity'].get_tuple()
-        n = self.number_of_targets()
+        n = self.number_of_singleton_referents()
         if low <= 0 and high >= n:
             # no constraints on size
             return (2**n)-1
@@ -301,40 +306,46 @@ class BeliefState(DictCell):
             k = low
             return choose(n, k)
         else:
-            print low, high, n
-            raise Exception
+            message = "low=%i high=%i n=%i" % (low, high, n)
+            raise Exception(message)
 
-    def number_of_targets(self):
+    def referents(self):
+        """ Returns all members of the context set that are compatible with the current beliefstate.
+        Warning: the number of referents is quadradic in elements of singleton referents/cells.  
+        Call `size()` method instead to compute size only, without ennumerating them.
         """
-        Returns the number of members of the context set that are consistent
-        with the belief state. 
+        return list(self.iter_referents())
+    
+    def iter_referents(self):
+        """ Generates members of the context set that are compatible with the current beliefstate. """
+        low, high = self['speaker_goals']['targetset_arity'].get_tuple()
+        min_size = max(1, low)
+        max_size = min(high + 1, self.number_of_singleton_referents()+1)
+        iterable = list(self.iter_singleton_referents())
+        for elements in itertools.chain.from_iterable(itertools.combinations(iterable, r) \
+                for r in range(min_size, max_size)):
+            yield  elements
+
+    def number_of_singleton_referents(self):
+        """
+        Returns the number of singleton members of the contextset (cells in domain) that are
+        compatible with the current belief state.
+
+        This is the size of the union of all referent sets.
         """
         if self.__dict__['contextset']:
             ct = 0
-            for i in self.evaluate_targetset():
+            for i in self.iter_singleton_referents():
                 ct += 1
             return ct
         else:
             raise Exception("self.contextset must be defined")
 
-    def evaluate_targetset(self):
+    def iter_singleton_referents(self):
         """
-        One method for computing the belief state's extension.  Returns the IDs
-        of the members of the context set that are compatible with the current
-        belief state.
-        """
-        return list(self.__evaluate_targetset())
+        Iterator of all of the singleton members of the context set.
 
-    def evaluate_targetset_tuple(self):
-        """ 
-        Method for computing the belief state's extension. Same as `evaluate_targetset` 
-        but sorts the members and returns them as a tuple; suitable for hashing.
-        """
-        return tuple(sorted([int(n) for n, _ in self.evaluate_targetset()]))
-
-    def __evaluate_targetset(self):
-        """
-        Returns (key, instance) tuples specifying the extension of the set
+        NOTE: this evaluates cells one-at-a-time, and does not handle relational constraints.
         """
         try:
             for member in self.__dict__['contextset'].cells:
@@ -343,17 +354,6 @@ class BeliefState(DictCell):
         except KeyError:
             raise Exception("No contextset defined")
 
-    def is_valid_goal(self):
-        """
-        Returns True if the belief state is consistent
-        """
-        return self.is_arity_consistent() and self.pos in ['NN', 'NNS', 'ASS']
-        
-    def is_arity_consistent(self):
-        """ Returns True if the number of members is consistent with the arity"""
-        n = self.number_of_targets()
-        return not self['speaker_goals']['targetset_arity'].is_contradictory(n)
-        
     def copy(self):
         """
         Copies the BeliefState by recursively deep-copying all of
