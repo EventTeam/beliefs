@@ -361,7 +361,6 @@ class BeliefState(DictCell):
         during the interpretation or generation.
         """
         copied = BeliefState(self.__dict__['contextset']) 
-        #copied.__dict__['p'].update(self.__dict__['p'])
         for key in ['environment_variable', 'pos', 'p']:
             copied.__dict__[key] = copy.deepcopy(self.__dict__[key])
         return copied
