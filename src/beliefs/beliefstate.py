@@ -124,6 +124,17 @@ class BeliefState(DictCell):
                     yield entry
 
 
+    def get_nth_unique_value(self, keypath, n, reverse=False):
+        """
+        Returns the `n-1`th unique value, or raises
+        a contradiction if that is out of bounds
+        """
+        unique_values = self.get_ordered_values(keypath, reverse).values()
+        if 0 <= n < len(unique_values):
+            return unique_values[n]
+        else:
+            raise Contradiction("n-th Unique value out of range: " + str(n))
+
     def get_ordered_values(self, keypath, reverse=False):
         """
         Retrieves the contextset's values for the specified keypath.
