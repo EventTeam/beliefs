@@ -31,6 +31,7 @@ class BeliefState(DictCell):
         self.__dict__['pos'] = 'S'  # syntactic state
         self.__dict__['contextset'] = contextset
         self.__dict__['environment_variable'] = {}
+        self.__dict__['deferred_effects'] = []
 
         default_structure = {'target': DictCell(),
                 'speaker_goals': {'targetset_arity': IntervalCell(0, 10000),
@@ -43,6 +44,18 @@ class BeliefState(DictCell):
         Sets the BeliefState's part of speech 
         """
         self.__dict__['pos'] = pos
+
+    def add_deferred_effect(self, effect):
+        """ Pushes an effect on to an effect stack to later be executed"""
+        self.__dict__['deferred_effects'].append(effect)
+
+    def execute_deffered_effects(self):
+        """ Evaluates the deferred effects """
+        costs = 0
+        while len(self.__dict__['deferred_effects']) != 0:
+            effect = self.__dict__['deferred_effects'].pop()
+            costs += effect(self)
+        return costs
 
     def get_pos(self):
         """ Returns Part of Speech"""
@@ -192,7 +205,7 @@ class BeliefState(DictCell):
         Second, this merges that cell with the value
         """
         if keypath not in self:
-            first_instance = None
+            first_referent = None
             if keypath[0] == 'target':
                 has_targets = False 
                 for _, referent in self.iter_singleton_referents():
@@ -390,6 +403,9 @@ class BeliefState(DictCell):
         # hash environment variables
         for ekey, kval in self.__dict__['environment_variable'].items():
             hashval += hash(ekey) + hash(kval)
+
+        for effect in self.__dict__['deferred_effects']:
+            hashval += hash(effect)
 
         # hash dictionary
         for value in self.__dict__['p']:
