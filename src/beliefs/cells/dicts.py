@@ -157,7 +157,7 @@ class DictCell(Cell):
         """
         hash_val = 0
         for key, val in self:
-            hash_val = hash_val ^ hash(key) ^ hash(val)
+            hash_val +=  hash(key) + hash(val)
         if hash_val == -2:
             hash_val = -1
         return hash_val

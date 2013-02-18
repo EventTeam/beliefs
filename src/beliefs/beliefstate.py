@@ -12,25 +12,25 @@ class BeliefState(DictCell):
     Suppose the domain has entities/cells: 1,2,3.  A valid beliefstate represents the possible groupings 
     of these entities; a single grouping is called a *referent*.  A beliefstate can be about
     "all referents of size two", for example, and computing the beliefstate's contextset would 
-    yeild the targets {1,2}, {2,3}, and {1,3}.
+    yield the targets {1,2}, {2,3}, and {1,3}.
     
     In addition to containing a description of the intended targets, a belief state contains information
     about the relational constraints (such as arity size), and linguistic decisions.
     """
     def __init__(self, contextset=None):
         """ 
-        Initializes an empty belief state, and stores the contextset (if specified) 
+        Initializes an empty beliefsstate, and stores the contextset (if specified) 
         into self.contextset. 
          
-        By default, belief states are given the 'S' part of speech and an empty
+        By default, beliefstates are given the 'S' part of speech and an empty
         environment variable stack.
-
-        The other, more common, way to create a belief state is to call bs.copy() on 
-        a previous belief state.
+        
+        Most commonly, beliefstates are created by calling the `copy()` method
+        from a previous beliefstate.
         """
         self.__dict__['pos'] = 'S'  # syntactic state
         self.__dict__['contextset'] = contextset
-        self.__dict__['environment_variable'] = {}
+        self.__dict__['environment_variables'] = {}
         self.__dict__['deferred_effects'] = []
 
         default_structure = {'target': DictCell(),
@@ -40,39 +40,51 @@ class BeliefState(DictCell):
         DictCell.__init__(self, default_structure)
     
     def set_pos(self, pos):
-        """
-        Sets the BeliefState's part of speech 
+        """ Sets the beliefstates's part of speech, `pos`, and then executes
+        any deferred effects that are keyed by that pos tag.
         """
         self.__dict__['pos'] = pos
-
-    def add_deferred_effect(self, effect):
-        """ Pushes an effect on to an effect stack to later be executed"""
-        self.__dict__['deferred_effects'].append(effect)
-
-    def execute_deffered_effects(self):
-        """ Evaluates the deferred effects """
-        costs = 0
-        while len(self.__dict__['deferred_effects']) != 0:
-            effect = self.__dict__['deferred_effects'].pop()
-            costs += effect(self)
-        return costs
+        # if any deferred effects are keyed by this pos tag, evaluate them, and
+        # return their cumulative costs
+        return self.execute_deferred_effects(pos)
 
     def get_pos(self):
         """ Returns Part of Speech"""
         return self.__dict__['pos']
 
+    def add_deferred_effect(self, effect, pos):
+        """ Pushes an (pos, effect) tuple onto a stack to later be executed if the
+        state reaches the 'pos'."""
+        if not isinstance(pos, (unicode, str)):
+            raise Exception("Invalid POS tag. Must be string not %d" % (type(pos)))
+
+        self.__dict__['deferred_effects'].insert(0,(pos, effect,))
+
+    def execute_deferred_effects(self, pos):
+        """ Evaluates deferred effects that are triggered by the prefix of the
+        pos on the current beliefstate. For instance, if the effect is triggered
+        by the 'NN' pos, then the effect will be triggered by 'NN' or 'NNS'."""
+        costs = 0
+        for entry in self.__dict__['deferred_effects']:
+            effect_pos, effect = entry
+            if pos.startswith(effect_pos):
+                logging.info("Executing deferred effect" + str(effect))
+                costs += effect(self)
+                self.__dict__['deferred_effects'].remove(entry)
+        return costs
+
     def set_environment_variable(self, key, val):
         """ Sets a variable if that variable is not already set """
         if self.get_environment_variable(key) in [None, val]:
-            self.__dict__['environment_variable'][key] = val
+            self.__dict__['environment_variables'][key] = val
         else:
             raise Contradiction
 
     def get_environment_variable(self, key, default=None, pop=False):
-        if key in self.__dict__['environment_variable']:
-            val = self.__dict__['environment_variable'][key]
+        if key in self.__dict__['environment_variables']:
+            val = self.__dict__['environment_variables'][key]
             if pop:
-                del self.__dict__['environment_variable'][key]
+                del self.__dict__['environment_variables'][key]
             return val
         else:
             return default
@@ -142,7 +154,7 @@ class BeliefState(DictCell):
         Returns the `n-1`th unique value, or raises
         a contradiction if that is out of bounds
         """
-        unique_values = self.get_ordered_values(keypath, reverse).values()
+        unique_values = self.get_ordered_values(keypath, reverse).keys()
         if 0 <= n < len(unique_values):
             return unique_values[n]
         else:
@@ -350,6 +362,16 @@ class BeliefState(DictCell):
                 for r in range(min_size, max_size)):
             yield  elements
 
+    def iter_referents_tuples(self):
+        """ Generates tuples of indices representing members of the context set that are compatible with the current beliefstate. """
+        low, high = self['speaker_goals']['targetset_arity'].get_tuple()
+        min_size = max(1, low)
+        max_size = min(high + 1, self.number_of_singleton_referents()+1)
+        iterable = list([int(i) for i,_ in self.iter_singleton_referents()])
+        for elements in itertools.chain.from_iterable(itertools.combinations(iterable, r) \
+                for r in range(min_size, max_size)):
+            yield  elements
+
     def number_of_singleton_referents(self):
         """
         Returns the number of singleton members of the contextset (cells in domain) that are
@@ -385,7 +407,7 @@ class BeliefState(DictCell):
         during the interpretation or generation.
         """
         copied = BeliefState(self.__dict__['contextset']) 
-        for key in ['environment_variable', 'pos', 'p']:
+        for key in ['environment_variables', 'deferred_effects', 'pos', 'p']:
             copied.__dict__[key] = copy.deepcopy(self.__dict__[key])
         return copied
 
@@ -401,7 +423,7 @@ class BeliefState(DictCell):
         hashval += hash(self.__dict__['pos'])
 
         # hash environment variables
-        for ekey, kval in self.__dict__['environment_variable'].items():
+        for ekey, kval in self.__dict__['environment_variables'].items():
             hashval += hash(ekey) + hash(kval)
 
         for effect in self.__dict__['deferred_effects']:

@@ -394,7 +394,7 @@ class PartialOrderedCell(Cell):
         else:
             return self.upper
 
-    def to_dot(self):
+    def to_dotfile(self):
         """ Writes a DOT graphviz file of the domain structure, and returns the filename"""
         domain = self.get_domain()
         filename = "%s.dot" % (self.__class__.__name__)
