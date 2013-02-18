@@ -314,7 +314,7 @@ class BeliefState(DictCell):
                 return True 
         return False 
 
-    def size(self):
+    def belief_size(self):
         """ Returns the size of context set:  *the number of referents (sets of cells) with 
         arities consistent with the beliefstate's airity constraint*.
         
@@ -371,6 +371,10 @@ class BeliefState(DictCell):
         for elements in itertools.chain.from_iterable(itertools.combinations(iterable, r) \
                 for r in range(min_size, max_size)):
             yield  elements
+
+    def size(self):
+        """ Returns the number of singleton referents """
+        return self.number_of_singleton_referents()
 
     def number_of_singleton_referents(self):
         """
