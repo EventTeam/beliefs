@@ -48,6 +48,7 @@ to allow values to come from multiple sources.
 
 import copy
 import logging
+from beliefs.belief_utils import *
 from .exceptions import *
 
 class Cell(object):

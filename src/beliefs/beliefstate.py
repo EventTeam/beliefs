@@ -387,6 +387,8 @@ class BeliefState(DictCell):
             ct = 0
             for i in self.iter_singleton_referents():
                 ct += 1
+            if self['speaker_goals']['targetset_arity'].is_contradictory(ct):
+                raise Contradiction("Invalid targetset airity")
             return ct
         else:
             raise Exception("self.contextset must be defined")
