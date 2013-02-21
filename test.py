@@ -157,9 +157,7 @@ d3 = DictCell({'a2' : {'b2' : BoolCell(F)}})
 assert d2.merge(d1) == d3.merge(d2)
 assert hash(d2.merge(d1)) == hash(d3.merge(d2))
 
-assert_raises(Exception, lambda: v.merge(z), "Merge fail")
-
-assert_raises(Exception, lambda: x.merge(y), "Merge fail")
+assert_raises(Exception, lambda a: v.merge(x), "Merge fail")
 
 #LinearOrderedCell
 v = LinearOrderedCell(['animal','dog','poodle','toy poodle'], 'animal', 'toy poodle')
