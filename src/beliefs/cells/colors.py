@@ -1,7 +1,7 @@
 from beliefs.cells import *
 from colormath.color_objects import *
 
-COLOR_NAMES =  {'red': [255,0,0],
+COLOR_NAMES = {'red': [255,0,0],
                 'cyan': [0,255,255],
                 'blue': [0, 0, 255],
                 'medium_blue': [0, 0, 205],
@@ -16,9 +16,9 @@ class RGBColorCell(Cell):
 
     def __init__(self, r=None, b=None, g=None):
         """ Instantiates a color of RGB """
-        self.r = r 
-        self.b = b 
-        self.g = g 
+        self.r = r
+        self.b = b
+        self.g = g
         self.value = None
         if not (r is None or b is None or g is None):
             self.value = RGBColor(r, b, g, rgb_type='sRGB')
@@ -88,7 +88,7 @@ class RGBColorCell(Cell):
         elif self.value is None and not other.value is None:
             self.r, self.g, self.b = other.r, other.g, other.b
             self.value = RGBColor(self.r, self.b, self.g, rgb_type='sRGB')
-        # last cases:  other is none, or both are none 
+        # last cases: other is none, or both are none
         
         return self
 
@@ -117,7 +117,7 @@ class RGBColorCell(Cell):
         
     def __str__(self):
         """
-        REpresentation of color
+        Representation of color
         """
         if self.value:
             rgb = (self.r, self.b, self.g)
@@ -152,7 +152,7 @@ def test_rgb_color_cell():
     # black and white must be very different
     b = RGBColorCell.from_name('black')
     w = RGBColorCell.from_name('white')
-    assert b.membership_score(w)  < 0.05
+    assert b.membership_score(w) < 0.05
     b1 = RGBColorCell.from_name('blue')
     b2 = RGBColorCell.from_name('light_blue')
     b3 = RGBColorCell.from_name('medium_blue')

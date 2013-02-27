@@ -52,14 +52,15 @@ class BoolCell(Cell):
         return other.is_entailed_by(self)
         
     def is_contradictory(self, other):
+        """ Determines if two cells are contradictory. Returns a boolean."""
         other = BoolCell.coerce(other)
-        if self.value == U or other.value == U \
-                or (self.value == other.value):
+        if self.value == U or other.value == U or (self.value == other.value):
             return False
         else:
             return True
 
     def to_dot(self):
+        """ Returns value as a string"""
         return "%s" % (self.value)
 
     def to_json(self):
@@ -71,6 +72,7 @@ class BoolCell(Cell):
         self.value = other
 
     def is_equal(self, other):
+        """ Tests whether two Cells are equal. Returns a boolean. """
         try:
             other = BoolCell.coerce(other)
             return self.value == other.value

@@ -1,4 +1,4 @@
-from .cell import *
+from cell import *
 import re
 
 class StringCell(Cell):

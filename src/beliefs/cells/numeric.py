@@ -1,4 +1,4 @@
-from .cell import *
+from cell import *
 import numpy as np
 
 class IntervalCell(Cell):

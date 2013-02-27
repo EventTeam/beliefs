@@ -1,6 +1,6 @@
-from .dicts import *
-from .numeric import *
-from .strings import *
+from dicts import *
+from numeric import *
+from strings import *
 from math import radians, cos, sin, asin, sqrt
 
 class LatLonCell(DictCell):

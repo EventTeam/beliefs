@@ -2,8 +2,8 @@ import numpy as np
 import json
 
 #from stategraph.cells import *
-from .dicts import *
-from .cell import *
+from dicts import *
+from cell import *
 
 class LazyCell(Cell):
     """
@@ -171,7 +171,7 @@ class LazyCell(Cell):
         hash_val += reduce(lambda x, y: hash(x) ^ hash(y), self.exclude, 0)
         hash_val += reduce(lambda x, y: hash(x) ^ hash(y), self.include, 0)
         return hash_val
-        
+
     __eq__ = is_equal
     
     
