@@ -1,0 +1,239 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Lists &mdash; myUROP 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="myUROP 1.0 documentation" href="index.html" />
+    <link rel="next" title="Numeric" href="numeric.html" />
+    <link rel="prev" title="Lazy" href="lazy.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="numeric.html" title="Numeric"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="lazy.html" title="Lazy"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">myUROP 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-lists">
+<span id="lists"></span><h1>Lists<a class="headerlink" href="#module-lists" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="lists.LinearOrderedCell">
+<em class="property">class </em><tt class="descclassname">lists.</tt><tt class="descname">LinearOrderedCell</tt><big>(</big><em>ordered_domain</em>, <em>low=None</em>, <em>high=None</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="cell.html#cell.Cell" title="cell.Cell"><tt class="xref py py-class docutils literal"><span class="pre">cell.Cell</span></tt></a></p>
+<p>A generalization of IntervalCell to non-numeric symbols</p>
+<dl class="method">
+<dt id="lists.LinearOrderedCell.coerce">
+<tt class="descname">coerce</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.coerce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.coerce" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes one or two values in the domain and returns a LinearOrderedCell
+with the same domain</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.LinearOrderedCell.is_contradictory">
+<tt class="descname">is_contradictory</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.is_contradictory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.is_contradictory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether other and self can coexist</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.LinearOrderedCell.is_entailed_by">
+<tt class="descname">is_entailed_by</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.is_entailed_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.is_entailed_by" title="Permalink to this definition">¶</a></dt>
+<dd><p>Other is more specific than self.   Other is bounded within self.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.LinearOrderedCell.is_equal">
+<tt class="descname">is_equal</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.is_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.is_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>If two intervals are the same</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.LinearOrderedCell.merge">
+<tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merges the two values</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.LinearOrderedCell.stem">
+<tt class="descname">stem</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.stem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.stem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new instance without any values</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.LinearOrderedCell.to_i">
+<tt class="descname">to_i</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.to_i"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.to_i" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maps value to position in domain</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="lists.ListCell">
+<em class="property">class </em><tt class="descclassname">lists.</tt><tt class="descname">ListCell</tt><big>(</big><em>value=None</em><big>)</big><a class="reference internal" href="_modules/lists.html#ListCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.ListCell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="cell.html#cell.Cell" title="cell.Cell"><tt class="xref py py-class docutils literal"><span class="pre">cell.Cell</span></tt></a></p>
+<p>ListCells contain ordered elements</p>
+<dl class="method">
+<dt id="lists.ListCell.append">
+<tt class="descname">append</tt><big>(</big><em>el</em><big>)</big><a class="reference internal" href="_modules/lists.html#ListCell.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.ListCell.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Idiosynractic method for adding an element to a list</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="lists.ListCell.coerce">
+<em class="property">static </em><tt class="descname">coerce</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/lists.html#ListCell.coerce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.ListCell.coerce" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turns a value into a list</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.ListCell.get_values">
+<tt class="descname">get_values</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/lists.html#ListCell.get_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.ListCell.get_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list containing the elements</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.ListCell.is_contradictory">
+<tt class="descname">is_contradictory</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#ListCell.is_contradictory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.ListCell.is_contradictory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Two lists are contradictory if the shorter one is not a prefix of the
+other. (Very strict definition &#8211; could be generalized to subsequence)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.ListCell.is_entailed_by">
+<tt class="descname">is_entailed_by</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#ListCell.is_entailed_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.ListCell.is_entailed_by" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True iff the values in this list can be entailed by the other
+list (ie, this list is a prefix of the other)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.ListCell.is_equal">
+<tt class="descname">is_equal</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#ListCell.is_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.ListCell.is_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether the lists are equal</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.ListCell.merge">
+<tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#ListCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.ListCell.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merges two Lists</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.ListCell.size">
+<tt class="descname">size</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/lists.html#ListCell.size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.ListCell.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of elements in the list</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="lists.PrefixCell">
+<em class="property">class </em><tt class="descclassname">lists.</tt><tt class="descname">PrefixCell</tt><big>(</big><em>value=None</em><big>)</big><a class="reference internal" href="_modules/lists.html#PrefixCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.PrefixCell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lists.ListCell" title="lists.ListCell"><tt class="xref py py-class docutils literal"><span class="pre">lists.ListCell</span></tt></a></p>
+<p>PrefixCells contain lists of paths</p>
+<dl class="method">
+<dt id="lists.PrefixCell.merge">
+<tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#PrefixCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.PrefixCell.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merges two prefixes</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="lazy.html"
+                        title="previous chapter">Lazy</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="numeric.html"
+                        title="next chapter">Numeric</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/lists.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="numeric.html" title="Numeric"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="lazy.html" title="Lazy"
+             >previous</a> |</li>
+        <li><a href="index.html">myUROP 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Nicolas Bravo.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

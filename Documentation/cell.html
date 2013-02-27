@@ -1,0 +1,305 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Cell &mdash; myUROP 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="myUROP 1.0 documentation" href="index.html" />
+    <link rel="next" title="Colors" href="colors.html" />
+    <link rel="prev" title="Bools" href="bools.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="colors.html" title="Colors"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="bools.html" title="Bools"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">myUROP 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-cell">
+<span id="cell"></span><h1>Cell<a class="headerlink" href="#module-cell" title="Permalink to this headline">¶</a></h1>
+<p>This file defines the atomic and complex cells that are used in Propagator
+expressions.</p>
+<p>From CSAIL-TR-2009-053: &#8220;Instead of thinking of a cell as an object that stores
+a value, think of a cell as an object that stores everything you know about a
+value...&#8221;  Cells accumulate partial information, and meta-data such as provenance.</p>
+<blockquote>
+<div><ul class="simple">
+<li>Empty cells are just cells containing no information.</li>
+<li>&#8220;Second values&#8221; are more information.</li>
+<li>Equality tests are tests whether the new information is redundant.</li>
+<li>Contradiction from different values means the information cannot be
+reconciled.</li>
+</ul>
+</div></blockquote>
+<p>Propagator Networks are a programming methodology that generalize &#8216;expressions&#8217;
+to allow values to come from multiple sources.</p>
+<blockquote>
+<div><p>Propagator Network: a wiring diagram for information
+Cells: are machines that store data
+Propagators: are machines that interconnect cells</p>
+<dl class="docutils">
+<dt>Merge Procedure:</dt>
+<dd><ul class="first simple">
+<li>Allows data to be merged to increment information content</li>
+</ul>
+<blockquote>
+<div><ul class="simple">
+<li>If equal: do nothing</li>
+<li>If contradictory: - deal with</li>
+<li>Set values</li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li>Track provenance
+- Tolerate global inconsistency
+- Every value has: (1) where it came from, (2) what it depends on</li>
+<li>Represented as a set of values and premises (dependencies)</li>
+</ul>
+<blockquote class="last">
+<div><ul>
+<li><p class="first">implies? v1 v2</p>
+</li>
+<li><dl class="first docutils">
+<dt>World view:  the set of assumptions that you want to use to</dt>
+<dd><p class="first last">?:  How do you pick these? (Minimal set?)</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</dd>
+<dt>&#8216;amb&#8217; operator.</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt><em>dependency-directed backtracking</em></dt>
+<dd><ul class="first last simple">
+<li>evaluating dependencies by recursive descent, you have to
+recompute when you go back</li>
+<li>every time a failure occurs, it cuts the search space, because of
+the dependency backtracking</li>
+<li>only recompute things that depend on it</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">if you have a contradiction, you have to know which assumptions it
+depended upon.</p>
+</li>
+<li><dl class="first docutils">
+<dt>&#8216;reasons-against&#8217;, &#8216;reasons-for&#8217;,</dt>
+<dd><ul class="first last simple">
+<li>if both, then diagnose higher-level assumptions</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="class">
+<dt id="cell.Cell">
+<em class="property">class </em><tt class="descclassname">cell.</tt><tt class="descname">Cell</tt><a class="reference internal" href="_modules/cell.html#Cell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cell.Cell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Base class and Interface for Propagator Cells</p>
+<p>Each subclass of Cell must implement:</p>
+<blockquote>
+<div><ul>
+<li><dl class="first docutils">
+<dt>is_equal(other)</dt>
+<dd><ul class="first last simple">
+<li>whether two objects are the same</li>
+<li>__eq__ = is_equal</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">is_contradictory(other)</p>
+</li>
+<li><p class="first">is_entailed_by(other)</p>
+</li>
+<li><dl class="first docutils">
+<dt>merge(other)</dt>
+<dd><p class="first last">&#8220;The fully nuanced question that merge answers is
+<a href="#id1"><span class="problematic" id="id2">``</span></a>What do I need to do to the network in order to make
+it reflect the discovery that these two information
+structures are about the same object?&#8217;&#8216;</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>size()</dt>
+<dd><p class="first">Describes how large the set is
+- How should we compute sizes for Strings?  Or should</p>
+<blockquote>
+<div><p>they return None and we just ignore them?</p>
+</div></blockquote>
+<ul class="last simple">
+<li>__len__ = size</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<dl class="docutils">
+<dt>Optionally, a static function:</dt>
+<dd><ul class="first last simple">
+<li>coerce(value)</li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="cell.Cell.cellclass">
+<tt class="descname">cellclass</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/cell.html#Cell.cellclass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cell.Cell.cellclass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a string containing the class name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cell.Cell.entails">
+<tt class="descname">entails</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/cell.html#Cell.entails"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cell.Cell.entails" title="Permalink to this definition">¶</a></dt>
+<dd><p>The inverse of is_entailed_by, meaning Other is more general than Self.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cell.Cell.is_entailed_by">
+<tt class="descname">is_entailed_by</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/cell.html#Cell.is_entailed_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cell.Cell.is_entailed_by" title="Permalink to this definition">¶</a></dt>
+<dd><p>Means that Other is more specific than Self;  Self is more general than
+other.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cell.Cell.merge">
+<tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/cell.html#Cell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cell.Cell.merge" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Merge has three cases:</dt>
+<dd><p class="first">1.  Neither new nor old values are redundant =&gt; need both of their
+supports
+2.  If either value is strictly redundant =&gt; don&#8217;t include its
+supports
+3.  If they are equivalent, we can choose which support to take.</p>
+<blockquote class="last">
+<div><ul class="simple">
+<li>Use the one already present, unless it has more information</li>
+</ul>
+</div></blockquote>
+</dd>
+</dl>
+<p>If two values contradict each other, return a contradiction object.
+(raise a contradiction exception)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cell.Cell.set">
+<tt class="descname">set</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/cell.html#Cell.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cell.Cell.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for Merge</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cell.Cell.stem">
+<tt class="descname">stem</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/cell.html#Cell.stem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cell.Cell.stem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new instance of the current cell value</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="bools.html"
+                        title="previous chapter">Bools</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="colors.html"
+                        title="next chapter">Colors</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/cell.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="colors.html" title="Colors"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="bools.html" title="Bools"
+             >previous</a> |</li>
+        <li><a href="index.html">myUROP 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Nicolas Bravo.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

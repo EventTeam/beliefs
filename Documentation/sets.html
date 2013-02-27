@@ -1,0 +1,283 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Sets &mdash; myUROP 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="myUROP 1.0 documentation" href="index.html" />
+    <link rel="next" title="Spatial" href="spatial.html" />
+    <link rel="prev" title="Posets" href="posets.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="spatial.html" title="Spatial"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="posets.html" title="Posets"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">myUROP 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-sets">
+<span id="sets"></span><h1>Sets<a class="headerlink" href="#module-sets" title="Permalink to this headline">¶</a></h1>
+<p>Classes to represent arbitrary sets (including sets of sets).</p>
+<p>This module implements sets using dictionaries whose values are
+ignored.  The usual operations (union, intersection, deletion, etc.)
+are provided as both methods and operators.</p>
+<p>Important: sets are not sequences!  While they support &#8216;x in s&#8217;,
+&#8216;len(s)&#8217;, and &#8216;for x in s&#8217;, none of those operations are unique for
+sequences; for example, mappings support all three as well.  The
+characteristic operation for sequences is subscripting with small
+integers: s[i], for i in range(len(s)).  Sets don&#8217;t support
+subscripting at all.  Also, sequences allow multiple occurrences and
+their elements have a definite order; sets on the other hand don&#8217;t
+record multiple occurrences and don&#8217;t remember the order of element
+insertion (which is why they don&#8217;t support s[i]).</p>
+<p>The following classes are provided:</p>
+<dl class="docutils">
+<dt>BaseSet &#8211; All the operations common to both mutable and immutable</dt>
+<dd>sets. This is an abstract class, not meant to be directly
+instantiated.</dd>
+</dl>
+<p>Set &#8211; Mutable sets, subclass of BaseSet; not hashable.</p>
+<dl class="docutils">
+<dt>ImmutableSet &#8211; Immutable sets, subclass of BaseSet; hashable.</dt>
+<dd>An iterable argument is mandatory to create an ImmutableSet.</dd>
+<dt>_TemporarilyImmutableSet &#8211; A wrapper around a Set, hashable,</dt>
+<dd>giving the same hash value as the immutable set equivalent
+would have.  Do not use this class directly.</dd>
+</dl>
+<p>Only hashable objects can be added to a Set. In particular, you cannot
+really add a Set as an element to another Set; if you try, what is
+actually added is an ImmutableSet built from it (it compares equal to
+the one you tried adding).</p>
+<p>When you ask if <a href="#id1"><span class="problematic" id="id2">`</span></a>x in y&#8217; where x is a Set and y is a Set or
+ImmutableSet, x is wrapped into a _TemporarilyImmutableSet z, and
+what&#8217;s tested is actually <a href="#id3"><span class="problematic" id="id4">`</span></a>z in y&#8217;.</p>
+<dl class="class">
+<dt id="sets.BaseSet">
+<em class="property">class </em><tt class="descclassname">sets.</tt><tt class="descname">BaseSet</tt><a class="reference internal" href="_modules/sets.html#BaseSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.BaseSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Common base class for mutable and immutable sets.</p>
+<dl class="method">
+<dt id="sets.BaseSet.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/sets.html#BaseSet.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.BaseSet.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a shallow copy of a set.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sets.BaseSet.difference">
+<tt class="descname">difference</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/sets.html#BaseSet.difference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.BaseSet.difference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the difference of two sets as a new Set.</p>
+<p>(I.e. all elements that are in this set and not in the other.)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sets.BaseSet.intersection">
+<tt class="descname">intersection</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/sets.html#BaseSet.intersection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.BaseSet.intersection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection of two sets as a new set.</p>
+<p>(I.e. all elements that are in both sets.)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sets.BaseSet.issubset">
+<tt class="descname">issubset</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/sets.html#BaseSet.issubset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.BaseSet.issubset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Report whether another set contains this set.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sets.BaseSet.issuperset">
+<tt class="descname">issuperset</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/sets.html#BaseSet.issuperset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.BaseSet.issuperset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Report whether this set contains another set.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sets.BaseSet.symmetric_difference">
+<tt class="descname">symmetric_difference</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/sets.html#BaseSet.symmetric_difference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.BaseSet.symmetric_difference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the symmetric difference of two sets as a new set.</p>
+<p>(I.e. all elements that are in exactly one of the sets.)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sets.BaseSet.union">
+<tt class="descname">union</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/sets.html#BaseSet.union"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.BaseSet.union" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the union of two sets as a new set.</p>
+<p>(I.e. all elements that are in either set.)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sets.Set">
+<em class="property">class </em><tt class="descclassname">sets.</tt><tt class="descname">Set</tt><big>(</big><em>iterable=None</em><big>)</big><a class="reference internal" href="_modules/sets.html#Set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.Set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sets.BaseSet" title="sets.BaseSet"><tt class="xref py py-class docutils literal"><span class="pre">sets.BaseSet</span></tt></a></p>
+<p>Mutable set class.</p>
+<dl class="method">
+<dt id="sets.Set.add">
+<tt class="descname">add</tt><big>(</big><em>element</em><big>)</big><a class="reference internal" href="_modules/sets.html#Set.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.Set.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an element to a set.</p>
+<p>This has no effect if the element is already present.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sets.Set.clear">
+<tt class="descname">clear</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/sets.html#Set.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.Set.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all elements from this set.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sets.Set.difference_update">
+<tt class="descname">difference_update</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/sets.html#Set.difference_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.Set.difference_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all elements of another set from this set.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sets.Set.discard">
+<tt class="descname">discard</tt><big>(</big><em>element</em><big>)</big><a class="reference internal" href="_modules/sets.html#Set.discard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.Set.discard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove an element from a set if it is a member.</p>
+<p>If the element is not a member, do nothing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sets.Set.intersection_update">
+<tt class="descname">intersection_update</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/sets.html#Set.intersection_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.Set.intersection_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update a set with the intersection of itself and another.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sets.Set.pop">
+<tt class="descname">pop</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/sets.html#Set.pop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.Set.pop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove and return an arbitrary set element.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sets.Set.remove">
+<tt class="descname">remove</tt><big>(</big><em>element</em><big>)</big><a class="reference internal" href="_modules/sets.html#Set.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.Set.remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove an element from a set; it must be a member.</p>
+<p>If the element is not a member, raise a KeyError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sets.Set.symmetric_difference_update">
+<tt class="descname">symmetric_difference_update</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/sets.html#Set.symmetric_difference_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.Set.symmetric_difference_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update a set with the symmetric difference of itself and another.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sets.Set.union_update">
+<tt class="descname">union_update</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/sets.html#Set.union_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.Set.union_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update a set with the union of itself and another.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sets.Set.update">
+<tt class="descname">update</tt><big>(</big><em>iterable</em><big>)</big><a class="reference internal" href="_modules/sets.html#Set.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.Set.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add all values from an iterable (such as a list or file).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sets.ImmutableSet">
+<em class="property">class </em><tt class="descclassname">sets.</tt><tt class="descname">ImmutableSet</tt><big>(</big><em>iterable=None</em><big>)</big><a class="reference internal" href="_modules/sets.html#ImmutableSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.ImmutableSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sets.BaseSet" title="sets.BaseSet"><tt class="xref py py-class docutils literal"><span class="pre">sets.BaseSet</span></tt></a></p>
+<p>Immutable set class.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="posets.html"
+                        title="previous chapter">Posets</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="spatial.html"
+                        title="next chapter">Spatial</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/sets.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="spatial.html" title="Spatial"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="posets.html" title="Posets"
+             >previous</a> |</li>
+        <li><a href="index.html">myUROP 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Nicolas Bravo.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
