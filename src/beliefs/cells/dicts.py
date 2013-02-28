@@ -2,6 +2,7 @@ from .cell import *
 import operator
 import datetime
 import time
+import itertools
 
 SIMPLE_TYPES = (int, long, float, bool, dict, basestring, list)
 
@@ -119,9 +120,14 @@ class DictCell(Cell):
 
 
     def entails(self, other):
+        """ Whether the target of the other belief state is strictly more
+        general than the caller belief state
+
+        """
         return other.is_entailed_by(self)
 
     def is_contradictory(self, other):
+        """ Returns True if the two DictCells are unmergeable.  """
         if not isinstance(other, DictCell):
             raise Exception("Incomparable")
         for key, val in self:
@@ -131,13 +137,12 @@ class DictCell(Cell):
         return False
 
     def is_equal(self, other):
-        """
-        Two DictCells are equal when they share ALL Keys,  and all of their 
+        """ Two DictCells are equal when they share ALL Keys,  and all of their 
         is_equal() methods return True.  This ensures substructure equality.
         """
         if not isinstance(other, DictCell):
             return False
-        for (this, that) in zip(self, other):
+        for (this, that) in itertools.zip_longest(self, other):
             if this[0] != that[0]:
                 # compare key names
                 return False
@@ -152,9 +157,7 @@ class DictCell(Cell):
         return iter(sorted(self.__dict__['p'].items(), key=operator.itemgetter(0)))
 
     def __hash__(self):
-        """
-        Iterate through all members and hash 'em
-        """
+        """ Iterate through all members and hash 'em """
         hash_val = 0
         for key, val in self:
             hash_val +=  hash(key) + hash(val)
@@ -188,9 +191,7 @@ class DictCell(Cell):
         return self
 
     def __repr__(self, indent=0):
-        """
-        Pretty prints a string representing the structure of the tree.
-        """
+        """ Pretty prints a string representing the structure of the tree.  """
         result = ""
         for i, (key, val) in enumerate(self):
             if i != 0:  result += " " * indent

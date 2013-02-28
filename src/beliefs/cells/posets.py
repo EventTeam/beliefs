@@ -428,26 +428,3 @@ if __name__ == '__main__':
     print list(t.get_refinement_options())
     print list(t.get_relaxation_options())
     print t
-
-
-class HumanActions(PartialOrderedCell):
-    """ Actions for the goal """
-    def __init__(self):
-        dag = None
-        if not self.has_domain():
-            # only initialize once
-            dag = nx.DiGraph()
-            dag.add_edge("human-action", "watch") # tv/movies
-            dag.add_edge("human-action", "play") # game
-            dag.add_edge("human-action", "listen") # music
-            dag.add_edge("watch", "watch-movie")
-            dag.add_edge("watch", "watch-tv")
-            dag.add_edge("play", "watch-movie")
-            dag.add_edge("play", "watch-tv")
-            dag.add_edge("play", "play-game")
-            dag.add_edge("play", "listen-song")
-            dag.add_edge("see", "watch-movie")
-            dag.add_edge("see", "watch-tv")
-            
-        PartialOrderedCell.__init__(self, dag)
-

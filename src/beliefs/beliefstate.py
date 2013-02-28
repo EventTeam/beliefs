@@ -268,9 +268,13 @@ class BeliefState(DictCell):
 
     def entails(self, other):
         """
-        One beliefstate entails another beliefstate iff the other state's cells are all equal or 
-        more general than the caller's parts.  That means the other state must have at least 
-        all of the same keys/components.  """
+        One beliefstate entails another beliefstate iff the other state's cells are
+        all equal or more general than the caller's parts.  That means the other 
+        state must have at least all of the same keys/components.  
+
+        Note: this only compares the items in the DictCell, not `pos`,
+        `environment_variables` or `deferred_effects`.
+        """
         return other.is_entailed_by(self)
 
     def is_entailed_by(self, other):
@@ -280,6 +284,9 @@ class BeliefState(DictCell):
         structure (for all structures) and all values (for all defined values).
         
         Inverse of `entails`.
+
+        Note: this only compares the items in the DictCell, not `pos`,
+        `environment_variables` or `deferred_effects`.
         """
         for (s_key, s_val) in self:
             if s_key in other:
@@ -293,11 +300,13 @@ class BeliefState(DictCell):
 
     def is_equal(self, other):
         """
-        Two beliefstates are equal if all of their part names
-        are equal and all of their cell's values return True for
-        is_equal()
+        Two beliefstates are equal if all of their part names are equal and all
+        of their cell's values return True for is_equal().
+
+        Note: this only compares the items in the DictCell, not `pos`,
+        `environment_variables` or `deferred_effects`.
         """
-        for (this, that) in zip(self, other):
+        for (this, that) in itertools.zip_longest(self, other):
             if this[0] != that[0]:
                 # compare key names
                 return False
@@ -308,7 +317,11 @@ class BeliefState(DictCell):
         
     def is_contradictory(self, other):
         """ Two beliefstates are incompatible if the other beliefstates's cells
-         are not consistent with or accessible from the caller. """
+         are not consistent with or accessible from the caller.
+         
+        Note: this only compares the items in the DictCell, not `pos`,
+        `environment_variables` or `deferred_effects`.
+        """
         for (s_key, s_val) in self:
             if s_key in other and s_val.is_contradictory(other[s_key]):
                 return True 
