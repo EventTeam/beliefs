@@ -9,10 +9,10 @@ class BeliefState(DictCell):
     Represents a beliefstate, a partial information object *about* specific targets.
     A beliefstate is a continuum between individual cells and entire classes of cells.
         
-    Suppose the domain has entities/cells: 1,2,3.  A valid beliefstate represents the possible groupings 
-    of these entities; a single grouping is called a *referent*.  A beliefstate can be about
-    "all referents of size two", for example, and computing the beliefstate's contextset would 
-    yield the targets {1,2}, {2,3}, and {1,3}.
+    Suppose the domain has entities/cells: 1,2,3.  A beliefstate represents the
+    possible groupings of these entities; a single grouping is called a *referent*. 
+    A beliefstate can be about "all referents of size two", for example, and computing
+    the beliefstate's contextset would yield the targets {1,2}, {2,3}, and {1,3}.
     
     In addition to containing a description of the intended targets, a belief state contains information
     about the relational constraints (such as arity size), and linguistic decisions.
@@ -34,7 +34,8 @@ class BeliefState(DictCell):
         self.__dict__['deferred_effects'] = []
 
         default_structure = {'target': DictCell(),
-                'speaker_goals': {'targetset_arity': IntervalCell(0, 10000),
+                'has_relational_constraint': BoolCell(),
+                'speaker_goals': {'targetset_arity': IntervalCell(),
                                   'is_in_commonground': BoolCell()}}
 
         DictCell.__init__(self, default_structure)
@@ -204,7 +205,7 @@ class BeliefState(DictCell):
 
     def get_paths_for_attribute(self, attribute_name):
         """
-        Returns items with a particular name
+        Returns a path list to all attributes that have with a particular name.
         """
         has_name = lambda name, structure:  name == attribute_name
         return self.find_path(has_name, on_targets=True)
@@ -327,13 +328,21 @@ class BeliefState(DictCell):
                 return True 
         return False 
 
-    def belief_size(self):
-        """ Returns the size of context set:  *the number of referents (sets of cells) with 
-        arities consistent with the beliefstate's airity constraint*.
+    def size(self):
+        """ Returns the size of the context set.
+
+        There are two routines that can be used to do this.  The first is a fast
+        one that calculates the size of generating all combinations, but doesn't
+        take into account the relational constraints (such as those imposed by 
+        gradable adjectives).  The second is an exhaustive enumeration of the
+        members.
         
-        Initially, if there are $n$ targets (the result of `self.number_of_singleton_referents()`) 
-        then there are $2^{n}-1$ valid belief states.
+        If there are $n$ targets (the result of `self.number_of_singleton_referents()`) 
+        then there are generally $2^{n}-1$ valid belief states.
         """
+        if self['has_relational_constraint'] == True:
+            return self.number_of_singleton_referents()
+
         low, high = self['speaker_goals']['targetset_arity'].get_tuple()
         n = self.number_of_singleton_referents()
         if low <= 0 and high >= n:
@@ -360,34 +369,43 @@ class BeliefState(DictCell):
 
     def referents(self):
         """ Returns all members of the context set that are compatible with the current beliefstate.
-        Warning: the number of referents is quadradic in elements of singleton referents/cells.  
+        Warning: the number of referents can be quadradic in elements of singleton referents/cells.  
         Call `size()` method instead to compute size only, without ennumerating them.
         """
-        return list(self.iter_referents())
+        if self['has_relational_constraint'] == True:
+            # we get here when there was a branch
+            return [r for _, r in self.iter_singleton_referents()]
+        else:
+            # all groupings of singletons
+            return list(self.iter_referents())
     
     def iter_referents(self):
         """ Generates members of the context set that are compatible with the current beliefstate. """
-        low, high = self['speaker_goals']['targetset_arity'].get_tuple()
-        min_size = max(1, low)
-        max_size = min(high + 1, self.number_of_singleton_referents()+1)
-        iterable = list(self.iter_singleton_referents())
-        for elements in itertools.chain.from_iterable(itertools.combinations(iterable, r) \
-                for r in range(min_size, max_size)):
-            yield  elements
+        if self['has_relational_constraint'] == True:
+            # we get here when there was a branch
+            yield [r for _, r in self.iter_singleton_referents()]
+        else:
+            low, high = self['speaker_goals']['targetset_arity'].get_tuple()
+            min_size = max(1, low)
+            max_size = min(high + 1, self.number_of_singleton_referents()+1)
+            iterable = list(self.iter_singleton_referents())
+            for elements in itertools.chain.from_iterable(itertools.combinations(iterable, r) \
+                    for r in range(min_size, max_size)):
+                yield  elements
 
     def iter_referents_tuples(self):
         """ Generates tuples of indices representing members of the context set that are compatible with the current beliefstate. """
-        low, high = self['speaker_goals']['targetset_arity'].get_tuple()
-        min_size = max(1, low)
-        max_size = min(high + 1, self.number_of_singleton_referents()+1)
-        iterable = list([int(i) for i,_ in self.iter_singleton_referents()])
-        for elements in itertools.chain.from_iterable(itertools.combinations(iterable, r) \
-                for r in range(min_size, max_size)):
-            yield  elements
-
-    def size(self):
-        """ Returns the number of singleton referents """
-        return self.number_of_singleton_referents()
+        if self['has_relational_constraint'] == True:
+            # we get here when there was a branch
+            yield [i for i, _ in self.iter_singleton_referents()]
+        else:
+            low, high = self['speaker_goals']['targetset_arity'].get_tuple()
+            min_size = max(1, low)
+            max_size = min(high + 1, self.number_of_singleton_referents()+1)
+            iterable = list([int(i) for i,_ in self.iter_singleton_referents()])
+            for elements in itertools.chain.from_iterable(itertools.combinations(iterable, r) \
+                    for r in range(min_size, max_size)):
+                yield  elements
 
     def number_of_singleton_referents(self):
         """
