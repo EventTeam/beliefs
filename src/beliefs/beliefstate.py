@@ -306,7 +306,7 @@ class BeliefState(DictCell):
         Note: this only compares the items in the DictCell, not `pos`,
         `environment_variables` or `deferred_effects`.
         """
-        for (this, that) in itertools.zip_longest(self, other):
+        for (this, that) in itertools.izip_longest(self, other):
             if this[0] != that[0]:
                 # compare key names
                 return False

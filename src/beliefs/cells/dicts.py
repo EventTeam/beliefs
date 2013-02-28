@@ -142,7 +142,7 @@ class DictCell(Cell):
         """
         if not isinstance(other, DictCell):
             return False
-        for (this, that) in itertools.zip_longest(self, other):
+        for (this, that) in itertools.izip_longest(self, other):
             if this[0] != that[0]:
                 # compare key names
                 return False
