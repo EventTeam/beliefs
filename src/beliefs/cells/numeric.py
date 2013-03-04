@@ -26,6 +26,12 @@ class IntervalCell(Cell):
         """
         Takes a number (float, int) or a two-valued integer and returns the
         [low, high] in the standard interval form
+
+        :param value: 
+        :type value: int,float, complex
+        :returns: IntervalCell
+        :raises: Exception
+        
         """
         is_number = lambda x: isinstance(x, (int, float, complex)) #is x an instance of those things
         if isinstance(value, IntervalCell) or issubclass(value.__class__,IntervalCell): 
@@ -57,12 +63,19 @@ class IntervalCell(Cell):
     def size(self):
         """
         Number of possible values in the interval.  Boundaries are inclusive
+
+        :returns: int -- Length of interval
         """
         return (self.high - self.low) + 1 
 
     def is_contradictory(self, other):
         """
-        Whether other and self can coexist
+        Determines whether other and self can coexist. Two intervals are contradictory if they are disjoint, i.e. if the intersection of self and other is empty
+
+        :param other: IntervalCell or coercible value
+        :returns: bool
+        :raises: Exception
+        
         """
         other = IntervalCell.coerce(other)
         assert other.low <= other.high, "Low must be <= high"
@@ -73,14 +86,24 @@ class IntervalCell(Cell):
 
     def is_entailed_by(self, other):
         """
-        Other is more specific than self.   Other is bounded within self.
+        Returns true if other is more specific than self, i.e. other is bounded within self.
+
+        :param other: IntervalCell or coercible value
+        :returns: bool
+        :raises: Exception
+        
         """
         other = IntervalCell.coerce(other)
         return other.low >= self.low and other.high <= self.high
 
     def is_equal(self, other):
         """
-        If two intervals are the same
+        Returns true if two intervals are the same
+
+        :param other: IntervalCell or coercible value
+        :returns: bool
+        :raises: Exception
+        
         """
         other = IntervalCell.coerce(other)
         return other.low == self.low and other.high == self.high
@@ -88,6 +111,11 @@ class IntervalCell(Cell):
     def merge(self, other):
         """
         Merges the two values
+
+        :param other: IntervalCell or coercible value
+        :returns: bool
+        :raises: Exception
+        
         """
         other = IntervalCell.coerce(other)
         if self.is_equal(other):
@@ -199,6 +227,13 @@ class IntervalCell(Cell):
         Applies a mathematic function to the interval arithmetic template:
         generate all combinations of low/high values and then take the widest
         bounds (min/max) for the result.
+
+        :param other: IntervalCell or coercible value
+        :type other: IntervalCell
+        :param function: Mathematical function to be applied to the bounds of the interval. Must take two arguments and return a number
+        :type function: function
+        :returns: IntervalCell
+        :raises: Exception
         """
         other = IntervalCell.coerce(other)
         # check the arity of the function
@@ -228,14 +263,14 @@ class IntervalCell(Cell):
         """ Returns (low, high) tuple """
         return (self.low, self.high)
 
-    def to_dot(self):
+    '''def to_dot(self):
         """
         Returns a scalar or None
         """
         if self.low == self.high:
             return self.low
         else:
-            return None
+            return None'''
 
     __eq__ = is_equal
     __len__ = size
