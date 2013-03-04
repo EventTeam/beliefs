@@ -1,7 +1,7 @@
 Sets
 *************
 
-.. automodule:: sets
+.. automodule:: setCells
    :members:
    :show-inheritance:
    

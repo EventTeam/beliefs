@@ -67,7 +67,6 @@
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
  | <a href="#P"><strong>P</strong></a>
- | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
  | <a href="#U"><strong>U</strong></a>
@@ -77,10 +76,6 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
-      
-  <dt><a href="sets.html#sets.Set.add">add() (sets.Set method)</a>
-  </dt>
-
       
   <dt><a href="spatial.html#spatial.AddressCell">AddressCell (class in spatial)</a>
   </dt>
@@ -97,10 +92,6 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
-      
-  <dt><a href="sets.html#sets.BaseSet">BaseSet (class in sets)</a>
-  </dt>
-
       
   <dt><a href="bools.html#bools.BoolCell">BoolCell (class in bools)</a>
   </dt>
@@ -130,10 +121,6 @@
   </dt>
 
       
-  <dt><a href="sets.html#sets.Set.clear">clear() (sets.Set method)</a>
-  </dt>
-
-      
   <dt><a href="bools.html#bools.BoolCell.coerce">coerce() (bools.BoolCell static method)</a>
   </dt>
 
@@ -155,6 +142,10 @@
   </dt>
 
         
+  <dt><a href="setCells.html#setCells.SetIntersectionCell.coerce">(setCells.SetIntersectionCell method)</a>
+  </dt>
+
+        
   <dt><a href="strings.html#strings.StringCell.coerce">(strings.StringCell static method)</a>
   </dt>
 
@@ -173,10 +164,12 @@
   <dt><a href="dicts.html#dicts.DictCell.contains">contains() (dicts.DictCell method)</a>
   </dt>
 
-      
-  <dt><a href="sets.html#sets.BaseSet.copy">copy() (sets.BaseSet method)</a>
+      <dd><dl>
+        
+  <dt><a href="setCells.html#setCells.SetIntersectionCell.contains">(setCells.SetIntersectionCell method)</a>
   </dt>
 
+      </dl></dd>
   </dl></td>
 </tr></table>
 
@@ -187,22 +180,10 @@
   <dt><a href="dicts.html#dicts.DictCell">DictCell (class in dicts)</a>
   </dt>
 
-      
-  <dt><a href="dicts.html#module-dicts">dicts (module)</a>
-  </dt>
-
-      
-  <dt><a href="sets.html#sets.BaseSet.difference">difference() (sets.BaseSet method)</a>
-  </dt>
-
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="sets.html#sets.Set.difference_update">difference_update() (sets.Set method)</a>
-  </dt>
-
-      
-  <dt><a href="sets.html#sets.Set.discard">discard() (sets.Set method)</a>
+  <dt><a href="dicts.html#module-dicts">dicts (module)</a>
   </dt>
 
   </dl></td>
@@ -280,6 +261,14 @@
   <dt><a href="posets.html#posets.PartialOrderedCell.get_values">(posets.PartialOrderedCell method)</a>
   </dt>
 
+        
+  <dt><a href="setCells.html#setCells.SetIntersectionCell.get_values">(setCells.SetIntersectionCell method)</a>
+  </dt>
+
+        
+  <dt><a href="setCells.html#setCells.SetUnionCell.get_values">(setCells.SetUnionCell method)</a>
+  </dt>
+
       </dl></dd>
   </dl></td>
 </tr></table>
@@ -307,18 +296,6 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
-      
-  <dt><a href="sets.html#sets.ImmutableSet">ImmutableSet (class in sets)</a>
-  </dt>
-
-      
-  <dt><a href="sets.html#sets.BaseSet.intersection">intersection() (sets.BaseSet method)</a>
-  </dt>
-
-      
-  <dt><a href="sets.html#sets.Set.intersection_update">intersection_update() (sets.Set method)</a>
-  </dt>
-
       
   <dt><a href="numeric.html#numeric.IntervalCell">IntervalCell (class in numeric)</a>
   </dt>
@@ -349,16 +326,20 @@
   </dt>
 
         
+  <dt><a href="setCells.html#setCells.SetIntersectionCell.is_contradictory">(setCells.SetIntersectionCell method)</a>
+  </dt>
+
+        
   <dt><a href="strings.html#strings.StringCell.is_contradictory">(strings.StringCell method)</a>
   </dt>
 
       </dl></dd>
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="posets.html#posets.PartialOrderedCell.is_domain_equal">is_domain_equal() (posets.PartialOrderedCell method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="bools.html#bools.BoolCell.is_entailed_by">is_entailed_by() (bools.BoolCell method)</a>
   </dt>
@@ -390,6 +371,10 @@
 
         
   <dt><a href="posets.html#posets.PartialOrderedCell.is_entailed_by">(posets.PartialOrderedCell method)</a>
+  </dt>
+
+        
+  <dt><a href="setCells.html#setCells.SetIntersectionCell.is_entailed_by">(setCells.SetIntersectionCell method)</a>
   </dt>
 
         
@@ -427,18 +412,14 @@
   </dt>
 
         
+  <dt><a href="setCells.html#setCells.SetIntersectionCell.is_equal">(setCells.SetIntersectionCell method)</a>
+  </dt>
+
+        
   <dt><a href="strings.html#strings.StringCell.is_equal">(strings.StringCell method)</a>
   </dt>
 
       </dl></dd>
-      
-  <dt><a href="sets.html#sets.BaseSet.issubset">issubset() (sets.BaseSet method)</a>
-  </dt>
-
-      
-  <dt><a href="sets.html#sets.BaseSet.issuperset">issuperset() (sets.BaseSet method)</a>
-  </dt>
-
       
   <dt><a href="dicts.html#dicts.DictCell.items">items() (dicts.DictCell method)</a>
   </dt>
@@ -533,6 +514,14 @@
   </dt>
 
         
+  <dt><a href="setCells.html#setCells.SetIntersectionCell.merge">(setCells.SetIntersectionCell method)</a>
+  </dt>
+
+        
+  <dt><a href="setCells.html#setCells.SetUnionCell.merge">(setCells.SetUnionCell method)</a>
+  </dt>
+
+        
   <dt><a href="strings.html#strings.StringCell.merge">(strings.StringCell method)</a>
   </dt>
 
@@ -564,27 +553,13 @@
   </dt>
 
       
-  <dt><a href="sets.html#sets.Set.pop">pop() (sets.Set method)</a>
-  </dt>
-
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
-      
   <dt><a href="posets.html#module-posets">posets (module)</a>
   </dt>
 
-      
-  <dt><a href="lists.html#lists.PrefixCell">PrefixCell (class in lists)</a>
-  </dt>
-
   </dl></td>
-</tr></table>
-
-<h2 id="R">R</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="sets.html#sets.Set.remove">remove() (sets.Set method)</a>
+  <dt><a href="lists.html#lists.PrefixCell">PrefixCell (class in lists)</a>
   </dt>
 
   </dl></td>
@@ -594,7 +569,7 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="sets.html#sets.Set">Set (class in sets)</a>
+  <dt><a href="setCells.html#setCells.SetIntersectionCell.same_domain">same_domain() (setCells.SetIntersectionCell method)</a>
   </dt>
 
       
@@ -606,9 +581,19 @@
   </dt>
 
       
-  <dt><a href="sets.html#module-sets">sets (module)</a>
+  <dt><a href="setCells.html#module-setCells">setCells (module)</a>
   </dt>
 
+      
+  <dt><a href="setCells.html#setCells.SetIntersectionCell">SetIntersectionCell (class in setCells)</a>
+  </dt>
+
+      
+  <dt><a href="setCells.html#setCells.SetUnionCell">SetUnionCell (class in setCells)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="lazy.html#lazy.LazyCell.size">size() (lazy.LazyCell method)</a>
   </dt>
@@ -631,8 +616,6 @@
   <dt><a href="spatial.html#module-spatial">spatial (module)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="cell.html#cell.Cell.stem">stem() (cell.Cell method)</a>
   </dt>
@@ -646,6 +629,10 @@
   <dt><a href="numeric.html#numeric.IntervalCell.stem">(numeric.IntervalCell method)</a>
   </dt>
 
+        
+  <dt><a href="setCells.html#setCells.SetIntersectionCell.stem">(setCells.SetIntersectionCell method)</a>
+  </dt>
+
       </dl></dd>
       
   <dt><a href="strings.html#strings.StringCell">StringCell (class in strings)</a>
@@ -653,14 +640,6 @@
 
       
   <dt><a href="strings.html#module-strings">strings (module)</a>
-  </dt>
-
-      
-  <dt><a href="sets.html#sets.BaseSet.symmetric_difference">symmetric_difference() (sets.BaseSet method)</a>
-  </dt>
-
-      
-  <dt><a href="sets.html#sets.Set.symmetric_difference_update">symmetric_difference_update() (sets.Set method)</a>
   </dt>
 
   </dl></td>
@@ -679,11 +658,19 @@
 
       <dd><dl>
         
+  <dt><a href="lists.html#lists.LinearOrderedCell.to_dot">(lists.LinearOrderedCell method)</a>
+  </dt>
+
+        
   <dt><a href="numeric.html#numeric.IntervalCell.to_dot">(numeric.IntervalCell method)</a>
   </dt>
 
         
   <dt><a href="posets.html#posets.PartialOrderedCell.to_dot">(posets.PartialOrderedCell method)</a>
+  </dt>
+
+        
+  <dt><a href="setCells.html#setCells.SetIntersectionCell.to_dot">(setCells.SetIntersectionCell method)</a>
   </dt>
 
         
@@ -712,25 +699,11 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="sets.html#sets.BaseSet.union">union() (sets.BaseSet method)</a>
-  </dt>
-
-      
-  <dt><a href="sets.html#sets.Set.union_update">union_update() (sets.Set method)</a>
+  <dt><a href="lazy.html#lazy.LazyCell.update">update() (lazy.LazyCell method)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
-      
-  <dt><a href="lazy.html#lazy.LazyCell.update">update() (lazy.LazyCell method)</a>
-  </dt>
-
-      <dd><dl>
-        
-  <dt><a href="sets.html#sets.Set.update">(sets.Set method)</a>
-  </dt>
-
-      </dl></dd>
       
   <dt><a href="lazy.html#lazy.LazyCell.update_intension">update_intension() (lazy.LazyCell method)</a>
   </dt>

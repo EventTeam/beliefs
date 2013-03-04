@@ -45,6 +45,10 @@ class LinearOrderedCell(Cell):
         """
         Takes one or two values in the domain and returns a LinearOrderedCell
         with the same domain
+
+        :param value: A single value in the domain, or a 2-element list or tuple of values in the domain
+        :returns: LinearOrderedCell
+        :raises: Exception
         """
         if isinstance(value, LinearOrderedCell) and (self.domain == value.domain or \
             list_diff(self.domain, value.domain) == []):
@@ -64,7 +68,13 @@ class LinearOrderedCell(Cell):
             raise Exception("Cannot coerce %s into LinearOrderedCell" % (str(value)))
 
     def to_i(self, val):
-        """ Maps value to position in domain """
+        """
+        Maps value to position in domain
+
+        :param val: value in the domain
+        :returns: int -- index of value in the domain. Returns -1 if val is None
+
+        """
         if val is None:
             return -1
         return self.domain.index(val)
@@ -72,6 +82,11 @@ class LinearOrderedCell(Cell):
     def is_contradictory(self, other):
         """
         Whether other and self can coexist
+
+        :param other: A LinearOrderedCell or coercible value
+        :returns: bool
+        :raises: Exception
+        
         """
         other = self.coerce(other)
         to_i = self.to_i
@@ -83,7 +98,12 @@ class LinearOrderedCell(Cell):
 
     def is_entailed_by(self, other):
         """
-        Other is more specific than self.   Other is bounded within self.
+        Returns true if Other is more specific than self or if Other is bounded within self.
+
+        :param other: A LinearOrderedCell or coercible value
+        :returns: bool
+        :raises: Exception
+        
         """
         other = self.coerce(other)
         to_i = self.to_i
@@ -92,7 +112,12 @@ class LinearOrderedCell(Cell):
 
     def is_equal(self, other):
         """
-        If two intervals are the same
+        Determines whether two intervals are the same, i.e. every element of each domain is also an element of the other domain, and the low and high of each domain correspond to the low and high of the other
+
+        :param other: A LinearOrderedCell or coercible value
+        :returns: bool
+        :raises: Exception
+        
         """
         other = self.coerce(other)
         return list_diff(self.domain, other.domain) == [] \
@@ -100,6 +125,12 @@ class LinearOrderedCell(Cell):
                 and self.high == other.high
 
     def to_dot(self):
+        """
+        A string representation of the Cell
+
+        :returns: If the domain consits of a single value, that value is returned. Otherwise, the empty string is returned.
+
+        """
         if self.low == self.high:
             return self.low
         else:
@@ -108,6 +139,11 @@ class LinearOrderedCell(Cell):
     def merge(self, other):
         """
         Merges the two values
+
+        :param other: A LinearOrderedCell or coercible value
+        :returns: LinearOrderedCell
+        :raises: Contradiction
+        
         """
         other = self.coerce(other)
         if list_diff(self.domain, other.domain) != []:
@@ -159,7 +195,11 @@ class ListCell(Cell):
     @staticmethod
     def coerce(value):
         """
-        Turns a value into a list
+        Turns a value into a ListCell
+
+        :param value: The value to be coerced
+        :returns: ListCell
+        
         """
         if isinstance(value, ListCell):
             return value
@@ -171,6 +211,8 @@ class ListCell(Cell):
     def size(self):
         """
         Returns the number of elements in the list
+
+        :returns: int -- number of elements in the list
         """
         if self.value is None:
             return 0
@@ -204,6 +246,10 @@ class ListCell(Cell):
         """
         Returns True iff the values in this list can be entailed by the other
         list (ie, this list is a prefix of the other)
+
+        :param other: ListCell or coercible value
+        :returns: bool
+        
         """
         other = ListCell.coerce(other)
         if other.size() < self.size():
@@ -246,7 +292,11 @@ class ListCell(Cell):
         
     def merge(self, other):
         """
-        Merges two Lists 
+        Merges two Lists
+
+        :param other: A ListCell or coercible value
+        :returns: ListCell
+        
         """
         other = ListCell.coerce(other)
         if self.is_equal(other):
@@ -304,6 +354,10 @@ class PrefixCell(ListCell):
     def merge(self, other):
         """
         Merges two prefixes
+
+        :param other: A ListCell or coercible value
+        :returns: PrefixCell
+        
         """
         other = PrefixCell.coerce(other)
         if self.is_equal(other):

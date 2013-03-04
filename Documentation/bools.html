@@ -67,42 +67,72 @@
 <dt id="bools.BoolCell.coerce">
 <em class="property">static </em><tt class="descname">coerce</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.coerce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.coerce" title="Permalink to this definition">¶</a></dt>
 <dd><p>Coerces a Bool, None, or int into Bit/Propositional form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>bool, int</em>) &#8211; The value to coerce</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">BoolCell</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">CellConstructionFailure, CoercionFailure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bools.BoolCell.is_entailed_by">
+<tt class="descname">is_entailed_by</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.is_entailed_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.is_entailed_by" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the other is as or more specific than self</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>BoolCell, bool, int</em>) &#8211; The BoolCell or value that may entail self</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">CellConstructionFailure, CoercionFailure</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="bools.BoolCell.entails">
 <tt class="descname">entails</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.entails"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.entails" title="Permalink to this definition">¶</a></dt>
-<dd><p>Inverse is_entailed_by</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bools.BoolCell.from_json">
-<tt class="descname">from_json</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.from_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.from_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initializes from JSON representation</p>
+<dd><p>Inverse of <tt class="docutils literal"><span class="pre">is_entailed_by</span></tt></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>BoolCell, bool, int</em>) &#8211; The BoolCell or value to check if it is entailed by self</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">CellConstructionFailure, CoercionFailure</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="bools.BoolCell.is_contradictory">
 <tt class="descname">is_contradictory</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.is_contradictory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.is_contradictory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determines if two cells are contradictory. Returns a boolean.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bools.BoolCell.is_entailed_by">
-<tt class="descname">is_entailed_by</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.is_entailed_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.is_entailed_by" title="Permalink to this definition">¶</a></dt>
-<dd><p>If the other is as or more specific than self</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bools.BoolCell.is_equal">
-<tt class="descname">is_equal</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.is_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.is_equal" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests whether two Cells are equal. Returns a boolean.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bools.BoolCell.merge">
-<tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.merge" title="Permalink to this definition">¶</a></dt>
-<dd><p>Merges two BoolCells</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>BoolCell, bool, int</em>) &#8211; The BoolCell or value that may contradict self.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">CellConstructionFailure, CoercionFailure</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -115,6 +145,48 @@
 <dt id="bools.BoolCell.to_json">
 <tt class="descname">to_json</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.to_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.to_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns JSON representation of BoolCell</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bools.BoolCell.from_json">
+<tt class="descname">from_json</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.from_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes from JSON representation</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bools.BoolCell.is_equal">
+<tt class="descname">is_equal</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.is_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.is_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests whether two Cells are equal. Returns a boolean.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>BoolCell, bool, int</em>) &#8211; BoolCell or value to be tested</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">CoercionFailure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bools.BoolCell.merge">
+<tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merges two BoolCells</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>BoolCell, bool, int</em>) &#8211; BoolCell or coerce-able value to be merged</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">BoolCell</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">CellConstructionFailure, CoercionFailure, Contradiction</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>

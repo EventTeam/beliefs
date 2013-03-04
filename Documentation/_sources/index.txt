@@ -19,7 +19,7 @@ Contents:
    lists
    numeric
    posets
-   sets
+   setCells
    spatial
    strings
    

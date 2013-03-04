@@ -284,3 +284,5 @@ epub_copyright = u'2013, Nicolas Bravo'
 
 # Allow duplicate toc entries.
 #epub_tocdup = True
+
+autodoc_member_order = 'bysource'
