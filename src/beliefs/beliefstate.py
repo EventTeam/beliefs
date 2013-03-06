@@ -32,14 +32,19 @@ class BeliefState(DictCell):
         self.__dict__['contextset'] = contextset
         self.__dict__['environment_variables'] = {}
         self.__dict__['deferred_effects'] = []
+        self.__dict__['multistate'] = True 
 
         default_structure = {'target': DictCell(),
-                'has_relational_constraint': BoolCell(),
                 'speaker_goals': {'targetset_arity': IntervalCell(),
                                   'is_in_commonground': BoolCell()}}
 
         DictCell.__init__(self, default_structure)
-    
+   
+    def set_multistate(self, boolean):
+        """ Sets the multistate parameter indicating whether or not the state
+        represents a single belief, or numerous beliefstates """
+        self.__dict__['multistate'] = boolean
+
     def set_pos(self, pos):
         """ Sets the beliefstates's part of speech, `pos`, and then executes
         any deferred effects that are keyed by that pos tag.
@@ -340,11 +345,14 @@ class BeliefState(DictCell):
         If there are $n$ targets (the result of `self.number_of_singleton_referents()`) 
         then there are generally $2^{n}-1$ valid belief states.
         """
-        if self['has_relational_constraint'] == True:
-            return self.number_of_singleton_referents()
+        n = self.number_of_singleton_referents()
+
+        if not self.__dict__['multistate']:
+            if self['speaker_goals']['targetset_arity'].is_contradictory(n):
+                raise Contradiction("Invalid targetset airity")
+            return n
 
         low, high = self['speaker_goals']['targetset_arity'].get_tuple()
-        n = self.number_of_singleton_referents()
         if low <= 0 and high >= n:
             # no constraints on size
             return (2**n)-1
@@ -372,7 +380,7 @@ class BeliefState(DictCell):
         Warning: the number of referents can be quadradic in elements of singleton referents/cells.  
         Call `size()` method instead to compute size only, without ennumerating them.
         """
-        if self['has_relational_constraint'] == True:
+        if not self.__dict__['multistate']:
             # we get here when there was a branch
             return [r for _, r in self.iter_singleton_referents()]
         else:
@@ -381,7 +389,7 @@ class BeliefState(DictCell):
     
     def iter_referents(self):
         """ Generates members of the context set that are compatible with the current beliefstate. """
-        if self['has_relational_constraint'] == True:
+        if not self.__dict__['multistate']:
             # we get here when there was a branch
             yield [r for _, r in self.iter_singleton_referents()]
         else:
@@ -395,7 +403,7 @@ class BeliefState(DictCell):
 
     def iter_referents_tuples(self):
         """ Generates tuples of indices representing members of the context set that are compatible with the current beliefstate. """
-        if self['has_relational_constraint'] == True:
+        if not self.__dict__['multistate']:
             # we get here when there was a branch
             yield [i for i, _ in self.iter_singleton_referents()]
         else:
@@ -418,8 +426,6 @@ class BeliefState(DictCell):
             ct = 0
             for i in self.iter_singleton_referents():
                 ct += 1
-            if self['speaker_goals']['targetset_arity'].is_contradictory(ct):
-                raise Contradiction("Invalid targetset airity")
             return ct
         else:
             raise Exception("self.contextset must be defined")
@@ -444,7 +450,7 @@ class BeliefState(DictCell):
         during the interpretation or generation.
         """
         copied = BeliefState(self.__dict__['contextset']) 
-        for key in ['environment_variables', 'deferred_effects', 'pos', 'p']:
+        for key in ['environment_variables', 'deferred_effects', 'multistate', 'pos', 'p']:
             copied.__dict__[key] = copy.deepcopy(self.__dict__[key])
         return copied
 
@@ -458,6 +464,9 @@ class BeliefState(DictCell):
 
         # hash part of speech
         hashval += hash(self.__dict__['pos'])
+
+        # is multistate
+        hashval += hash(self.__dict__['multistate'])
 
         # hash environment variables
         for ekey, kval in self.__dict__['environment_variables'].items():
