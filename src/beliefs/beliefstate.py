@@ -36,7 +36,8 @@ class BeliefState(DictCell):
 
         default_structure = {'target': DictCell(),
                 'speaker_goals': {'targetset_arity': IntervalCell(),
-                                  'is_in_commonground': BoolCell()}}
+                                  'is_in_commonground': BoolCell()},
+                'speaker_model': {'is_syntax_stacked': BoolCell()}}
 
         DictCell.__init__(self, default_structure)
    
@@ -64,7 +65,12 @@ class BeliefState(DictCell):
         if not isinstance(pos, (unicode, str)):
             raise Exception("Invalid POS tag. Must be string not %d" % (type(pos)))
 
-        self.__dict__['deferred_effects'].insert(0,(pos, effect,))
+        if self['speaker_model']['is_syntax_stacked'] == True:
+            self.__dict__['deferred_effects'].insert(0,(pos, effect,))
+        elif self['speaker_model']['is_syntax_stacked'] == False:
+            self.__dict__['deferred_effects'].append((pos, effect,))
+        else:
+            raise Contradiction("Speaker Model undefined")
 
     def execute_deferred_effects(self, pos):
         """ Evaluates deferred effects that are triggered by the prefix of the
@@ -405,7 +411,7 @@ class BeliefState(DictCell):
         """ Generates tuples of indices representing members of the context set that are compatible with the current beliefstate. """
         if not self.__dict__['multistate']:
             # we get here when there was a branch
-            yield [i for i, _ in self.iter_singleton_referents()]
+            yield tuple([int(i) for i, _ in self.iter_singleton_referents()])
         else:
             low, high = self['speaker_goals']['targetset_arity'].get_tuple()
             min_size = max(1, low)
