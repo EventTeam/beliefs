@@ -37,7 +37,7 @@ class BeliefState(DictCell):
         default_structure = {'target': DictCell(),
                 'speaker_goals': {'targetset_arity': IntervalCell(),
                                   'is_in_commonground': BoolCell()},
-                'speaker_model': {'is_syntax_stacked': BoolCell()}}
+                'speaker_model': {'is_syntax_stacked': BoolCell(F)}}
 
         DictCell.__init__(self, default_structure)
    
@@ -45,6 +45,11 @@ class BeliefState(DictCell):
         """ Sets the multistate parameter indicating whether or not the state
         represents a single belief, or numerous beliefstates """
         self.__dict__['multistate'] = boolean
+
+    def get_multistate(self):
+        """ Returns the multistate parameter indicating whether or not the state
+        represents a single belief, or numerous beliefstates """
+        return self.__dict__['multistate']
 
     def set_pos(self, pos):
         """ Sets the beliefstates's part of speech, `pos`, and then executes
@@ -64,7 +69,6 @@ class BeliefState(DictCell):
         state reaches the 'pos'."""
         if not isinstance(pos, (unicode, str)):
             raise Exception("Invalid POS tag. Must be string not %d" % (type(pos)))
-
         if self['speaker_model']['is_syntax_stacked'] == True:
             self.__dict__['deferred_effects'].insert(0,(pos, effect,))
         elif self['speaker_model']['is_syntax_stacked'] == False:
@@ -80,7 +84,7 @@ class BeliefState(DictCell):
         for entry in self.__dict__['deferred_effects']:
             effect_pos, effect = entry
             if pos.startswith(effect_pos):
-                logging.info("Executing deferred effect" + str(effect))
+                logging.error("Executing deferred effect" + str(effect))
                 costs += effect(self)
                 self.__dict__['deferred_effects'].remove(entry)
         return costs
@@ -402,13 +406,16 @@ class BeliefState(DictCell):
             low, high = self['speaker_goals']['targetset_arity'].get_tuple()
             min_size = max(1, low)
             max_size = min(high + 1, self.number_of_singleton_referents()+1)
+            if low == 2:
+                min_size = max_size-1 # weird hack
             iterable = list(self.iter_singleton_referents())
             for elements in itertools.chain.from_iterable(itertools.combinations(iterable, r) \
                     for r in range(min_size, max_size)):
                 yield  elements
 
     def iter_referents_tuples(self):
-        """ Generates tuples of indices representing members of the context set that are compatible with the current beliefstate. """
+        """ Generates tuples of indices representing members of the context 
+        set that are compatible with the current beliefstate. """
         if not self.__dict__['multistate']:
             # we get here when there was a branch
             yield tuple([int(i) for i, _ in self.iter_singleton_referents()])
@@ -416,6 +423,8 @@ class BeliefState(DictCell):
             low, high = self['speaker_goals']['targetset_arity'].get_tuple()
             min_size = max(1, low)
             max_size = min(high + 1, self.number_of_singleton_referents()+1)
+            if low == 2:
+                min_size = max_size-1 # weird hack
             iterable = list([int(i) for i,_ in self.iter_singleton_referents()])
             for elements in itertools.chain.from_iterable(itertools.combinations(iterable, r) \
                     for r in range(min_size, max_size)):
