@@ -46,8 +46,70 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="bools">
-<h1>Bools<a class="headerlink" href="#bools" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-bools">
+<span id="bools"></span><h1>Bools<a class="headerlink" href="#module-bools" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="bools.BoolCell">
+<em class="property">class </em><tt class="descname">BoolCell</tt><big>(</big><em>value=None</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">beliefs.cells.cell.Cell</span></tt></p>
+<p>3-valued logic (T, F, U)
+(U)ndefined means (T v F) ^ -(T ^ F)</p>
+<dl class="staticmethod">
+<dt id="bools.BoolCell.coerce">
+<em class="property">static </em><tt class="descname">coerce</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.coerce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.coerce" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coerces a Bool, None, or int into Bit/Propositional form</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bools.BoolCell.entails">
+<tt class="descname">entails</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.entails"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.entails" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inverse is_entailed_by</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bools.BoolCell.from_json">
+<tt class="descname">from_json</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.from_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes from JSON representation</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bools.BoolCell.is_contradictory">
+<tt class="descname">is_contradictory</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.is_contradictory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.is_contradictory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines if two cells are contradictory. Returns a boolean.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bools.BoolCell.is_entailed_by">
+<tt class="descname">is_entailed_by</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.is_entailed_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.is_entailed_by" title="Permalink to this definition">¶</a></dt>
+<dd><p>If the other is as or more specific than self</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bools.BoolCell.is_equal">
+<tt class="descname">is_equal</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.is_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.is_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests whether two Cells are equal. Returns a boolean.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bools.BoolCell.merge">
+<tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merges two BoolCells</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bools.BoolCell.to_dot">
+<tt class="descname">to_dot</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.to_dot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.to_dot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns value as a string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bools.BoolCell.to_json">
+<tt class="descname">to_json</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.to_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns JSON representation of BoolCell</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -91,7 +153,7 @@
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013, Nicolas Bravo.
+        &copy; Copyright 2013, Dustin Smith, Nicolas Bravo.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

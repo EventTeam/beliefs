@@ -10,7 +10,7 @@ Beliefs
 .. toctree::
    :maxdepth: 2
 
-   beliefstate
+   beliefs.beliefstate
 
 Here are *cell* data containers, :ref:`cell` subclasses that are designed to accumulate and maintain the consistency of *partial information*:
 
@@ -22,9 +22,7 @@ Here are *cell* data containers, :ref:`cell` subclasses that are designed to acc
 - :py:class:`posets.PartialOrderedCell` maintains a taxonomy of information
 
 
-
-
-
+This library is being developed at <https://github.com/EventTeam/beliefs>.
 
 
 

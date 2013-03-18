@@ -1,7 +1,7 @@
-Beliefstate
+beliefstate
 *************
 
-.. automodule:: beliefstate
+.. automodule:: beliefstate 
    :members:
    :show-inheritance:
    
