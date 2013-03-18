@@ -1,0 +1,6 @@
+Bools
+*************
+
+.. automodule:: bools
+   :members:
+   

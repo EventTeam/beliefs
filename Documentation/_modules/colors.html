@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,9 +7,9 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>colors &mdash; AIGRE 1.0 documentation</title>
+    <title>colors &mdash; beliefs 1.0 documentation</title>
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -26,7 +25,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="AIGRE 1.0 documentation" href="../index.html" />
+    <link rel="top" title="beliefs 1.0 documentation" href="../index.html" />
     <link rel="up" title="Module code" href="index.html" /> 
   </head>
   <body>
@@ -39,7 +38,7 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../index.html">AIGRE 1.0 documentation</a> &raquo;</li>
+        <li><a href="../index.html">beliefs 1.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -66,7 +65,10 @@
 
 <div class="viewcode-block" id="RGBColorCell"><a class="viewcode-back" href="../colors.html#colors.RGBColorCell">[docs]</a><span class="k">class</span> <span class="nc">RGBColorCell</span><span class="p">(</span><span class="n">Cell</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Maybe i just need some comments here?</span>
+<span class="sd">    A Cell representation of an RGB Color.</span>
+
+<span class="sd">    :param r,b,g: Integers in the range 0 to 255 inclusive</span>
+<span class="sd">    :type r,b,g: int</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -81,7 +83,22 @@
     <span class="nd">@classmethod</span>
 <div class="viewcode-block" id="RGBColorCell.from_name"><a class="viewcode-back" href="../colors.html#colors.RGBColorCell.from_name">[docs]</a>    <span class="k">def</span> <span class="nf">from_name</span><span class="p">(</span><span class="n">clz</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Instantiates the object from a known name</span>
+<span class="sd">        Instantiates the object from a known color name. The list of known names, along with their RGB values::</span>
+
+<span class="sd">                red: [255,0,0]</span>
+<span class="sd">                cyan: [0,255,255]</span>
+<span class="sd">                blue: [0, 0, 255]</span>
+<span class="sd">                medium_blue: [0, 0, 205]</span>
+<span class="sd">                black: [0,0,0]</span>
+<span class="sd">                white: [255,255,255]</span>
+<span class="sd">                green: [0,128,0]</span>
+<span class="sd">                light_blue: [30, 144,255]</span>
+<span class="sd">                teal: [0, 128, 128]</span>
+<span class="sd">                yellow: [255, 255,0]</span>
+
+<span class="sd">        :param name: Color to use for the RGBColorCell</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        :returns: RGBColorCell</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="s">&quot;green&quot;</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;teal&quot;</span>
@@ -91,7 +108,22 @@
 
 </div>
 <div class="viewcode-block" id="RGBColorCell.to_html"><a class="viewcode-back" href="../colors.html#colors.RGBColorCell.to_html">[docs]</a>    <span class="k">def</span> <span class="nf">to_html</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Converts to Hex &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts to Hex</span>
+
+<span class="sd">        :returns: str</span>
+
+<span class="sd">        &gt;&gt;&gt; b = RGBColorCell.from_name(&#39;black&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; w = RGBColorCell.from_name(&#39;white&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; t = RGBColorCell.from_name(&#39;teal&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; b.to_html()</span>
+<span class="sd">        &#39;#000000&#39;</span>
+<span class="sd">        &gt;&gt;&gt; w.to_html()</span>
+<span class="sd">        &#39;#ffffff&#39;</span>
+<span class="sd">        &gt;&gt;&gt; t.to_html()</span>
+<span class="sd">        &#39;#008080&#39;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">out</span> <span class="o">=</span> <span class="s">&quot;#&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">out</span> <span class="o">+=</span> <span class="s">&quot;00&quot;</span>
@@ -117,14 +149,35 @@
     <span class="nd">@classmethod</span>
 <div class="viewcode-block" id="RGBColorCell.coerce"><a class="viewcode-back" href="../colors.html#colors.RGBColorCell.coerce">[docs]</a>    <span class="k">def</span> <span class="nf">coerce</span><span class="p">(</span><span class="n">clz</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Raises an Exception if other is not an instance of RGBColorCell.</span>
+
+<span class="sd">        :param other: An instance of RGBColorCell</span>
+<span class="sd">        :type other: RGBColorCell</span>
+<span class="sd">        :returns: RGBColorCell</span>
+<span class="sd">        :raises: Exception</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">RGBColorCell</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Needs to be another color cell&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">other</span>
 </div>
 <div class="viewcode-block" id="RGBColorCell.membership_score"><a class="viewcode-back" href="../colors.html#colors.RGBColorCell.membership_score">[docs]</a>    <span class="k">def</span> <span class="nf">membership_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Fuzzy set gradable membership score</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fuzzy set gradable membership score.</span>
+<span class="sd">        </span>
 <span class="sd">        See http://code.google.com/p/python-colormath/wiki/ColorDifferences</span>
+
+<span class="sd">        :param element: A Color Cell</span>
+<span class="sd">        :type element: RGBColorCell</span>
+<span class="sd">        :returns: float - In the range of 0 to 1</span>
+<span class="sd">        :raises: Exception</span>
+
+<span class="sd">        &gt;&gt;&gt; colorCell1 = RGBColorCell(0,150,255)</span>
+<span class="sd">        &gt;&gt;&gt; colorCell2 = RGBColorCell(100,30,75)</span>
+<span class="sd">        &gt;&gt;&gt; colorCell1.membership_score(colorCell2)</span>
+<span class="sd">        0.7719099090792914</span>
+<span class="sd">        &gt;&gt;&gt; colorCell1.membership_score(colorCell1)</span>
+<span class="sd">        1.0</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">other</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
@@ -135,6 +188,11 @@
 <div class="viewcode-block" id="RGBColorCell.merge"><a class="viewcode-back" href="../colors.html#colors.RGBColorCell.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Merges the values</span>
+
+<span class="sd">        :param other: an RGBColorCell to merge with</span>
+<span class="sd">        :type other: RGBColorCell</span>
+<span class="sd">        :returns: RGBColorCell</span>
+<span class="sd">        :raises: Exception, Contradiction</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">print</span> <span class="s">&quot;MERGING&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span>
         <span class="n">other</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
@@ -149,7 +207,25 @@
 </div>
 <div class="viewcode-block" id="RGBColorCell.is_contradictory"><a class="viewcode-back" href="../colors.html#colors.RGBColorCell.is_contradictory">[docs]</a>    <span class="k">def</span> <span class="nf">is_contradictory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Two Color Cells are contradictory if their ``membership_score`` is not equal to 1.0</span>
+
+<span class="sd">        :param other: A Color Cell to compare</span>
+<span class="sd">        :type other: RGBColorCell</span>
+<span class="sd">        :returns: bool</span>
+<span class="sd">        :raises: Exception</span>
+
+<span class="sd">        &gt;&gt;&gt; b = RGBColorCell.from_name(&#39;black&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; w = RGBColorCell.from_name(&#39;white&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; b.membership_score(w)</span>
+<span class="sd">        0.0215265678169</span>
+<span class="sd">        &gt;&gt;&gt; b.is_contradictory(w)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; b.membership_score(b)</span>
+<span class="sd">        1.0</span>
+<span class="sd">        &gt;&gt;&gt; b.is_contradictory(b)</span>
+<span class="sd">        False</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">membership_score</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">1.0</span>
 </div>
     <span class="k">def</span> <span class="nf">is_entailed_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
@@ -158,7 +234,22 @@
             
 <div class="viewcode-block" id="RGBColorCell.is_equal"><a class="viewcode-back" href="../colors.html#colors.RGBColorCell.is_equal">[docs]</a>    <span class="k">def</span> <span class="nf">is_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns True if the distance is 0</span>
+<span class="sd">        Returns True if the distance, i.e. ``membership_score``, is 0</span>
+
+<span class="sd">        :param other: RGBColorCell</span>
+<span class="sd">        :returns: bool</span>
+<span class="sd">        :raises: Exception if *other* is not an instance of RGBColorCell</span>
+
+<span class="sd">        &gt;&gt;&gt; b = RGBColorCell.from_name(&#39;black&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; w = RGBColorCell.from_name(&#39;white&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; b.membership_score(b)</span>
+<span class="sd">        1.0</span>
+<span class="sd">        &gt;&gt;&gt; b.is_equal(b)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; b.membership_score(w)</span>
+<span class="sd">        0.0215265678169</span>
+<span class="sd">        &gt;&gt;&gt; b.is_equal(w)</span>
+<span class="sd">        False</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">membership_score</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="o">==</span> <span class="mf">1.0</span>
 
@@ -250,12 +341,12 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../index.html">AIGRE 1.0 documentation</a> &raquo;</li>
+        <li><a href="../index.html">beliefs 1.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013, Nicolas Bravo.
+        &copy; Copyright 2013, Dustin Smith, Nicolas Bravo.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

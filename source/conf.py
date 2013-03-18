@@ -17,7 +17,8 @@ import sys, os
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('/home/nbravo/UROP/beliefs/src/beliefs/'))
-sys.path.append('/home/nbravo/UROP/beliefs/src/beliefs/cells')
+sys.path.append(os.path.abspath('../src/beliefs/'))
+sys.path.append(os.path.abspath('../src/beliefs/cells'))
 
 # -- General configuration -----------------------------------------------------
 
@@ -41,8 +42,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'AIGRE'
-copyright = u'2013, Nicolas Bravo'
+project = u'beliefs'
+copyright = u'2013, Dustin Smith, Nicolas Bravo'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -75,7 +76,7 @@ exclude_patterns = []
 
 # If true, the current module name will be prepended to all description
 # unit titles (such as .. function::).
-#add_module_names = True
+add_module_names = False 
 
 # If true, sectionauthor and moduleauthor directives will be shown in the
 # output. They are ignored by default.
@@ -92,7 +93,7 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'default'
+html_theme = 'nature'  # or pyramid, agogo
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -165,7 +166,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'myUROPdoc'
+htmlhelp_basename = 'beliefs'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -184,8 +185,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'myUROP.tex', u'myUROP Documentation',
-   u'Nicolas Bravo', 'manual'),
+  ('index')
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -213,10 +213,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [
-    ('index', 'myurop', u'myUROP Documentation',
-     [u'Nicolas Bravo'], 1)
-]
+man_pages = [ ]
 
 # If true, show URL addresses after external links.
 #man_show_urls = False
@@ -228,8 +225,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'myUROP', u'myUROP Documentation',
-   u'Nicolas Bravo', 'myUROP', 'One line description of project.',
+  ('index', 
    'Miscellaneous'),
 ]
 
@@ -246,10 +242,8 @@ texinfo_documents = [
 # -- Options for Epub output ---------------------------------------------------
 
 # Bibliographic Dublin Core info.
-epub_title = u'myUROP'
-epub_author = u'Nicolas Bravo'
-epub_publisher = u'Nicolas Bravo'
-epub_copyright = u'2013, Nicolas Bravo'
+epub_title = u'beliefs'
+epub_author = u'Dustin Smith'
 
 # The language of the text. It defaults to the language option
 # or en if the language is not set.

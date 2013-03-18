@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,9 +7,9 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>lists &mdash; AIGRE 1.0 documentation</title>
+    <title>lists &mdash; beliefs 1.0 documentation</title>
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -26,7 +25,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="AIGRE 1.0 documentation" href="../index.html" />
+    <link rel="top" title="beliefs 1.0 documentation" href="../index.html" />
     <link rel="up" title="Module code" href="index.html" /> 
   </head>
   <body>
@@ -39,7 +38,7 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../index.html">AIGRE 1.0 documentation</a> &raquo;</li>
+        <li><a href="../index.html">beliefs 1.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -97,6 +96,10 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Takes one or two values in the domain and returns a LinearOrderedCell</span>
 <span class="sd">        with the same domain</span>
+
+<span class="sd">        :param value: A single value in the domain, or a 2-element list or tuple of values in the domain</span>
+<span class="sd">        :returns: LinearOrderedCell</span>
+<span class="sd">        :raises: Exception</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">LinearOrderedCell</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="o">==</span> <span class="n">value</span><span class="o">.</span><span class="n">domain</span> <span class="ow">or</span> \
             <span class="n">list_diff</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="n">value</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="o">==</span> <span class="p">[]):</span>
@@ -116,7 +119,13 @@
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Cannot coerce </span><span class="si">%s</span><span class="s"> into LinearOrderedCell&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)))</span>
 </div>
 <div class="viewcode-block" id="LinearOrderedCell.to_i"><a class="viewcode-back" href="../lists.html#lists.LinearOrderedCell.to_i">[docs]</a>    <span class="k">def</span> <span class="nf">to_i</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Maps value to position in domain &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Maps value to position in domain</span>
+
+<span class="sd">        :param val: value in the domain</span>
+<span class="sd">        :returns: int -- index of value in the domain. Returns -1 if val is None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
@@ -124,6 +133,11 @@
 <div class="viewcode-block" id="LinearOrderedCell.is_contradictory"><a class="viewcode-back" href="../lists.html#lists.LinearOrderedCell.is_contradictory">[docs]</a>    <span class="k">def</span> <span class="nf">is_contradictory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Whether other and self can coexist</span>
+
+<span class="sd">        :param other: A LinearOrderedCell or coercible value</span>
+<span class="sd">        :returns: bool</span>
+<span class="sd">        :raises: Exception</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">other</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="n">to_i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_i</span>
@@ -135,7 +149,12 @@
 </div>
 <div class="viewcode-block" id="LinearOrderedCell.is_entailed_by"><a class="viewcode-back" href="../lists.html#lists.LinearOrderedCell.is_entailed_by">[docs]</a>    <span class="k">def</span> <span class="nf">is_entailed_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Other is more specific than self.   Other is bounded within self.</span>
+<span class="sd">        Returns true if Other is more specific than self or if Other is bounded within self.</span>
+
+<span class="sd">        :param other: A LinearOrderedCell or coercible value</span>
+<span class="sd">        :returns: bool</span>
+<span class="sd">        :raises: Exception</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">other</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="n">to_i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_i</span>
@@ -144,7 +163,12 @@
 </div>
 <div class="viewcode-block" id="LinearOrderedCell.is_equal"><a class="viewcode-back" href="../lists.html#lists.LinearOrderedCell.is_equal">[docs]</a>    <span class="k">def</span> <span class="nf">is_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        If two intervals are the same</span>
+<span class="sd">        Determines whether two intervals are the same, i.e. every element of each domain is also an element of the other domain, and the low and high of each domain correspond to the low and high of the other</span>
+
+<span class="sd">        :param other: A LinearOrderedCell or coercible value</span>
+<span class="sd">        :returns: bool</span>
+<span class="sd">        :raises: Exception</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">other</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">list_diff</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="o">==</span> <span class="p">[]</span> \
@@ -152,6 +176,12 @@
                 <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">high</span>
 </div>
 <div class="viewcode-block" id="LinearOrderedCell.to_dot"><a class="viewcode-back" href="../lists.html#lists.LinearOrderedCell.to_dot">[docs]</a>    <span class="k">def</span> <span class="nf">to_dot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A string representation of the Cell</span>
+
+<span class="sd">        :returns: If the domain consits of a single value, that value is returned. Otherwise, the empty string is returned.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span>
         <span class="k">else</span><span class="p">:</span>
@@ -160,6 +190,11 @@
 <div class="viewcode-block" id="LinearOrderedCell.merge"><a class="viewcode-back" href="../lists.html#lists.LinearOrderedCell.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Merges the two values</span>
+
+<span class="sd">        :param other: A LinearOrderedCell or coercible value</span>
+<span class="sd">        :returns: LinearOrderedCell</span>
+<span class="sd">        :raises: Contradiction</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">other</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">list_diff</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="o">!=</span> <span class="p">[]:</span>
@@ -211,7 +246,11 @@
     <span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="ListCell.coerce"><a class="viewcode-back" href="../lists.html#lists.ListCell.coerce">[docs]</a>    <span class="k">def</span> <span class="nf">coerce</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Turns a value into a list</span>
+<span class="sd">        Turns a value into a ListCell</span>
+
+<span class="sd">        :param value: The value to be coerced</span>
+<span class="sd">        :returns: ListCell</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">ListCell</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">value</span>
@@ -223,6 +262,8 @@
 <div class="viewcode-block" id="ListCell.size"><a class="viewcode-back" href="../lists.html#lists.ListCell.size">[docs]</a>    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the number of elements in the list</span>
+
+<span class="sd">        :returns: int -- number of elements in the list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="mi">0</span>
@@ -256,6 +297,10 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns True iff the values in this list can be entailed by the other</span>
 <span class="sd">        list (ie, this list is a prefix of the other)</span>
+
+<span class="sd">        :param other: ListCell or coercible value</span>
+<span class="sd">        :returns: bool</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">other</span> <span class="o">=</span> <span class="n">ListCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">():</span>
@@ -298,7 +343,11 @@
         </div>
 <div class="viewcode-block" id="ListCell.merge"><a class="viewcode-back" href="../lists.html#lists.ListCell.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Merges two Lists </span>
+<span class="sd">        Merges two Lists</span>
+
+<span class="sd">        :param other: A ListCell or coercible value</span>
+<span class="sd">        :returns: ListCell</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">other</span> <span class="o">=</span> <span class="n">ListCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
@@ -356,6 +405,10 @@
 <div class="viewcode-block" id="PrefixCell.merge"><a class="viewcode-back" href="../lists.html#lists.PrefixCell.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Merges two prefixes</span>
+
+<span class="sd">        :param other: A ListCell or coercible value</span>
+<span class="sd">        :returns: PrefixCell</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">other</span> <span class="o">=</span> <span class="n">PrefixCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
@@ -414,12 +467,12 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../index.html">AIGRE 1.0 documentation</a> &raquo;</li>
+        <li><a href="../index.html">beliefs 1.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013, Nicolas Bravo.
+        &copy; Copyright 2013, Dustin Smith, Nicolas Bravo.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

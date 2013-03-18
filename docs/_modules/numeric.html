@@ -1,0 +1,335 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>numeric &mdash; beliefs 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="beliefs 1.0 documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">beliefs 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for numeric</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">cell</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<div class="viewcode-block" id="IntervalCell"><a class="viewcode-back" href="../numeric.html#numeric.IntervalCell">[docs]</a><span class="k">class</span> <span class="nc">IntervalCell</span><span class="p">(</span><span class="n">Cell</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implements an interval cell along with interval algebra</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a new IntervalCell with values restricted to between `low` and `high`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        
+        <span class="k">if</span> <span class="n">low</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="n">low</span>
+        <span class="k">if</span> <span class="n">high</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="n">high</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CellConstructionFailure</span>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="IntervalCell.coerce"><a class="viewcode-back" href="../numeric.html#numeric.IntervalCell.coerce">[docs]</a>    <span class="k">def</span> <span class="nf">coerce</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Takes a number (float, int) or a two-valued integer and returns the</span>
+<span class="sd">        [low, high] in the standard interval form</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">is_number</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">complex</span><span class="p">))</span> <span class="c">#is x an instance of those things</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">IntervalCell</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span><span class="n">IntervalCell</span><span class="p">):</span> 
+            <span class="c">#if intervalcell or subclass, return the subclass</span>
+            <span class="k">return</span> <span class="n">value</span>
+        <span class="k">elif</span> <span class="n">is_number</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s">&#39;low&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s">&#39;high&#39;</span><span class="p">):</span>
+            <span class="c"># duck type</span>
+            <span class="k">assert</span> <span class="n">value</span><span class="o">.</span><span class="n">low</span> <span class="o">&lt;=</span> <span class="n">value</span><span class="o">.</span><span class="n">high</span><span class="p">,</span> <span class="s">&quot;Invalid low/high in </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">value</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">is_number</span><span class="p">,</span> <span class="n">value</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">high</span> <span class="o">&lt;</span> <span class="n">low</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">Contradiction</span><span class="p">(</span><span class="s">&quot;Low must be lte High&quot;</span><span class="p">)</span> 
+            <span class="k">return</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Don&#39;t know how to coerce </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)))</span>
+</div>
+<div class="viewcode-block" id="IntervalCell.stem"><a class="viewcode-back" href="../numeric.html#numeric.IntervalCell.stem">[docs]</a>    <span class="k">def</span> <span class="nf">stem</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Creates a new instance &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="IntervalCell.size"><a class="viewcode-back" href="../numeric.html#numeric.IntervalCell.size">[docs]</a>    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Number of possible values in the interval.  Boundaries are inclusive</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> 
+</div>
+<div class="viewcode-block" id="IntervalCell.is_contradictory"><a class="viewcode-back" href="../numeric.html#numeric.IntervalCell.is_contradictory">[docs]</a>    <span class="k">def</span> <span class="nf">is_contradictory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Whether other and self can coexist</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">other</span><span class="o">.</span><span class="n">low</span> <span class="o">&lt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">high</span><span class="p">,</span> <span class="s">&quot;Low must be &lt;= high&quot;</span>
+        <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">min</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">high</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="IntervalCell.is_entailed_by"><a class="viewcode-back" href="../numeric.html#numeric.IntervalCell.is_entailed_by">[docs]</a>    <span class="k">def</span> <span class="nf">is_entailed_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Other is more specific than self.   Other is bounded within self.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">other</span><span class="o">.</span><span class="n">low</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">high</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span>
+</div>
+<div class="viewcode-block" id="IntervalCell.is_equal"><a class="viewcode-back" href="../numeric.html#numeric.IntervalCell.is_equal">[docs]</a>    <span class="k">def</span> <span class="nf">is_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If two intervals are the same</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">other</span><span class="o">.</span><span class="n">low</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">high</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span>
+</div>
+<div class="viewcode-block" id="IntervalCell.merge"><a class="viewcode-back" href="../numeric.html#numeric.IntervalCell.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Merges the two values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="c"># pick among dependencies</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">elif</span> <span class="n">other</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">high</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">Contradiction</span><span class="p">(</span><span class="s">&quot;Cannot merge intervals&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c"># information in both</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">low</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+</div>
+    <span class="k">def</span> <span class="nf">__cmp__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Uses &#39;self.low&#39; to make the comparison</span>
+
+<span class="sd">        Returns -1 if self &lt; other</span>
+<span class="sd">                0 if self == other</span>
+<span class="sd">                1 if other &gt; self</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">low</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">high</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">low</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Displays the interval</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&quot;</span><span class="si">%0.2f</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&quot;[</span><span class="si">%0.2f</span><span class="s">, </span><span class="si">%0.2f</span><span class="s">]&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Interval addition</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Subtraction</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">high</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">low</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Interval Multiplication</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="n">combos</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">low</span><span class="p">,</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">high</span><span class="p">,</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">low</span><span class="p">,</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">high</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">combos</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">combos</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_upper</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Overload =&lt;  </span>
+<span class="sd">        </span>
+<span class="sd">        Note:  we&#39;re overloading &lt;= and &gt;=, not &lt; and &gt;, because IntervalCell considers</span>
+<span class="sd">        its boundaries as inclusive.   Removing the inequality requires setting the inclusive</span>
+<span class="sd">        boundary to &#39;one less&#39; than the current boundary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_upper</span><span class="p">,</span> <span class="n">IntervalCell</span><span class="p">):</span>
+            <span class="n">new_upper</span> <span class="o">=</span> <span class="n">new_upper</span><span class="o">.</span><span class="n">low</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">IntervalCell</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="n">new_upper</span><span class="p">))</span>
+    
+    <span class="k">def</span> <span class="nf">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_lower</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Overload &gt;=  &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_lower</span><span class="p">,</span> <span class="n">IntervalCell</span><span class="p">):</span>
+            <span class="n">new_lower</span> <span class="o">=</span> <span class="n">new_lower</span><span class="o">.</span><span class="n">high</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">IntervalCell</span><span class="p">(</span><span class="n">new_lower</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__int__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Integer type conversion &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">,</span> <span class="s">&quot;Cannot be converted to int&quot;</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__float__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Float type conversion &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">,</span> <span class="s">&quot;Cannot be converted to float&quot;</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__div__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Division (checks for 0s)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">high</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">low</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ZeroDivisionError</span><span class="p">(</span><span class="s">&quot;Cannot divide by interval [0,0]&quot;</span><span class="p">)</span>
+            <span class="k">return</span>  <span class="n">IntervalCell</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">other</span><span class="o">.</span><span class="n">low</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">other</span><span class="o">.</span><span class="n">low</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">other</span><span class="o">.</span><span class="n">high</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span> <span class="o">*</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">other</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">other</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>
+
+<div class="viewcode-block" id="IntervalCell.map"><a class="viewcode-back" href="../numeric.html#numeric.IntervalCell.map">[docs]</a>    <span class="k">def</span> <span class="nf">map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">function</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Applies a mathematic function to the interval arithmetic template:</span>
+<span class="sd">        generate all combinations of low/high values and then take the widest</span>
+<span class="sd">        bounds (min/max) for the result.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="c"># check the arity of the function</span>
+        <span class="kn">import</span> <span class="nn">inspect</span>
+        <span class="n">arity</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getargspec</span><span class="p">(</span><span class="n">function</span><span class="p">)</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">arity</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">combos</span> <span class="o">=</span> <span class="p">[</span><span class="n">function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">low</span><span class="p">),</span>
+                      <span class="n">function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">high</span><span class="p">),</span>
+                      <span class="n">function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">low</span><span class="p">),</span>
+                      <span class="n">function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">high</span><span class="p">)]</span>
+            <span class="k">return</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">combos</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">combos</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Cannot apply function of arity </span><span class="si">%i</span><span class="s"> &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">arity</span><span class="p">))</span>
+</div>
+    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Allows the use of Python&#39;s &#39;in&#39; syntax &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">&lt;=</span> <span class="n">other</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span>
+
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Unqiue hash for interval &quot;&quot;&quot;</span>
+        <span class="n">hval</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">hval</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span> <span class="o">+</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">hval</span>
+
+<div class="viewcode-block" id="IntervalCell.get_tuple"><a class="viewcode-back" href="../numeric.html#numeric.IntervalCell.get_tuple">[docs]</a>    <span class="k">def</span> <span class="nf">get_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns (low, high) tuple &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="IntervalCell.to_dot"><a class="viewcode-back" href="../numeric.html#numeric.IntervalCell.to_dot">[docs]</a>    <span class="k">def</span> <span class="nf">to_dot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a scalar or None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+</div>
+    <span class="n">__eq__</span> <span class="o">=</span> <span class="n">is_equal</span>
+    <span class="n">__len__</span> <span class="o">=</span> <span class="n">size</span>
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">beliefs 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Dustin Smith, Nicolas Bravo.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

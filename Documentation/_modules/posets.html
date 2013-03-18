@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,9 +7,9 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>posets &mdash; AIGRE 1.0 documentation</title>
+    <title>posets &mdash; beliefs 1.0 documentation</title>
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -26,7 +25,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="AIGRE 1.0 documentation" href="../index.html" />
+    <link rel="top" title="beliefs 1.0 documentation" href="../index.html" />
     <link rel="up" title="Module code" href="index.html" /> 
   </head>
   <body>
@@ -39,7 +38,7 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../index.html">AIGRE 1.0 documentation</a> &raquo;</li>
+        <li><a href="../index.html">beliefs 1.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -480,29 +479,7 @@
     <span class="k">print</span> <span class="nb">list</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">get_refinement_options</span><span class="p">())</span>
     <span class="k">print</span> <span class="nb">list</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">get_relaxation_options</span><span class="p">())</span>
     <span class="k">print</span> <span class="n">t</span>
-
-
-<div class="viewcode-block" id="HumanActions"><a class="viewcode-back" href="../posets.html#posets.HumanActions">[docs]</a><span class="k">class</span> <span class="nc">HumanActions</span><span class="p">(</span><span class="n">PartialOrderedCell</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Actions for the goal &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">dag</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_domain</span><span class="p">():</span>
-            <span class="c"># only initialize once</span>
-            <span class="n">dag</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
-            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;human-action&quot;</span><span class="p">,</span> <span class="s">&quot;watch&quot;</span><span class="p">)</span> <span class="c"># tv/movies</span>
-            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;human-action&quot;</span><span class="p">,</span> <span class="s">&quot;play&quot;</span><span class="p">)</span> <span class="c"># game</span>
-            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;human-action&quot;</span><span class="p">,</span> <span class="s">&quot;listen&quot;</span><span class="p">)</span> <span class="c"># music</span>
-            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;watch&quot;</span><span class="p">,</span> <span class="s">&quot;watch-movie&quot;</span><span class="p">)</span>
-            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;watch&quot;</span><span class="p">,</span> <span class="s">&quot;watch-tv&quot;</span><span class="p">)</span>
-            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;play&quot;</span><span class="p">,</span> <span class="s">&quot;watch-movie&quot;</span><span class="p">)</span>
-            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;play&quot;</span><span class="p">,</span> <span class="s">&quot;watch-tv&quot;</span><span class="p">)</span>
-            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;play&quot;</span><span class="p">,</span> <span class="s">&quot;play-game&quot;</span><span class="p">)</span>
-            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;play&quot;</span><span class="p">,</span> <span class="s">&quot;listen-song&quot;</span><span class="p">)</span>
-            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;see&quot;</span><span class="p">,</span> <span class="s">&quot;watch-movie&quot;</span><span class="p">)</span>
-            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;see&quot;</span><span class="p">,</span> <span class="s">&quot;watch-tv&quot;</span><span class="p">)</span>
-            
-        <span class="n">PartialOrderedCell</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dag</span><span class="p">)</span>
-</pre></div></div>
+</pre></div>
 
           </div>
         </div>
@@ -535,12 +512,12 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../index.html">AIGRE 1.0 documentation</a> &raquo;</li>
+        <li><a href="../index.html">beliefs 1.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013, Nicolas Bravo.
+        &copy; Copyright 2013, Dustin Smith, Nicolas Bravo.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

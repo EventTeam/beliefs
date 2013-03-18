@@ -1,0 +1,348 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>beliefstate &mdash; beliefs 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="beliefs 1.0 documentation" href="index.html" />
+    <link rel="next" title="Bools" href="bools.html" />
+    <link rel="prev" title="Beliefs" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="bools.html" title="Bools"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Beliefs"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">beliefs 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-beliefstate">
+<span id="beliefstate"></span><h1>beliefstate<a class="headerlink" href="#module-beliefstate" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="beliefstate.BeliefState">
+<em class="property">class </em><tt class="descname">BeliefState</tt><big>(</big><em>contextset=None</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">beliefs.cells.dicts.DictCell</span></tt></p>
+<p>Represents a beliefstate, a partial information object <em>about</em> specific targets.
+A beliefstate is a continuum between individual cells and entire classes of cells.</p>
+<p>Suppose the domain has entities/cells: 1,2,3.  A beliefstate represents the
+possible groupings of these entities; a single grouping is called a <em>referent</em>. 
+A beliefstate can be about &#8220;all referents of size two&#8221;, for example, and computing
+the beliefstate&#8217;s contextset would yield the targets {1,2}, {2,3}, and {1,3}.</p>
+<p>In addition to containing a description of the intended targets, a belief state contains information
+about the relational constraints (such as arity size), and linguistic decisions.</p>
+<dl class="method">
+<dt id="beliefstate.BeliefState.set_multistate">
+<tt class="descname">set_multistate</tt><big>(</big><em>boolean</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.set_multistate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.set_multistate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the multistate parameter indicating whether or not the state
+represents a single belief, or numerous beliefstates</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.get_multistate">
+<tt class="descname">get_multistate</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.get_multistate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.get_multistate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the multistate parameter indicating whether or not the state
+represents a single belief, or numerous beliefstates</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.set_pos">
+<tt class="descname">set_pos</tt><big>(</big><em>pos</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.set_pos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.set_pos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the beliefstates&#8217;s part of speech, <cite>pos</cite>, and then executes
+any deferred effects that are keyed by that pos tag.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.get_pos">
+<tt class="descname">get_pos</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.get_pos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.get_pos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns Part of Speech</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.add_deferred_effect">
+<tt class="descname">add_deferred_effect</tt><big>(</big><em>effect</em>, <em>pos</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.add_deferred_effect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.add_deferred_effect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pushes an (pos, effect) tuple onto a stack to later be executed if the
+state reaches the &#8216;pos&#8217;.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.execute_deferred_effects">
+<tt class="descname">execute_deferred_effects</tt><big>(</big><em>pos</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.execute_deferred_effects"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.execute_deferred_effects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluates deferred effects that are triggered by the prefix of the
+pos on the current beliefstate. For instance, if the effect is triggered
+by the &#8216;NN&#8217; pos, then the effect will be triggered by &#8216;NN&#8217; or &#8216;NNS&#8217;.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.set_environment_variable">
+<tt class="descname">set_environment_variable</tt><big>(</big><em>key</em>, <em>val</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.set_environment_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.set_environment_variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets a variable if that variable is not already set</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.has_contextset">
+<tt class="descname">has_contextset</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.has_contextset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.has_contextset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the BeliefState has a context set defined &#8211; meaning a set
+of external referents.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.iter_breadth_first">
+<tt class="descname">iter_breadth_first</tt><big>(</big><em>root=None</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.iter_breadth_first"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.iter_breadth_first" title="Permalink to this definition">¶</a></dt>
+<dd><p>Traverses the belief state&#8217;s structure breadth-first</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.find_path">
+<tt class="descname">find_path</tt><big>(</big><em>test_function=None</em>, <em>on_targets=False</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.find_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.find_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>General helper method that iterates breadth-first over the contextset&#8217;s
+cells and returns a path where the test_function is True</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.get_nth_unique_value">
+<tt class="descname">get_nth_unique_value</tt><big>(</big><em>keypath</em>, <em>n</em>, <em>reverse=False</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.get_nth_unique_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.get_nth_unique_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the <a href="#id1"><span class="problematic" id="id2">`</span></a>n-1`th unique value, or raises
+a contradiction if that is out of bounds</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.get_ordered_values">
+<tt class="descname">get_ordered_values</tt><big>(</big><em>keypath</em>, <em>reverse=False</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.get_ordered_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.get_ordered_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the contextset&#8217;s values for the specified keypath.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.get_paths_for_attribute_set">
+<tt class="descname">get_paths_for_attribute_set</tt><big>(</big><em>keys</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.get_paths_for_attribute_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.get_paths_for_attribute_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a list/set of keys (or one key), returns the parts that have
+all of the keys in the list.</p>
+<p>DOES NOT WORK WITH TOP LEVEL OBJECTS (since these are not indexed by
+the path)</p>
+<p>These paths are not pointers to the objects themselves, but tuples of
+prefixes that allow us to (attempt) to look up that object in any
+belief state.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.get_parts">
+<tt class="descname">get_parts</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.get_parts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.get_parts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Searches for all DictCells (with nested structure)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.get_paths_for_attribute">
+<tt class="descname">get_paths_for_attribute</tt><big>(</big><em>attribute_name</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.get_paths_for_attribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.get_paths_for_attribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a path list to all attributes that have with a particular name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.merge">
+<tt class="descname">merge</tt><big>(</big><em>keypath</em>, <em>value</em>, <em>op='set'</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>First gets the cell at BeliefState&#8217;s keypath, or creates a new cell 
+from the first target that has that keypath (This could mess up if the
+member its copying from has a different Cell or domain for that keypath.)
+Second, this merges that cell with the value</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.add_cell">
+<tt class="descname">add_cell</tt><big>(</big><em>keypath</em>, <em>cell</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.add_cell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.add_cell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new cell to the end of <cite>keypath</cite> of type <cite>cell</cite></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.entails">
+<tt class="descname">entails</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.entails"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.entails" title="Permalink to this definition">¶</a></dt>
+<dd><p>One beliefstate entails another beliefstate iff the other state&#8217;s cells are
+all equal or more general than the caller&#8217;s parts.  That means the other 
+state must have at least all of the same keys/components.</p>
+<p>Note: this only compares the items in the DictCell, not <cite>pos</cite>,
+<cite>environment_variables</cite> or <cite>deferred_effects</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.is_entailed_by">
+<tt class="descname">is_entailed_by</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.is_entailed_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.is_entailed_by" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given two beliefstates, returns True iff the calling instance
+implies the other beliefstate, meaning it contains at least the same
+structure (for all structures) and all values (for all defined values).</p>
+<p>Inverse of <cite>entails</cite>.</p>
+<p>Note: this only compares the items in the DictCell, not <cite>pos</cite>,
+<cite>environment_variables</cite> or <cite>deferred_effects</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.is_equal">
+<tt class="descname">is_equal</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.is_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.is_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Two beliefstates are equal if all of their part names are equal and all
+of their cell&#8217;s values return True for is_equal().</p>
+<p>Note: this only compares the items in the DictCell, not <cite>pos</cite>,
+<cite>environment_variables</cite> or <cite>deferred_effects</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.is_contradictory">
+<tt class="descname">is_contradictory</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.is_contradictory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.is_contradictory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Two beliefstates are incompatible if the other beliefstates&#8217;s cells
+are not consistent with or accessible from the caller.</p>
+<p>Note: this only compares the items in the DictCell, not <cite>pos</cite>,
+<cite>environment_variables</cite> or <cite>deferred_effects</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.size">
+<tt class="descname">size</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the size of the context set.</p>
+<p>There are two routines that can be used to do this.  The first is a fast
+one that calculates the size of generating all combinations, but doesn&#8217;t
+take into account the relational constraints (such as those imposed by 
+gradable adjectives).  The second is an exhaustive enumeration of the
+members.</p>
+<p>If there are $n$ targets (the result of <cite>self.number_of_singleton_referents()</cite>) 
+then there are generally $2^{n}-1$ valid belief states.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.referents">
+<tt class="descname">referents</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.referents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.referents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all members of the context set that are compatible with the current beliefstate.
+Warning: the number of referents can be quadradic in elements of singleton referents/cells.  
+Call <cite>size()</cite> method instead to compute size only, without ennumerating them.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.iter_referents">
+<tt class="descname">iter_referents</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.iter_referents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.iter_referents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates members of the context set that are compatible with the current beliefstate.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.iter_referents_tuples">
+<tt class="descname">iter_referents_tuples</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.iter_referents_tuples"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.iter_referents_tuples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates tuples of indices representing members of the context 
+set that are compatible with the current beliefstate.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.number_of_singleton_referents">
+<tt class="descname">number_of_singleton_referents</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.number_of_singleton_referents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.number_of_singleton_referents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of singleton members of the contextset (cells in domain) that are
+compatible with the current belief state.</p>
+<p>This is the size of the union of all referent sets.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.iter_singleton_referents">
+<tt class="descname">iter_singleton_referents</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.iter_singleton_referents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.iter_singleton_referents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterator of all of the singleton members of the context set.</p>
+<p>NOTE: this evaluates cells one-at-a-time, and does not handle relational constraints.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copies the BeliefState by recursively deep-copying all of
+its parts.  Domains are not copied, as they do not change
+during the interpretation or generation.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Beliefs</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="bools.html"
+                        title="next chapter">Bools</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/beliefstate.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="bools.html" title="Bools"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Beliefs"
+             >previous</a> |</li>
+        <li><a href="index.html">beliefs 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Dustin Smith, Nicolas Bravo.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

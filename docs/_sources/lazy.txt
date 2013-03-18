@@ -1,0 +1,6 @@
+Lazy
+*************
+
+.. automodule:: lazy
+   :members:
+   

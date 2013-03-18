@@ -1,0 +1,6 @@
+Posets
+*************
+
+.. automodule:: posets
+   :members:
+   
