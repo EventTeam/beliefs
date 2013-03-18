@@ -15,6 +15,9 @@ COLOR_NAMES = {'red': [255,0,0],
 class RGBColorCell(Cell):
     """
     A Cell representation of an RGB Color.
+
+    :param r,b,g: Integers in the range 0 to 255 inclusive
+    :type r,b,g: int
     """
 
     def __init__(self, r=None, b=None, g=None):
@@ -29,7 +32,22 @@ class RGBColorCell(Cell):
     @classmethod
     def from_name(clz, name):
         """
-        Instantiates the object from a known name.
+        Instantiates the object from a known color name. The list of known names, along with their RGB values::
+
+                red: [255,0,0]
+                cyan: [0,255,255]
+                blue: [0, 0, 255]
+                medium_blue: [0, 0, 205]
+                black: [0,0,0]
+                white: [255,255,255]
+                green: [0,128,0]
+                light_blue: [30, 144,255]
+                teal: [0, 128, 128]
+                yellow: [255, 255,0]
+
+        :param name: Color to use for the RGBColorCell
+        :type name: str
+        :returns: RGBColorCell
         """
         if isinstance(name, list) and "green" in name:
             name = "teal"
@@ -82,7 +100,7 @@ class RGBColorCell(Cell):
         """
         Raises an Exception if other is not an instance of RGBColorCell.
 
-        :param other:
+        :param other: An instance of RGBColorCell
         :type other: RGBColorCell
         :returns: RGBColorCell
         :raises: Exception
@@ -101,6 +119,14 @@ class RGBColorCell(Cell):
         :type element: RGBColorCell
         :returns: float - In the range of 0 to 1
         :raises: Exception
+
+        >>> colorCell1 = RGBColorCell(0,150,255)
+        >>> colorCell2 = RGBColorCell(100,30,75)
+        >>> colorCell1.membership_score(colorCell2)
+        0.7719099090792914
+        >>> colorCell1.membership_score(colorCell1)
+        1.0
+        
         """
         other = self.coerce(element)
         if self.value and other.value:
@@ -111,6 +137,11 @@ class RGBColorCell(Cell):
     def merge(self, other):
         """
         Merges the values
+
+        :param other: an RGBColorCell to merge with
+        :type other: RGBColorCell
+        :returns: RGBColorCell
+        :raises: Exception, Contradiction
         """
         print "MERGING", self, other
         other = self.coerce(other)
@@ -125,7 +156,25 @@ class RGBColorCell(Cell):
 
     def is_contradictory(self, other):
         """
+        Two Color Cells are contradictory if their ``membership_score`` is not equal to 1.0
+
+        :param other: A Color Cell to compare
+        :type other: RGBColorCell
+        :returns: bool
+        :raises: Exception
+
+        >>> b = RGBColorCell.from_name('black')
+        >>> w = RGBColorCell.from_name('white')
+        >>> b.membership_score(w)
+        0.0215265678169
+        >>> b.is_contradictory(w)
+        True
+        >>> b.membership_score(b)
+        1.0
+        >>> b.is_contradictory(b)
+        False
         """
+        
         return self.value and other.value and self.membership_score(other) != 1.0
 
     def is_entailed_by(self, other):
@@ -139,6 +188,17 @@ class RGBColorCell(Cell):
         :param other: RGBColorCell
         :returns: bool
         :raises: Exception if *other* is not an instance of RGBColorCell
+
+        >>> b = RGBColorCell.from_name('black')
+        >>> w = RGBColorCell.from_name('white')
+        >>> b.membership_score(b)
+        1.0
+        >>> b.is_equal(b)
+        True
+        >>> b.membership_score(w)
+        0.0215265678169
+        >>> b.is_equal(w)
+        False
         """
         return self.membership_score(other) == 1.0
 
@@ -164,8 +224,7 @@ class RGBColorCell(Cell):
 
 # delta_e(c2, mode='cie1976')
 
-if __name__ == '__main__':
-#def test_rgb_color_cell():
+def test_rgb_color_cell():
     r0 = RGBColorCell()
     r1 = RGBColorCell.from_name('red')
     r2 = RGBColorCell.from_name('red')
@@ -194,10 +253,7 @@ if __name__ == '__main__':
     b3 = RGBColorCell.from_name('medium_blue')
     b4 = RGBColorCell.from_name('cyan')
     b5 = RGBColorCell.from_name('teal')
-    print b5.to_html()
-    print r1.to_html()
-    print w.to_html()
 
 
-'''if __name__ == '__main__':
-    test_rgb_color_cell()'''
+if __name__ == '__main__':
+    test_rgb_color_cell()
