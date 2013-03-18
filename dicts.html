@@ -7,7 +7,11 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
+<<<<<<< HEAD
     <title>Dicts &mdash; beliefs 1.0 documentation</title>
+=======
+    <title>Dicts &mdash; AIGRE 1.0 documentation</title>
+>>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -25,7 +29,13 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<<<<<<< HEAD
     <link rel="top" title="beliefs 1.0 documentation" href="index.html" /> 
+=======
+    <link rel="top" title="AIGRE 1.0 documentation" href="index.html" />
+    <link rel="next" title="Lazy" href="lazy.html" />
+    <link rel="prev" title="Colors" href="colors.html" /> 
+>>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
   </head>
   <body>
     <div class="related">
@@ -37,7 +47,17 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
+<<<<<<< HEAD
         <li><a href="index.html">beliefs 1.0 documentation</a> &raquo;</li> 
+=======
+        <li class="right" >
+          <a href="lazy.html" title="Lazy"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="colors.html" title="Colors"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">AIGRE 1.0 documentation</a> &raquo;</li> 
+>>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
       </ul>
     </div>  
 
@@ -50,9 +70,14 @@
 <span id="dicts"></span><h1>Dicts<a class="headerlink" href="#module-dicts" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="dicts.DictCell">
+<<<<<<< HEAD
 <em class="property">class </em><tt class="descname">DictCell</tt><big>(</big><em>from_dict=None</em><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">cell.Cell</span></tt></p>
 <p>This is a wrapper for a dictionary of cells.  Can be compared with another
+=======
+<em class="property">class </em><tt class="descclassname">dicts.</tt><tt class="descname">DictCell</tt><big>(</big><em>from_dict=None</em><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a wrapper for a dictionary of cells.  Can be compared with another
+>>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
 DictCell.</p>
 <p>Unlike the other primitive structures, a DictCell cannot be coerced into something
 else.</p>
@@ -61,6 +86,14 @@ else.</p>
 <tt class="descname">contains</tt><big>(</big><em>key_or_keypath</em><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell.contains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell.contains" title="Permalink to this definition">¶</a></dt>
 <dd><p>Allows the &#8216;in&#8217; operator to work for checking if a particular key (or keypath)
 is inside the dictionary.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -97,18 +130,6 @@ is_equal() methods return True.  This ensures substructure equality.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="dicts.DictCell.items">
-<tt class="descname">items</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell.items"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell.items" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns both keys and values in dictionary</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="dicts.DictCell.keys">
-<tt class="descname">keys</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell.keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell.keys" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a list of the top-level keys in the DictCell</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="dicts.DictCell.merge">
 <tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell.merge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merges two complex structures (by recursively merging their parts).
@@ -123,9 +144,21 @@ for JSON serialization.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="dicts.DictCell.keys">
+<tt class="descname">keys</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell.keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell.keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the top-level keys in the DictCell</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="dicts.DictCell.values">
 <tt class="descname">values</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell.values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell.values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of the top-level values in the DictCell</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dicts.DictCell.items">
+<tt class="descname">items</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell.items"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell.items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns both keys and values in dictionary</p>
 </dd></dl>
 
 </dd></dl>
@@ -169,7 +202,17 @@ for JSON serialization.</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
+<<<<<<< HEAD
         <li><a href="index.html">beliefs 1.0 documentation</a> &raquo;</li> 
+=======
+        <li class="right" >
+          <a href="lazy.html" title="Lazy"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="colors.html" title="Colors"
+             >previous</a> |</li>
+        <li><a href="index.html">AIGRE 1.0 documentation</a> &raquo;</li> 
+>>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
       </ul>
     </div>
     <div class="footer">

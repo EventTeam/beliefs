@@ -7,7 +7,7 @@ __version__ = "0.1"
 from cell import Cell
 from bools import *
 from numeric import *
-from sets import *
+from setCells import *
 from lists import *
 from strings import *
 from posets import *

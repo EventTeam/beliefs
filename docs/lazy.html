@@ -51,8 +51,7 @@
 <dl class="class">
 <dt id="lazy.LazyCell">
 <em class="property">class </em><tt class="descname">LazyCell</tt><big>(</big><em>prototype</em><big>)</big><a class="reference internal" href="_modules/lazy.html#LazyCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lazy.LazyCell" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">cell.Cell</span></tt></p>
-<p>This is a proxy for accessing (partially enumerated) sets of candidate
+<dd><p>This is a proxy for accessing (partially enumerated) sets of candidate
 cells.  LazyCells are constrained to be within the value of their prototype</p>
 <dl class="docutils">
 <dt>Question:</dt>
@@ -68,46 +67,6 @@ properties on Yahoo search, or just the ones that</li>
 <p class="last">How to handle when a property has changed?</p>
 </dd>
 </dl>
-<dl class="method">
-<dt id="lazy.LazyCell.get_instances">
-<tt class="descname">get_instances</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/lazy.html#LazyCell.get_instances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lazy.LazyCell.get_instances" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the members of the LazyDict</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="lazy.LazyCell.is_contradiction">
-<tt class="descname">is_contradiction</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lazy.html#LazyCell.is_contradiction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lazy.LazyCell.is_contradiction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Is contradiction means that a merge of the new information with the
-LazyCell will result in 0 members and is over constrained.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="lazy.LazyCell.is_entailed_by">
-<tt class="descname">is_entailed_by</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lazy.html#LazyCell.is_entailed_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lazy.LazyCell.is_entailed_by" title="Permalink to this definition">¶</a></dt>
-<dd><p>Means merging other with self does not produce any new information.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="lazy.LazyCell.is_equal">
-<tt class="descname">is_equal</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lazy.html#LazyCell.is_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lazy.LazyCell.is_equal" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>The objects must be the same</dt>
-<dd><ul class="first last simple">
-<li>Same members (if enumerated)</li>
-<li>Or same structure (if not enumerated)</li>
-</ul>
-</dd>
-</dl>
-<p>If the merge does not produce any new information (or contradiction)
-then these are equal.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="lazy.LazyCell.merge">
-<tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lazy.html#LazyCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lazy.LazyCell.merge" title="Permalink to this definition">¶</a></dt>
-<dd><p>Other is some description of a parameter that is responsible for generating the instances</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="lazy.LazyCell.size">
 <tt class="descname">size</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/lazy.html#LazyCell.size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lazy.LazyCell.size" title="Permalink to this definition">¶</a></dt>
@@ -134,6 +93,46 @@ The methods responsibilities are:</p>
 <li>Defining self._size_full_intension</li>
 </ul>
 </div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="lazy.LazyCell.is_entailed_by">
+<tt class="descname">is_entailed_by</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lazy.html#LazyCell.is_entailed_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lazy.LazyCell.is_entailed_by" title="Permalink to this definition">¶</a></dt>
+<dd><p>Means merging other with self does not produce any new information.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="lazy.LazyCell.is_equal">
+<tt class="descname">is_equal</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lazy.html#LazyCell.is_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lazy.LazyCell.is_equal" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>The objects must be the same</dt>
+<dd><ul class="first last simple">
+<li>Same members (if enumerated)</li>
+<li>Or same structure (if not enumerated)</li>
+</ul>
+</dd>
+</dl>
+<p>If the merge does not produce any new information (or contradiction)
+then these are equal.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="lazy.LazyCell.get_instances">
+<tt class="descname">get_instances</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/lazy.html#LazyCell.get_instances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lazy.LazyCell.get_instances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the members of the LazyDict</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="lazy.LazyCell.is_contradiction">
+<tt class="descname">is_contradiction</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lazy.html#LazyCell.is_contradiction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lazy.LazyCell.is_contradiction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is contradiction means that a merge of the new information with the
+LazyCell will result in 0 members and is over constrained.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="lazy.LazyCell.merge">
+<tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lazy.html#LazyCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lazy.LazyCell.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Other is some description of a parameter that is responsible for generating the instances</p>
 </dd></dl>
 
 </dd></dl>

@@ -51,39 +51,7 @@
 <dl class="class">
 <dt id="lists.LinearOrderedCell">
 <em class="property">class </em><tt class="descname">LinearOrderedCell</tt><big>(</big><em>ordered_domain</em>, <em>low=None</em>, <em>high=None</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">cell.Cell</span></tt></p>
-<p>A generalization of IntervalCell to non-numeric symbols</p>
-<dl class="method">
-<dt id="lists.LinearOrderedCell.coerce">
-<tt class="descname">coerce</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.coerce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.coerce" title="Permalink to this definition">¶</a></dt>
-<dd><p>Takes one or two values in the domain and returns a LinearOrderedCell
-with the same domain</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="lists.LinearOrderedCell.is_contradictory">
-<tt class="descname">is_contradictory</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.is_contradictory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.is_contradictory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Whether other and self can coexist</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="lists.LinearOrderedCell.is_entailed_by">
-<tt class="descname">is_entailed_by</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.is_entailed_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.is_entailed_by" title="Permalink to this definition">¶</a></dt>
-<dd><p>Other is more specific than self.   Other is bounded within self.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="lists.LinearOrderedCell.is_equal">
-<tt class="descname">is_equal</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.is_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.is_equal" title="Permalink to this definition">¶</a></dt>
-<dd><p>If two intervals are the same</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="lists.LinearOrderedCell.merge">
-<tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.merge" title="Permalink to this definition">¶</a></dt>
-<dd><p>Merges the two values</p>
-</dd></dl>
-
+<dd><p>A generalization of IntervalCell to non-numeric symbols</p>
 <dl class="method">
 <dt id="lists.LinearOrderedCell.stem">
 <tt class="descname">stem</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.stem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.stem" title="Permalink to this definition">¶</a></dt>
@@ -91,9 +59,124 @@ with the same domain</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="lists.LinearOrderedCell.coerce">
+<tt class="descname">coerce</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.coerce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.coerce" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes one or two values in the domain and returns a LinearOrderedCell
+with the same domain</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> &#8211; A single value in the domain, or a 2-element list or tuple of values in the domain</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">LinearOrderedCell</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="lists.LinearOrderedCell.to_i">
 <tt class="descname">to_i</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.to_i"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.to_i" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maps value to position in domain</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>val</strong> &#8211; value in the domain</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">int &#8211; index of value in the domain. Returns -1 if val is None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.LinearOrderedCell.is_contradictory">
+<tt class="descname">is_contradictory</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.is_contradictory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.is_contradictory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether other and self can coexist</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> &#8211; A LinearOrderedCell or coercible value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.LinearOrderedCell.is_entailed_by">
+<tt class="descname">is_entailed_by</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.is_entailed_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.is_entailed_by" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if Other is more specific than self or if Other is bounded within self.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> &#8211; A LinearOrderedCell or coercible value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.LinearOrderedCell.is_equal">
+<tt class="descname">is_equal</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.is_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.is_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines whether two intervals are the same, i.e. every element of each domain is also an element of the other domain, and the low and high of each domain correspond to the low and high of the other</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> &#8211; A LinearOrderedCell or coercible value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.LinearOrderedCell.to_dot">
+<tt class="descname">to_dot</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.to_dot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.to_dot" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string representation of the Cell</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">If the domain consits of a single value, that value is returned. Otherwise, the empty string is returned.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.LinearOrderedCell.merge">
+<tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merges the two values</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> &#8211; A LinearOrderedCell or coercible value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">LinearOrderedCell</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Contradiction</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -101,24 +184,35 @@ with the same domain</p>
 <dl class="class">
 <dt id="lists.ListCell">
 <em class="property">class </em><tt class="descname">ListCell</tt><big>(</big><em>value=None</em><big>)</big><a class="reference internal" href="_modules/lists.html#ListCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.ListCell" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">cell.Cell</span></tt></p>
-<p>ListCells contain ordered elements</p>
-<dl class="method">
-<dt id="lists.ListCell.append">
-<tt class="descname">append</tt><big>(</big><em>el</em><big>)</big><a class="reference internal" href="_modules/lists.html#ListCell.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.ListCell.append" title="Permalink to this definition">¶</a></dt>
-<dd><p>Idiosynractic method for adding an element to a list</p>
-</dd></dl>
-
+<dd><p>ListCells contain ordered elements</p>
 <dl class="staticmethod">
 <dt id="lists.ListCell.coerce">
 <em class="property">static </em><tt class="descname">coerce</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/lists.html#ListCell.coerce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.ListCell.coerce" title="Permalink to this definition">¶</a></dt>
-<dd><p>Turns a value into a list</p>
+<dd><p>Turns a value into a ListCell</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> &#8211; The value to be coerced</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ListCell</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
-<dt id="lists.ListCell.get_values">
-<tt class="descname">get_values</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/lists.html#ListCell.get_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.ListCell.get_values" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a list containing the elements</p>
+<dt id="lists.ListCell.size">
+<tt class="descname">size</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/lists.html#ListCell.size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.ListCell.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of elements in the list</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">int &#8211; number of elements in the list</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -133,6 +227,16 @@ other. (Very strict definition &#8211; could be generalized to subsequence)</p>
 <tt class="descname">is_entailed_by</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#ListCell.is_entailed_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.ListCell.is_entailed_by" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns True iff the values in this list can be entailed by the other
 list (ie, this list is a prefix of the other)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> &#8211; ListCell or coercible value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -145,12 +249,28 @@ list (ie, this list is a prefix of the other)</p>
 <dt id="lists.ListCell.merge">
 <tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#ListCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.ListCell.merge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merges two Lists</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> &#8211; A ListCell or coercible value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ListCell</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
-<dt id="lists.ListCell.size">
-<tt class="descname">size</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/lists.html#ListCell.size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.ListCell.size" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the number of elements in the list</p>
+<dt id="lists.ListCell.append">
+<tt class="descname">append</tt><big>(</big><em>el</em><big>)</big><a class="reference internal" href="_modules/lists.html#ListCell.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.ListCell.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Idiosynractic method for adding an element to a list</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.ListCell.get_values">
+<tt class="descname">get_values</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/lists.html#ListCell.get_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.ListCell.get_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list containing the elements</p>
 </dd></dl>
 
 </dd></dl>
@@ -158,12 +278,21 @@ list (ie, this list is a prefix of the other)</p>
 <dl class="class">
 <dt id="lists.PrefixCell">
 <em class="property">class </em><tt class="descname">PrefixCell</tt><big>(</big><em>value=None</em><big>)</big><a class="reference internal" href="_modules/lists.html#PrefixCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.PrefixCell" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#lists.ListCell" title="lists.ListCell"><tt class="xref py py-class docutils literal"><span class="pre">lists.ListCell</span></tt></a></p>
-<p>PrefixCells contain lists of paths</p>
+<dd><p>PrefixCells contain lists of paths</p>
 <dl class="method">
 <dt id="lists.PrefixCell.merge">
 <tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#PrefixCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.PrefixCell.merge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merges two prefixes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> &#8211; A ListCell or coercible value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">PrefixCell</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>

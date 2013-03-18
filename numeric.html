@@ -7,7 +7,11 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
+<<<<<<< HEAD
     <title>Numeric &mdash; beliefs 1.0 documentation</title>
+=======
+    <title>Numeric &mdash; AIGRE 1.0 documentation</title>
+>>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -25,7 +29,13 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<<<<<<< HEAD
     <link rel="top" title="beliefs 1.0 documentation" href="index.html" /> 
+=======
+    <link rel="top" title="AIGRE 1.0 documentation" href="index.html" />
+    <link rel="next" title="Posets" href="posets.html" />
+    <link rel="prev" title="Lists" href="lists.html" /> 
+>>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
   </head>
   <body>
     <div class="related">
@@ -37,7 +47,17 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
+<<<<<<< HEAD
         <li><a href="index.html">beliefs 1.0 documentation</a> &raquo;</li> 
+=======
+        <li class="right" >
+          <a href="posets.html" title="Posets"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="lists.html" title="Lists"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">AIGRE 1.0 documentation</a> &raquo;</li> 
+>>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
       </ul>
     </div>  
 
@@ -50,58 +70,31 @@
 <span id="numeric"></span><h1>Numeric<a class="headerlink" href="#module-numeric" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="numeric.IntervalCell">
+<<<<<<< HEAD
 <em class="property">class </em><tt class="descname">IntervalCell</tt><big>(</big><em>low=None</em>, <em>high=None</em><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">cell.Cell</span></tt></p>
 <p>Implements an interval cell along with interval algebra</p>
+=======
+<em class="property">class </em><tt class="descclassname">numeric.</tt><tt class="descname">IntervalCell</tt><big>(</big><em>low=None</em>, <em>high=None</em><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements an interval cell along with interval algebra</p>
+>>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
 <dl class="staticmethod">
 <dt id="numeric.IntervalCell.coerce">
 <em class="property">static </em><tt class="descname">coerce</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell.coerce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell.coerce" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes a number (float, int) or a two-valued integer and returns the
 [low, high] in the standard interval form</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="numeric.IntervalCell.get_tuple">
-<tt class="descname">get_tuple</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell.get_tuple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell.get_tuple" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns (low, high) tuple</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="numeric.IntervalCell.is_contradictory">
-<tt class="descname">is_contradictory</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell.is_contradictory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell.is_contradictory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Whether other and self can coexist</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="numeric.IntervalCell.is_entailed_by">
-<tt class="descname">is_entailed_by</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell.is_entailed_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell.is_entailed_by" title="Permalink to this definition">¶</a></dt>
-<dd><p>Other is more specific than self.   Other is bounded within self.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="numeric.IntervalCell.is_equal">
-<tt class="descname">is_equal</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell.is_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell.is_equal" title="Permalink to this definition">¶</a></dt>
-<dd><p>If two intervals are the same</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="numeric.IntervalCell.map">
-<tt class="descname">map</tt><big>(</big><em>other</em>, <em>function</em><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell.map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell.map" title="Permalink to this definition">¶</a></dt>
-<dd><p>Applies a mathematic function to the interval arithmetic template:
-generate all combinations of low/high values and then take the widest
-bounds (min/max) for the result.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="numeric.IntervalCell.merge">
-<tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell.merge" title="Permalink to this definition">¶</a></dt>
-<dd><p>Merges the two values</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="numeric.IntervalCell.size">
-<tt class="descname">size</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell.size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell.size" title="Permalink to this definition">¶</a></dt>
-<dd><p>Number of possible values in the interval.  Boundaries are inclusive</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>int,float, complex</em>) &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">IntervalCell</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -111,9 +104,121 @@ bounds (min/max) for the result.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="numeric.IntervalCell.to_dot">
-<tt class="descname">to_dot</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell.to_dot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell.to_dot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a scalar or None</p>
+<dt id="numeric.IntervalCell.size">
+<tt class="descname">size</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell.size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of possible values in the interval.  Boundaries are inclusive</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">int &#8211; Length of interval</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="numeric.IntervalCell.is_contradictory">
+<tt class="descname">is_contradictory</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell.is_contradictory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell.is_contradictory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines whether other and self can coexist. Two intervals are contradictory if they are disjoint, i.e. if the intersection of self and other is empty</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> &#8211; IntervalCell or coercible value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="numeric.IntervalCell.is_entailed_by">
+<tt class="descname">is_entailed_by</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell.is_entailed_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell.is_entailed_by" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if other is more specific than self, i.e. other is bounded within self.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> &#8211; IntervalCell or coercible value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="numeric.IntervalCell.is_equal">
+<tt class="descname">is_equal</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell.is_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell.is_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if two intervals are the same</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> &#8211; IntervalCell or coercible value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="numeric.IntervalCell.merge">
+<tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merges the two values</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> &#8211; IntervalCell or coercible value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="numeric.IntervalCell.map">
+<tt class="descname">map</tt><big>(</big><em>other</em>, <em>function</em><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell.map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell.map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies a mathematic function to the interval arithmetic template:
+generate all combinations of low/high values and then take the widest
+bounds (min/max) for the result.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>other</strong> (<em>IntervalCell</em>) &#8211; IntervalCell or coercible value</li>
+<li><strong>function</strong> (<em>function</em>) &#8211; Mathematical function to be applied to the bounds of the interval. Must take two arguments and return a number</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">IntervalCell</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last">Exception</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="numeric.IntervalCell.get_tuple">
+<tt class="descname">get_tuple</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell.get_tuple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell.get_tuple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns (low, high) tuple</p>
 </dd></dl>
 
 </dd></dl>
@@ -157,7 +262,17 @@ bounds (min/max) for the result.</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
+<<<<<<< HEAD
         <li><a href="index.html">beliefs 1.0 documentation</a> &raquo;</li> 
+=======
+        <li class="right" >
+          <a href="posets.html" title="Posets"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="lists.html" title="Lists"
+             >previous</a> |</li>
+        <li><a href="index.html">AIGRE 1.0 documentation</a> &raquo;</li> 
+>>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
       </ul>
     </div>
     <div class="footer">

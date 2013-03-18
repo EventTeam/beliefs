@@ -7,7 +7,11 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
+<<<<<<< HEAD
     <title>Colors &mdash; beliefs 1.0 documentation</title>
+=======
+    <title>Colors &mdash; AIGRE 1.0 documentation</title>
+>>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -25,7 +29,13 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<<<<<<< HEAD
     <link rel="top" title="beliefs 1.0 documentation" href="index.html" /> 
+=======
+    <link rel="top" title="AIGRE 1.0 documentation" href="index.html" />
+    <link rel="next" title="Dicts" href="dicts.html" />
+    <link rel="prev" title="Cell" href="cell.html" /> 
+>>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
   </head>
   <body>
     <div class="related">
@@ -37,7 +47,17 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
+<<<<<<< HEAD
         <li><a href="index.html">beliefs 1.0 documentation</a> &raquo;</li> 
+=======
+        <li class="right" >
+          <a href="dicts.html" title="Dicts"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cell.html" title="Cell"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">AIGRE 1.0 documentation</a> &raquo;</li> 
+>>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
       </ul>
     </div>  
 
@@ -48,6 +68,195 @@
             
   <div class="section" id="module-colors">
 <span id="colors"></span><h1>Colors<a class="headerlink" href="#module-colors" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="colors.RGBColorCell">
+<em class="property">class </em><tt class="descclassname">colors.</tt><tt class="descname">RGBColorCell</tt><big>(</big><em>r=None</em>, <em>b=None</em>, <em>g=None</em><big>)</big><a class="reference internal" href="_modules/colors.html#RGBColorCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colors.RGBColorCell" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Cell representation of an RGB Color.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>r,b,g</strong> (<em>int</em>) &#8211; Integers in the range 0 to 255 inclusive</td>
+</tr>
+</tbody>
+</table>
+<dl class="classmethod">
+<dt id="colors.RGBColorCell.from_name">
+<em class="property">classmethod </em><tt class="descname">from_name</tt><big>(</big><em>clz</em>, <em>name</em><big>)</big><a class="reference internal" href="_modules/colors.html#RGBColorCell.from_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colors.RGBColorCell.from_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instantiates the object from a known color name. The list of known names, along with their RGB values:</p>
+<div class="highlight-python"><pre>red: [255,0,0]
+cyan: [0,255,255]
+blue: [0, 0, 255]
+medium_blue: [0, 0, 205]
+black: [0,0,0]
+white: [255,255,255]
+green: [0,128,0]
+light_blue: [30, 144,255]
+teal: [0, 128, 128]
+yellow: [255, 255,0]</pre>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; Color to use for the RGBColorCell</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">RGBColorCell</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="colors.RGBColorCell.to_html">
+<tt class="descname">to_html</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/colors.html#RGBColorCell.to_html"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colors.RGBColorCell.to_html" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts to Hex</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">RGBColorCell</span><span class="o">.</span><span class="n">from_name</span><span class="p">(</span><span class="s">&#39;black&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">RGBColorCell</span><span class="o">.</span><span class="n">from_name</span><span class="p">(</span><span class="s">&#39;white&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">RGBColorCell</span><span class="o">.</span><span class="n">from_name</span><span class="p">(</span><span class="s">&#39;teal&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">.</span><span class="n">to_html</span><span class="p">()</span>
+<span class="go">&#39;#000000&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span><span class="o">.</span><span class="n">to_html</span><span class="p">()</span>
+<span class="go">&#39;#ffffff&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">to_html</span><span class="p">()</span>
+<span class="go">&#39;#008080&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="colors.RGBColorCell.coerce">
+<em class="property">classmethod </em><tt class="descname">coerce</tt><big>(</big><em>clz</em>, <em>other</em><big>)</big><a class="reference internal" href="_modules/colors.html#RGBColorCell.coerce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colors.RGBColorCell.coerce" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raises an Exception if other is not an instance of RGBColorCell.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>RGBColorCell</em>) &#8211; An instance of RGBColorCell</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">RGBColorCell</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="colors.RGBColorCell.membership_score">
+<tt class="descname">membership_score</tt><big>(</big><em>element</em><big>)</big><a class="reference internal" href="_modules/colors.html#RGBColorCell.membership_score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colors.RGBColorCell.membership_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fuzzy set gradable membership score.</p>
+<p>See <a class="reference external" href="http://code.google.com/p/python-colormath/wiki/ColorDifferences">http://code.google.com/p/python-colormath/wiki/ColorDifferences</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>element</strong> (<em>RGBColorCell</em>) &#8211; A Color Cell</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">float - In the range of 0 to 1</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">colorCell1</span> <span class="o">=</span> <span class="n">RGBColorCell</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">150</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">colorCell2</span> <span class="o">=</span> <span class="n">RGBColorCell</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">75</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">colorCell1</span><span class="o">.</span><span class="n">membership_score</span><span class="p">(</span><span class="n">colorCell2</span><span class="p">)</span>
+<span class="go">0.7719099090792914</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">colorCell1</span><span class="o">.</span><span class="n">membership_score</span><span class="p">(</span><span class="n">colorCell1</span><span class="p">)</span>
+<span class="go">1.0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="colors.RGBColorCell.merge">
+<tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/colors.html#RGBColorCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colors.RGBColorCell.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merges the values</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>RGBColorCell</em>) &#8211; an RGBColorCell to merge with</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">RGBColorCell</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception, Contradiction</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="colors.RGBColorCell.is_contradictory">
+<tt class="descname">is_contradictory</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/colors.html#RGBColorCell.is_contradictory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colors.RGBColorCell.is_contradictory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Two Color Cells are contradictory if their <tt class="docutils literal"><span class="pre">membership_score</span></tt> is not equal to 1.0</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>RGBColorCell</em>) &#8211; A Color Cell to compare</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">RGBColorCell</span><span class="o">.</span><span class="n">from_name</span><span class="p">(</span><span class="s">&#39;black&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">RGBColorCell</span><span class="o">.</span><span class="n">from_name</span><span class="p">(</span><span class="s">&#39;white&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">.</span><span class="n">membership_score</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+<span class="go">0.0215265678169</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">.</span><span class="n">membership_score</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="go">1.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="colors.RGBColorCell.is_equal">
+<tt class="descname">is_equal</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/colors.html#RGBColorCell.is_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colors.RGBColorCell.is_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the distance, i.e. <tt class="docutils literal"><span class="pre">membership_score</span></tt>, is 0</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> &#8211; RGBColorCell</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception if <em>other</em> is not an instance of RGBColorCell</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">RGBColorCell</span><span class="o">.</span><span class="n">from_name</span><span class="p">(</span><span class="s">&#39;black&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">RGBColorCell</span><span class="o">.</span><span class="n">from_name</span><span class="p">(</span><span class="s">&#39;white&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">.</span><span class="n">membership_score</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="go">1.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">.</span><span class="n">membership_score</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+<span class="go">0.0215265678169</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -87,7 +296,17 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
+<<<<<<< HEAD
         <li><a href="index.html">beliefs 1.0 documentation</a> &raquo;</li> 
+=======
+        <li class="right" >
+          <a href="dicts.html" title="Dicts"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cell.html" title="Cell"
+             >previous</a> |</li>
+        <li><a href="index.html">AIGRE 1.0 documentation</a> &raquo;</li> 
+>>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
       </ul>
     </div>
     <div class="footer">

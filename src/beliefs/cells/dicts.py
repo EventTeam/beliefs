@@ -74,7 +74,9 @@ class DictCell(Cell):
 
     def contains(self, key_or_keypath):
         """ Allows the 'in' operator to work for checking if a particular key (or keypath)
-        is inside the dictionary. """
+        is inside the dictionary.
+
+        :returns: bool"""
         if isinstance(key_or_keypath, list):
             if len(key_or_keypath) == 0:
                 # empty list is root

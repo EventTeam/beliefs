@@ -3,12 +3,17 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+<<<<<<< HEAD
 Beliefs
+=======
+Welcome to AIGRE's documentation!
+>>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
 ==================================
 
 
 .. toctree::
    :maxdepth: 2
+<<<<<<< HEAD
 
    beliefstate
 
@@ -24,6 +29,21 @@ Here are *cell* data containers, :ref:`cell` subclasses that are designed to acc
 
 This library is being developed at <https://github.com/EventTeam/beliefs>.
 
+=======
+   
+   bools
+   cell
+   colors
+   dicts
+   lazy
+   lists
+   numeric
+   posets
+   setCells
+   spatial
+   strings
+   
+>>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
 
 
 

@@ -278,3 +278,5 @@ epub_author = u'Dustin Smith'
 
 # Allow duplicate toc entries.
 #epub_tocdup = True
+
+autodoc_member_order = 'bysource'

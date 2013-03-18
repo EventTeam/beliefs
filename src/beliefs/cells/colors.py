@@ -13,6 +13,12 @@ COLOR_NAMES = {'red': [255,0,0],
                 'yellow': [255, 255,0]}
 
 class RGBColorCell(Cell):
+    """
+    A Cell representation of an RGB Color.
+
+    :param r,b,g: Integers in the range 0 to 255 inclusive
+    :type r,b,g: int
+    """
 
     def __init__(self, r=None, b=None, g=None):
         """ Instantiates a color of RGB """
@@ -26,7 +32,22 @@ class RGBColorCell(Cell):
     @classmethod
     def from_name(clz, name):
         """
-        Instantiates the object from a known name
+        Instantiates the object from a known color name. The list of known names, along with their RGB values::
+
+                red: [255,0,0]
+                cyan: [0,255,255]
+                blue: [0, 0, 255]
+                medium_blue: [0, 0, 205]
+                black: [0,0,0]
+                white: [255,255,255]
+                green: [0,128,0]
+                light_blue: [30, 144,255]
+                teal: [0, 128, 128]
+                yellow: [255, 255,0]
+
+        :param name: Color to use for the RGBColorCell
+        :type name: str
+        :returns: RGBColorCell
         """
         if isinstance(name, list) and "green" in name:
             name = "teal"
@@ -36,7 +57,22 @@ class RGBColorCell(Cell):
 
 
     def to_html(self):
-        """ Converts to Hex """
+        """
+        Converts to Hex
+
+        :returns: str
+
+        >>> b = RGBColorCell.from_name('black')
+        >>> w = RGBColorCell.from_name('white')
+        >>> t = RGBColorCell.from_name('teal')
+        >>> b.to_html()
+        '#000000'
+        >>> w.to_html()
+        '#ffffff'
+        >>> t.to_html()
+        '#008080'
+
+        """
         out = "#"
         if self.r == 0:
             out += "00"
@@ -62,14 +98,35 @@ class RGBColorCell(Cell):
     @classmethod
     def coerce(clz, other):
         """
+        Raises an Exception if other is not an instance of RGBColorCell.
+
+        :param other: An instance of RGBColorCell
+        :type other: RGBColorCell
+        :returns: RGBColorCell
+        :raises: Exception
         """
         if not isinstance(other, RGBColorCell):
             raise Exception("Needs to be another color cell")
         return other
 
     def membership_score(self, element):
-        """ Fuzzy set gradable membership score
+        """
+        Fuzzy set gradable membership score.
+        
         See http://code.google.com/p/python-colormath/wiki/ColorDifferences
+
+        :param element: A Color Cell
+        :type element: RGBColorCell
+        :returns: float - In the range of 0 to 1
+        :raises: Exception
+
+        >>> colorCell1 = RGBColorCell(0,150,255)
+        >>> colorCell2 = RGBColorCell(100,30,75)
+        >>> colorCell1.membership_score(colorCell2)
+        0.7719099090792914
+        >>> colorCell1.membership_score(colorCell1)
+        1.0
+        
         """
         other = self.coerce(element)
         if self.value and other.value:
@@ -80,6 +137,11 @@ class RGBColorCell(Cell):
     def merge(self, other):
         """
         Merges the values
+
+        :param other: an RGBColorCell to merge with
+        :type other: RGBColorCell
+        :returns: RGBColorCell
+        :raises: Exception, Contradiction
         """
         print "MERGING", self, other
         other = self.coerce(other)
@@ -94,7 +156,25 @@ class RGBColorCell(Cell):
 
     def is_contradictory(self, other):
         """
+        Two Color Cells are contradictory if their ``membership_score`` is not equal to 1.0
+
+        :param other: A Color Cell to compare
+        :type other: RGBColorCell
+        :returns: bool
+        :raises: Exception
+
+        >>> b = RGBColorCell.from_name('black')
+        >>> w = RGBColorCell.from_name('white')
+        >>> b.membership_score(w)
+        0.0215265678169
+        >>> b.is_contradictory(w)
+        True
+        >>> b.membership_score(b)
+        1.0
+        >>> b.is_contradictory(b)
+        False
         """
+        
         return self.value and other.value and self.membership_score(other) != 1.0
 
     def is_entailed_by(self, other):
@@ -103,7 +183,22 @@ class RGBColorCell(Cell):
             
     def is_equal(self, other):
         """
-        Returns True if the distance is 0
+        Returns True if the distance, i.e. ``membership_score``, is 0
+
+        :param other: RGBColorCell
+        :returns: bool
+        :raises: Exception if *other* is not an instance of RGBColorCell
+
+        >>> b = RGBColorCell.from_name('black')
+        >>> w = RGBColorCell.from_name('white')
+        >>> b.membership_score(b)
+        1.0
+        >>> b.is_equal(b)
+        True
+        >>> b.membership_score(w)
+        0.0215265678169
+        >>> b.is_equal(w)
+        False
         """
         return self.membership_score(other) == 1.0
 
