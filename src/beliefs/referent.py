@@ -27,7 +27,7 @@ class TaxonomyCell(PartialOrderedCell):
 
     def __init__(self, initial_value=None):
         if not self.has_domain(): # only initialize once
-            raise Exception("TaxonomyCell.initialize(sys.modules[__name__]) must be called after importing classes")
+            #raise Exception("TaxonomyCell.initialize(sys.modules[__name__]) must be called after importing classes")
             print "initializing"
             # represents IS-A relationships
 
