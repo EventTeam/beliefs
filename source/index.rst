@@ -10,7 +10,7 @@ Beliefs
 .. toctree::
    :maxdepth: 2
 
-   beliefs.beliefstate
+   beliefstate
 
 Here are *cell* data containers, :ref:`cell` subclasses that are designed to accumulate and maintain the consistency of *partial information*:
 
