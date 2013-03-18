@@ -13,6 +13,9 @@ COLOR_NAMES = {'red': [255,0,0],
                 'yellow': [255, 255,0]}
 
 class RGBColorCell(Cell):
+    """
+    A Cell representation of an RGB Color.
+    """
 
     def __init__(self, r=None, b=None, g=None):
         """ Instantiates a color of RGB """
@@ -26,7 +29,7 @@ class RGBColorCell(Cell):
     @classmethod
     def from_name(clz, name):
         """
-        Instantiates the object from a known name
+        Instantiates the object from a known name.
         """
         if isinstance(name, list) and "green" in name:
             name = "teal"
@@ -62,14 +65,26 @@ class RGBColorCell(Cell):
     @classmethod
     def coerce(clz, other):
         """
+        Raises an Exception if other is not an instance of RGBColorCell.
+
+        :param other:
+        :type other: RGBColorCell
+        :returns: RGBColorCell
+        :raises: Exception
         """
         if not isinstance(other, RGBColorCell):
             raise Exception("Needs to be another color cell")
         return other
 
     def membership_score(self, element):
-        """ Fuzzy set gradable membership score
+        """
+        Fuzzy set gradable membership score. 
         See http://code.google.com/p/python-colormath/wiki/ColorDifferences
+
+        :param element: A Color Cell
+        :type element: RGBColorCell
+        :returns: float - In the range of 0 to 1
+        :raises: Exception
         """
         other = self.coerce(element)
         if self.value and other.value:
