@@ -1,5 +1,5 @@
 from beliefs.cells import *
-from .exceptions import *
+from beliefs.cells.exceptions import *
 
 # constants for 3-valued logic
 T = True

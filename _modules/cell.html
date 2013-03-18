@@ -1,0 +1,307 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>cell &mdash; beliefs 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="beliefs 1.0 documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">beliefs 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for cell</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This file defines the atomic and complex cells that are used in Propagator</span>
+<span class="sd">expressions.</span>
+
+<span class="sd">From CSAIL-TR-2009-053: &quot;Instead of thinking of a cell as an object that stores</span>
+<span class="sd">a value, think of a cell as an object that stores everything you know about a</span>
+<span class="sd">value...&quot;  Cells accumulate partial information, and meta-data such as provenance.</span>
+
+<span class="sd">  - Empty cells are just cells containing no information.</span>
+<span class="sd">  - &quot;Second values&quot; are more information.</span>
+<span class="sd">  - Equality tests are tests whether the new information is redundant.</span>
+<span class="sd">  - Contradiction from different values means the information cannot be</span>
+<span class="sd">    reconciled.</span>
+
+<span class="sd">Propagator Networks are a programming methodology that generalize &#39;expressions&#39;</span>
+<span class="sd">to allow values to come from multiple sources.</span>
+
+<span class="sd">    Propagator Network: a wiring diagram for information</span>
+<span class="sd">    Cells: are machines that store data</span>
+<span class="sd">    Propagators: are machines that interconnect cells</span>
+
+<span class="sd">    Merge Procedure:</span>
+<span class="sd">       * Allows data to be merged to increment information content</span>
+<span class="sd">        - If equal: do nothing</span>
+<span class="sd">        - If contradictory: - deal with</span>
+<span class="sd">        - Set values</span>
+<span class="sd">       * Track provenance</span>
+<span class="sd">         - Tolerate global inconsistency</span>
+<span class="sd">         - Every value has: (1) where it came from, (2) what it depends on</span>
+
+<span class="sd">       * Represented as a set of values and premises (dependencies)</span>
+<span class="sd">        - implies? v1 v2</span>
+<span class="sd">        - World view:  the set of assumptions that you want to use to</span>
+<span class="sd">           ?:  How do you pick these? (Minimal set?)</span>
+
+<span class="sd">    &#39;amb&#39; operator.</span>
+<span class="sd">        - *dependency-directed backtracking*</span>
+<span class="sd">            - evaluating dependencies by recursive descent, you have to</span>
+<span class="sd">              recompute when you go back</span>
+<span class="sd">            - every time a failure occurs, it cuts the search space, because of</span>
+<span class="sd">              the dependency backtracking</span>
+<span class="sd">            - only recompute things that depend on it</span>
+<span class="sd">        - if you have a contradiction, you have to know which assumptions it</span>
+<span class="sd">          depended upon.</span>
+<span class="sd">        - &#39;reasons-against&#39;, &#39;reasons-for&#39;,</span>
+<span class="sd">            - if both, then diagnose higher-level assumptions</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">beliefs.belief_utils</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">exceptions</span> <span class="kn">import</span> <span class="o">*</span>
+
+<div class="viewcode-block" id="Cell"><a class="viewcode-back" href="../cell.html#cell.Cell">[docs]</a><span class="k">class</span> <span class="nc">Cell</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class and Interface for Propagator Cells</span>
+
+<span class="sd">    Each subclass of Cell must implement:</span>
+
+<span class="sd">        * is_equal(other)</span>
+<span class="sd">            - whether two objects are the same</span>
+<span class="sd">            - __eq__ = is_equal</span>
+<span class="sd">        * is_contradictory(other)</span>
+<span class="sd">        * is_entailed_by(other)</span>
+<span class="sd">        * merge(other)</span>
+<span class="sd">            &quot;The fully nuanced question that merge answers is</span>
+<span class="sd">            ``What do I need to do to the network in order to make</span>
+<span class="sd">            it reflect the discovery that these two information</span>
+<span class="sd">            structures are about the same object?&#39;&#39;</span>
+<span class="sd">        * size()</span>
+<span class="sd">            Describes how large the set is</span>
+<span class="sd">            - How should we compute sizes for Strings?  Or should</span>
+<span class="sd">              they return None and we just ignore them?</span>
+<span class="sd">            - __len__ = size</span>
+<span class="sd">    Optionally, a static function:</span>
+<span class="sd">        * coerce(value)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__instancecheck__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        defines behavior of isinstance(obj, Cell) that checks to see</span>
+<span class="sd">        if obj is a Cell</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">required_methods</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;is_equal&#39;</span><span class="p">,</span> <span class="s">&#39;is_contradictory&#39;</span><span class="p">,</span> <span class="s">&#39;is_entailed_by&#39;</span> \
+                <span class="s">&#39;entails&#39;</span><span class="p">,</span> <span class="s">&#39;merge&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">required_methods</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s"> is not a cell: missing &#39;</span><span class="si">%s</span><span class="s">&#39; method.&quot;</span> \
+                        <span class="o">%</span> <span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">method</span><span class="p">))</span>
+                <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="bp">True</span>
+            
+
+    <span class="k">def</span> <span class="nf">is_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="bp">NotImplemented</span> 
+
+    <span class="k">def</span> <span class="nf">is_contradictory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="bp">NotImplemented</span> 
+
+<div class="viewcode-block" id="Cell.is_entailed_by"><a class="viewcode-back" href="../cell.html#cell.Cell.is_entailed_by">[docs]</a>    <span class="k">def</span> <span class="nf">is_entailed_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Means that Other is more specific than Self;  Self is more general than</span>
+<span class="sd">        other.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;Needs is_entailed_by in </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span>
+        <span class="k">raise</span> <span class="bp">NotImplemented</span>
+        </div>
+<div class="viewcode-block" id="Cell.entails"><a class="viewcode-back" href="../cell.html#cell.Cell.entails">[docs]</a>    <span class="k">def</span> <span class="nf">entails</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The inverse of is_entailed_by, meaning Other is more general than Self.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">other</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Cell.merge"><a class="viewcode-back" href="../cell.html#cell.Cell.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Merge has three cases:</span>
+<span class="sd">            1.  Neither new nor old values are redundant =&gt; need both of their</span>
+<span class="sd">            supports</span>
+<span class="sd">            2.  If either value is strictly redundant =&gt; don&#39;t include its</span>
+<span class="sd">            supports</span>
+<span class="sd">            3.  If they are equivalent, we can choose which support to take.</span>
+<span class="sd">              - Use the one already present, unless it has more information</span>
+
+<span class="sd">        If two values contradict each other, return a contradiction object.</span>
+<span class="sd">        (raise a contradiction exception)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+        </div>
+<div class="viewcode-block" id="Cell.set"><a class="viewcode-back" href="../cell.html#cell.Cell.set">[docs]</a>    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Alias for Merge &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+</div>
+    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        When primitive cells are checked for containment, it is typically to</span>
+<span class="sd">        see if it has a particular property</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Default string representation (deferred to subclass&#39;s __repr__)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__repr__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__deepcopy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memo</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Copies a Cell but does not copy it&#39;s domain or values (extension)</span>
+<span class="sd">        because these can be recomputed.</span>
+<span class="sd">        TODO: test that amortized flags (__recompute=False) are not copied</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">copied</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>  <span class="c"># shallow copy</span>
+        <span class="n">copied</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">copied</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;domain&#39;</span><span class="p">,</span> <span class="s">&#39;values&#39;</span><span class="p">,</span> <span class="s">&#39;_domain_hash&#39;</span><span class="p">]:</span>
+                <span class="n">copied</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">memo</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">copied</span>
+
+<div class="viewcode-block" id="Cell.stem"><a class="viewcode-back" href="../cell.html#cell.Cell.stem">[docs]</a>    <span class="k">def</span> <span class="nf">stem</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Creates a new instance of the current cell value &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Cell.cellclass"><a class="viewcode-back" href="../cell.html#cell.Cell.cellclass">[docs]</a>    <span class="k">def</span> <span class="nf">cellclass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns a string containing the class name &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
+        </div>
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A general purpose hash method for cells. If cells have other parts</span>
+<span class="sd">        that need to be compared, then they need to implement their own.</span>
+
+<span class="sd">        This method computes a hash for</span>
+<span class="sd">            - &#39;domain&#39; (iterable with hashable elements) </span>
+<span class="sd">        and either</span>
+<span class="sd">               - &#39;value&#39; (hashable),</span>
+<span class="sd">            or</span>
+<span class="sd">               - &#39;values&#39; (iterable with hashable elements)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hval</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;domain&#39;</span><span class="p">):</span>
+            <span class="c"># hash the domain </span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span> <span class="s">&#39;domain_hash&#39;</span><span class="p">):</span>
+                <span class="c"># compute domain hash and share among all class members</span>
+                <span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span> <span class="s">&#39;domain_hash&#39;</span><span class="p">,</span> 
+                    <span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span>  <span class="nb">hash</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">^</span> <span class="nb">hash</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="n">hval</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">domain_hash</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;value&#39;</span><span class="p">):</span>
+            <span class="c"># hash the value</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">hval</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">hval</span> <span class="o">+=</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;values&#39;</span><span class="p">):</span>
+            <span class="c"># hash each value in the domain</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">hval</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c"># works with any iterable value</span>
+                <span class="n">hval</span> <span class="o">+=</span> <span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">hash</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">^</span> <span class="nb">hash</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CellConstructionFailure</span><span class="p">(</span><span class="s">&quot;Missing value or values.  Something&quot;</span>\
+                    <span class="o">+</span> <span class="s">&quot; wont be __hash__&#39;d correctly in </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">hval</span> <span class="o">==</span> <span class="o">-</span><span class="mi">2</span><span class="p">:</span>
+            <span class="c"># -2 is a reserved hash value in python.</span>
+            <span class="n">hval</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="k">return</span> <span class="n">hval</span>
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">beliefs 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Nicolas Bravo.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

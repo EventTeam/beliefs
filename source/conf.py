@@ -166,7 +166,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'myUROPdoc'
+htmlhelp_basename = 'beliefs'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -185,8 +185,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'myUROP.tex', u'myUROP Documentation',
-   u'Nicolas Bravo', 'manual'),
+  ('index')
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -214,10 +213,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [
-    ('index', 'myurop', u'myUROP Documentation',
-     [u'Nicolas Bravo'], 1)
-]
+man_pages = [ ]
 
 # If true, show URL addresses after external links.
 #man_show_urls = False
@@ -246,7 +242,7 @@ texinfo_documents = [
 # -- Options for Epub output ---------------------------------------------------
 
 # Bibliographic Dublin Core info.
-epub_title = u'myUROP'
+epub_title = u'beliefs'
 epub_author = u'Nicolas Bravo'
 epub_publisher = u'Nicolas Bravo'
 epub_copyright = u'2013, Nicolas Bravo'
