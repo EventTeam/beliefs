@@ -17,7 +17,8 @@ import sys, os
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('/home/nbravo/UROP/beliefs/src/beliefs/'))
-sys.path.append('/home/nbravo/UROP/beliefs/src/beliefs/cells')
+sys.path.append(os.path.abspath('../src/beliefs/'))
+sys.path.append(os.path.abspath('../src/beliefs/cells'))
 
 # -- General configuration -----------------------------------------------------
 
@@ -75,7 +76,7 @@ exclude_patterns = []
 
 # If true, the current module name will be prepended to all description
 # unit titles (such as .. function::).
-#add_module_names = True
+add_module_names = False 
 
 # If true, sectionauthor and moduleauthor directives will be shown in the
 # output. They are ignored by default.
@@ -92,7 +93,7 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'default'
+html_theme = 'nature'  # or pyramid, agogo
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -228,8 +229,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'myUROP', u'myUROP Documentation',
-   u'Nicolas Bravo', 'myUROP', 'One line description of project.',
+  ('index', 
    'Miscellaneous'),
 ]
 

@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Sets &mdash; myUROP 1.0 documentation</title>
+    <title>Sets &mdash; beliefs 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="myUROP 1.0 documentation" href="index.html" />
+    <link rel="top" title="beliefs 1.0 documentation" href="index.html" />
     <link rel="next" title="Spatial" href="spatial.html" />
     <link rel="prev" title="Posets" href="posets.html" /> 
   </head>
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="posets.html" title="Posets"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">myUROP 1.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">beliefs 1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -55,170 +55,112 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-sets">
-<span id="sets"></span><h1>Sets<a class="headerlink" href="#module-sets" title="Permalink to this headline">¶</a></h1>
-<p>Classes to represent arbitrary sets (including sets of sets).</p>
-<p>This module implements sets using dictionaries whose values are
-ignored.  The usual operations (union, intersection, deletion, etc.)
-are provided as both methods and operators.</p>
-<p>Important: sets are not sequences!  While they support &#8216;x in s&#8217;,
-&#8216;len(s)&#8217;, and &#8216;for x in s&#8217;, none of those operations are unique for
-sequences; for example, mappings support all three as well.  The
-characteristic operation for sequences is subscripting with small
-integers: s[i], for i in range(len(s)).  Sets don&#8217;t support
-subscripting at all.  Also, sequences allow multiple occurrences and
-their elements have a definite order; sets on the other hand don&#8217;t
-record multiple occurrences and don&#8217;t remember the order of element
-insertion (which is why they don&#8217;t support s[i]).</p>
-<p>The following classes are provided:</p>
-<dl class="docutils">
-<dt>BaseSet &#8211; All the operations common to both mutable and immutable</dt>
-<dd>sets. This is an abstract class, not meant to be directly
-instantiated.</dd>
-</dl>
-<p>Set &#8211; Mutable sets, subclass of BaseSet; not hashable.</p>
-<dl class="docutils">
-<dt>ImmutableSet &#8211; Immutable sets, subclass of BaseSet; hashable.</dt>
-<dd>An iterable argument is mandatory to create an ImmutableSet.</dd>
-<dt>_TemporarilyImmutableSet &#8211; A wrapper around a Set, hashable,</dt>
-<dd>giving the same hash value as the immutable set equivalent
-would have.  Do not use this class directly.</dd>
-</dl>
-<p>Only hashable objects can be added to a Set. In particular, you cannot
-really add a Set as an element to another Set; if you try, what is
-actually added is an ImmutableSet built from it (it compares equal to
-the one you tried adding).</p>
-<p>When you ask if <a href="#id1"><span class="problematic" id="id2">`</span></a>x in y&#8217; where x is a Set and y is a Set or
-ImmutableSet, x is wrapped into a _TemporarilyImmutableSet z, and
-what&#8217;s tested is actually <a href="#id3"><span class="problematic" id="id4">`</span></a>z in y&#8217;.</p>
+  <div class="section" id="module-setCells">
+<span id="sets"></span><h1>Sets<a class="headerlink" href="#module-setCells" title="Permalink to this headline">¶</a></h1>
+<p>Defines the Set cells</p>
 <dl class="class">
-<dt id="sets.BaseSet">
-<em class="property">class </em><tt class="descclassname">sets.</tt><tt class="descname">BaseSet</tt><a class="reference internal" href="_modules/sets.html#BaseSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.BaseSet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>Common base class for mutable and immutable sets.</p>
+<dt id="setCells.SetIntersectionCell">
+<em class="property">class </em><tt class="descclassname">setCells.</tt><tt class="descname">SetIntersectionCell</tt><big>(</big><em>domain</em>, <em>value_or_values=None</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">beliefs.cells.cell.Cell</span></tt></p>
+<p>Represents iterable unordered elements.</p>
 <dl class="method">
-<dt id="sets.BaseSet.copy">
-<tt class="descname">copy</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/sets.html#BaseSet.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.BaseSet.copy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a shallow copy of a set.</p>
+<dt id="setCells.SetIntersectionCell.coerce">
+<tt class="descname">coerce</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.coerce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.coerce" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensures that a value is a SetCell</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="sets.BaseSet.difference">
-<tt class="descname">difference</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/sets.html#BaseSet.difference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.BaseSet.difference" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the difference of two sets as a new Set.</p>
-<p>(I.e. all elements that are in this set and not in the other.)</p>
+<dt id="setCells.SetIntersectionCell.contains">
+<tt class="descname">contains</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.contains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.contains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True iff value is in the set</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="sets.BaseSet.intersection">
-<tt class="descname">intersection</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/sets.html#BaseSet.intersection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.BaseSet.intersection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the intersection of two sets as a new set.</p>
-<p>(I.e. all elements that are in both sets.)</p>
+<dt id="setCells.SetIntersectionCell.get_values">
+<tt class="descname">get_values</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.get_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.get_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>The main difference between Intersection/Union</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="sets.BaseSet.issubset">
-<tt class="descname">issubset</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/sets.html#BaseSet.issubset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.BaseSet.issubset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Report whether another set contains this set.</p>
+<dt id="setCells.SetIntersectionCell.is_contradictory">
+<tt class="descname">is_contradictory</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.is_contradictory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.is_contradictory" title="Permalink to this definition">¶</a></dt>
+<dd><p>What does it mean for a set to contradict another? If a merge results
+in the empty set &#8211; when both sets are disjoint.</p>
+<p>CONTRADICTION: self = {4} other = {3}
+NOT CONTRADICTION: self = {4} other = {3,4}
+NOT CONTRADICTION: self = {3,4} other = {3}</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="sets.BaseSet.issuperset">
-<tt class="descname">issuperset</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/sets.html#BaseSet.issuperset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.BaseSet.issuperset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Report whether this set contains another set.</p>
+<dt id="setCells.SetIntersectionCell.is_entailed_by">
+<tt class="descname">is_entailed_by</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.is_entailed_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.is_entailed_by" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fewer members = more information (exception is empty set, which means
+all members of the domain)</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>when self is empty and others is not (equal to containing the</li>
+</ol>
+<blockquote>
+<div>entire domain)</div></blockquote>
+<ol class="arabic simple" start="2">
+<li>when other contains more members than self</li>
+</ol>
+</div></blockquote>
 </dd></dl>
 
 <dl class="method">
-<dt id="sets.BaseSet.symmetric_difference">
-<tt class="descname">symmetric_difference</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/sets.html#BaseSet.symmetric_difference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.BaseSet.symmetric_difference" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the symmetric difference of two sets as a new set.</p>
-<p>(I.e. all elements that are in exactly one of the sets.)</p>
+<dt id="setCells.SetIntersectionCell.is_equal">
+<tt class="descname">is_equal</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.is_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.is_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>True iff all members are the same</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="sets.BaseSet.union">
-<tt class="descname">union</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/sets.html#BaseSet.union"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.BaseSet.union" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the union of two sets as a new set.</p>
-<p>(I.e. all elements that are in either set.)</p>
+<dt id="setCells.SetIntersectionCell.merge">
+<tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>We can merge unless the merge results in an empty set &#8211; a
+contradiction</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="setCells.SetIntersectionCell.same_domain">
+<tt class="descname">same_domain</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.same_domain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.same_domain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cheap pointer comparison or symmetric difference operation
+to ensure domains are the same</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="setCells.SetIntersectionCell.stem">
+<tt class="descname">stem</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.stem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.stem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spawns a new SetCell of the same domain</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="setCells.SetIntersectionCell.to_dot">
+<tt class="descname">to_dot</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.to_dot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.to_dot" title="Permalink to this definition">¶</a></dt>
+<dd><p>For Graphviz rendering</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
-<dt id="sets.Set">
-<em class="property">class </em><tt class="descclassname">sets.</tt><tt class="descname">Set</tt><big>(</big><em>iterable=None</em><big>)</big><a class="reference internal" href="_modules/sets.html#Set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.Set" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#sets.BaseSet" title="sets.BaseSet"><tt class="xref py py-class docutils literal"><span class="pre">sets.BaseSet</span></tt></a></p>
-<p>Mutable set class.</p>
+<dt id="setCells.SetUnionCell">
+<em class="property">class </em><tt class="descclassname">setCells.</tt><tt class="descname">SetUnionCell</tt><big>(</big><em>domain</em>, <em>value_or_values=None</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetUnionCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetUnionCell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#setCells.SetIntersectionCell" title="setCells.SetIntersectionCell"><tt class="xref py py-class docutils literal"><span class="pre">setCells.SetIntersectionCell</span></tt></a></p>
+<p>SetUnionCell breaks monotonicity.
+Initially, its values are equal to its domain, and then after 1 or more updates, its values become the UNION of all of the updates</p>
 <dl class="method">
-<dt id="sets.Set.add">
-<tt class="descname">add</tt><big>(</big><em>element</em><big>)</big><a class="reference internal" href="_modules/sets.html#Set.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.Set.add" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add an element to a set.</p>
-<p>This has no effect if the element is already present.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="sets.Set.clear">
-<tt class="descname">clear</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/sets.html#Set.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.Set.clear" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove all elements from this set.</p>
+<dt id="setCells.SetUnionCell.get_values">
+<tt class="descname">get_values</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/setCells.html#SetUnionCell.get_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetUnionCell.get_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>The main difference between Intersection/Union</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="sets.Set.difference_update">
-<tt class="descname">difference_update</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/sets.html#Set.difference_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.Set.difference_update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove all elements of another set from this set.</p>
+<dt id="setCells.SetUnionCell.merge">
+<tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetUnionCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetUnionCell.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>We can merge unless the merge results in an empty set &#8211; a
+contradiction</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="sets.Set.discard">
-<tt class="descname">discard</tt><big>(</big><em>element</em><big>)</big><a class="reference internal" href="_modules/sets.html#Set.discard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.Set.discard" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove an element from a set if it is a member.</p>
-<p>If the element is not a member, do nothing.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="sets.Set.intersection_update">
-<tt class="descname">intersection_update</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/sets.html#Set.intersection_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.Set.intersection_update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update a set with the intersection of itself and another.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="sets.Set.pop">
-<tt class="descname">pop</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/sets.html#Set.pop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.Set.pop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove and return an arbitrary set element.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="sets.Set.remove">
-<tt class="descname">remove</tt><big>(</big><em>element</em><big>)</big><a class="reference internal" href="_modules/sets.html#Set.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.Set.remove" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove an element from a set; it must be a member.</p>
-<p>If the element is not a member, raise a KeyError.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="sets.Set.symmetric_difference_update">
-<tt class="descname">symmetric_difference_update</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/sets.html#Set.symmetric_difference_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.Set.symmetric_difference_update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update a set with the symmetric difference of itself and another.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="sets.Set.union_update">
-<tt class="descname">union_update</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/sets.html#Set.union_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.Set.union_update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update a set with the union of itself and another.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="sets.Set.update">
-<tt class="descname">update</tt><big>(</big><em>iterable</em><big>)</big><a class="reference internal" href="_modules/sets.html#Set.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.Set.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add all values from an iterable (such as a list or file).</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="sets.ImmutableSet">
-<em class="property">class </em><tt class="descclassname">sets.</tt><tt class="descname">ImmutableSet</tt><big>(</big><em>iterable=None</em><big>)</big><a class="reference internal" href="_modules/sets.html#ImmutableSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sets.ImmutableSet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#sets.BaseSet" title="sets.BaseSet"><tt class="xref py py-class docutils literal"><span class="pre">sets.BaseSet</span></tt></a></p>
-<p>Immutable set class.</p>
 </dd></dl>
 
 </div>
@@ -272,7 +214,7 @@ what&#8217;s tested is actually <a href="#id3"><span class="problematic" id="id4
         <li class="right" >
           <a href="posets.html" title="Posets"
              >previous</a> |</li>
-        <li><a href="index.html">myUROP 1.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">beliefs 1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

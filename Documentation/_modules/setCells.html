@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,9 +7,9 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>setCells &mdash; myUROP 1.0 documentation</title>
+    <title>setCells &mdash; beliefs 1.0 documentation</title>
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -26,7 +25,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="myUROP 1.0 documentation" href="../index.html" />
+    <link rel="top" title="beliefs 1.0 documentation" href="../index.html" />
     <link rel="up" title="Module code" href="index.html" /> 
   </head>
   <body>
@@ -39,7 +38,7 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../index.html">myUROP 1.0 documentation</a> &raquo;</li>
+        <li><a href="../index.html">beliefs 1.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -55,7 +54,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">beliefs.cells</span> <span class="kn">import</span> <span class="o">*</span>
 
-<div class="viewcode-block" id="SetIntersectionCell"><a class="viewcode-back" href="../sets.html#setCells.SetIntersectionCell">[docs]</a><span class="k">class</span> <span class="nc">SetIntersectionCell</span><span class="p">(</span><span class="n">Cell</span><span class="p">):</span>
+<div class="viewcode-block" id="SetIntersectionCell"><a class="viewcode-back" href="../setCells.html#setCells.SetIntersectionCell">[docs]</a><span class="k">class</span> <span class="nc">SetIntersectionCell</span><span class="p">(</span><span class="n">Cell</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Represents iterable unordered elements.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -79,11 +78,11 @@
         <span class="sd">&quot;&quot;&quot; Creates a new instance of the class with args &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">clz</span><span class="p">(</span><span class="o">*</span><span class="n">arg</span><span class="p">)</span>
 
-<div class="viewcode-block" id="SetIntersectionCell.stem"><a class="viewcode-back" href="../sets.html#setCells.SetIntersectionCell.stem">[docs]</a>    <span class="k">def</span> <span class="nf">stem</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SetIntersectionCell.stem"><a class="viewcode-back" href="../setCells.html#setCells.SetIntersectionCell.stem">[docs]</a>    <span class="k">def</span> <span class="nf">stem</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Spawns a new SetCell of the same domain&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="SetIntersectionCell.coerce"><a class="viewcode-back" href="../sets.html#setCells.SetIntersectionCell.coerce">[docs]</a>    <span class="k">def</span> <span class="nf">coerce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="SetIntersectionCell.coerce"><a class="viewcode-back" href="../setCells.html#setCells.SetIntersectionCell.coerce">[docs]</a>    <span class="k">def</span> <span class="nf">coerce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Ensures that a value is a SetCell</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -101,21 +100,21 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">CellConstructionFailure</span><span class="p">(</span><span class="s">&quot;Cannot turn </span><span class="si">%s</span><span class="s"> into a cell&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">value</span><span class="p">))</span>
 </div>
-<div class="viewcode-block" id="SetIntersectionCell.same_domain"><a class="viewcode-back" href="../sets.html#setCells.SetIntersectionCell.same_domain">[docs]</a>    <span class="k">def</span> <span class="nf">same_domain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="SetIntersectionCell.same_domain"><a class="viewcode-back" href="../setCells.html#setCells.SetIntersectionCell.same_domain">[docs]</a>    <span class="k">def</span> <span class="nf">same_domain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Cheap pointer comparison or symmetric difference operation</span>
 <span class="sd">        to ensure domains are the same</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">domain</span> <span class="ow">or</span> \
                 <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">symmetric_difference</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">domain</span><span class="p">)))</span> <span class="o">==</span> <span class="mi">0</span> </div>
-<div class="viewcode-block" id="SetIntersectionCell.is_equal"><a class="viewcode-back" href="../sets.html#setCells.SetIntersectionCell.is_equal">[docs]</a>    <span class="k">def</span> <span class="nf">is_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="SetIntersectionCell.is_equal"><a class="viewcode-back" href="../setCells.html#setCells.SetIntersectionCell.is_equal">[docs]</a>    <span class="k">def</span> <span class="nf">is_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        True iff all members are the same</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">other</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_values</span><span class="p">()</span><span class="o">.</span><span class="n">symmetric_difference</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">get_values</span><span class="p">()))</span> <span class="o">==</span> <span class="mi">0</span>
 </div>
-<div class="viewcode-block" id="SetIntersectionCell.is_contradictory"><a class="viewcode-back" href="../sets.html#setCells.SetIntersectionCell.is_contradictory">[docs]</a>    <span class="k">def</span> <span class="nf">is_contradictory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="SetIntersectionCell.is_contradictory"><a class="viewcode-back" href="../setCells.html#setCells.SetIntersectionCell.is_contradictory">[docs]</a>    <span class="k">def</span> <span class="nf">is_contradictory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        What does it mean for a set to contradict another? If a merge results</span>
 <span class="sd">        in the empty set -- when both sets are disjoint.</span>
@@ -134,7 +133,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_values</span><span class="p">())</span>
 
-<div class="viewcode-block" id="SetIntersectionCell.is_entailed_by"><a class="viewcode-back" href="../sets.html#setCells.SetIntersectionCell.is_entailed_by">[docs]</a>    <span class="k">def</span> <span class="nf">is_entailed_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="SetIntersectionCell.is_entailed_by"><a class="viewcode-back" href="../setCells.html#setCells.SetIntersectionCell.is_entailed_by">[docs]</a>    <span class="k">def</span> <span class="nf">is_entailed_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fewer members = more information (exception is empty set, which means</span>
 <span class="sd">        all members of the domain)</span>
@@ -157,20 +156,20 @@
         
         <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">issuperset</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> 
 </div>
-<div class="viewcode-block" id="SetIntersectionCell.contains"><a class="viewcode-back" href="../sets.html#setCells.SetIntersectionCell.contains">[docs]</a>    <span class="k">def</span> <span class="nf">contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="SetIntersectionCell.contains"><a class="viewcode-back" href="../setCells.html#setCells.SetIntersectionCell.contains">[docs]</a>    <span class="k">def</span> <span class="nf">contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns True iff value is in the set</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_values</span><span class="p">()</span>
 </div>
-<div class="viewcode-block" id="SetIntersectionCell.get_values"><a class="viewcode-back" href="../sets.html#setCells.SetIntersectionCell.get_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SetIntersectionCell.get_values"><a class="viewcode-back" href="../setCells.html#setCells.SetIntersectionCell.get_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; The main difference between Intersection/Union &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span>
 </div>
-<div class="viewcode-block" id="SetIntersectionCell.merge"><a class="viewcode-back" href="../sets.html#setCells.SetIntersectionCell.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="SetIntersectionCell.merge"><a class="viewcode-back" href="../setCells.html#setCells.SetIntersectionCell.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        We can merge unless the merge results in an empty set -- a</span>
 <span class="sd">        contradiction</span>
@@ -199,7 +198,7 @@
         <span class="sd">&quot;&quot;&quot; Python-specific representation&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s">&quot;{&quot;</span> <span class="o">+</span> <span class="s">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_values</span><span class="p">()])</span> <span class="o">+</span> <span class="s">&quot;}&quot;</span>
 
-<div class="viewcode-block" id="SetIntersectionCell.to_dot"><a class="viewcode-back" href="../sets.html#setCells.SetIntersectionCell.to_dot">[docs]</a>    <span class="k">def</span> <span class="nf">to_dot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SetIntersectionCell.to_dot"><a class="viewcode-back" href="../setCells.html#setCells.SetIntersectionCell.to_dot">[docs]</a>    <span class="k">def</span> <span class="nf">to_dot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; For Graphviz rendering &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_values</span><span class="p">())</span>
 </div>
@@ -218,11 +217,11 @@
     <span class="n">__eq__</span> <span class="o">=</span> <span class="n">is_equal</span>
 
 </div>
-<div class="viewcode-block" id="SetUnionCell"><a class="viewcode-back" href="../sets.html#setCells.SetUnionCell">[docs]</a><span class="k">class</span> <span class="nc">SetUnionCell</span><span class="p">(</span><span class="n">SetIntersectionCell</span><span class="p">):</span>
+<div class="viewcode-block" id="SetUnionCell"><a class="viewcode-back" href="../setCells.html#setCells.SetUnionCell">[docs]</a><span class="k">class</span> <span class="nc">SetUnionCell</span><span class="p">(</span><span class="n">SetIntersectionCell</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; SetUnionCell breaks monotonicity.</span>
 <span class="sd">    Initially, its values are equal to its domain, and then after 1 or more updates, its values become the UNION of all of the updates&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="SetUnionCell.merge"><a class="viewcode-back" href="../sets.html#setCells.SetUnionCell.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="SetUnionCell.merge"><a class="viewcode-back" href="../setCells.html#setCells.SetUnionCell.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        We can merge unless the merge results in an empty set -- a</span>
 <span class="sd">        contradiction</span>
@@ -244,7 +243,7 @@
         <span class="k">return</span> <span class="bp">self</span>
 
 </div>
-<div class="viewcode-block" id="SetUnionCell.get_values"><a class="viewcode-back" href="../sets.html#setCells.SetUnionCell.get_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SetUnionCell.get_values"><a class="viewcode-back" href="../setCells.html#setCells.SetUnionCell.get_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; The main difference between Intersection/Union &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span>
@@ -369,7 +368,7 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../index.html">myUROP 1.0 documentation</a> &raquo;</li>
+        <li><a href="../index.html">beliefs 1.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>

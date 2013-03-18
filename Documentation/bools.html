@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,9 +7,9 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Bools &mdash; myUROP 1.0 documentation</title>
+    <title>Bools &mdash; beliefs 1.0 documentation</title>
     
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -26,9 +25,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="myUROP 1.0 documentation" href="index.html" />
-    <link rel="next" title="Cell" href="cell.html" />
-    <link rel="prev" title="Welcome to myUROP’s documentation!" href="index.html" /> 
+    <link rel="top" title="beliefs 1.0 documentation" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -40,13 +37,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="right" >
-          <a href="cell.html" title="Cell"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="index.html" title="Welcome to myUROP’s documentation!"
-             accesskey="P">previous</a> |</li>
-        <li><a href="index.html">myUROP 1.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">beliefs 1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -55,70 +46,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-bools">
-<span id="bools"></span><h1>Bools<a class="headerlink" href="#module-bools" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="bools.BoolCell">
-<em class="property">class </em><tt class="descclassname">bools.</tt><tt class="descname">BoolCell</tt><big>(</big><em>value=None</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">beliefs.cells.cell.Cell</span></tt></p>
-<p>3-valued logic (T, F, U)
-(U)ndefined means (T v F) ^ -(T ^ F)</p>
-<dl class="staticmethod">
-<dt id="bools.BoolCell.coerce">
-<em class="property">static </em><tt class="descname">coerce</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.coerce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.coerce" title="Permalink to this definition">¶</a></dt>
-<dd><p>Coerces a Bool, None, or int into Bit/Propositional form</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bools.BoolCell.entails">
-<tt class="descname">entails</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.entails"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.entails" title="Permalink to this definition">¶</a></dt>
-<dd><p>Inverse is_entailed_by</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bools.BoolCell.from_json">
-<tt class="descname">from_json</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.from_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.from_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initializes from JSON representation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bools.BoolCell.is_contradictory">
-<tt class="descname">is_contradictory</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.is_contradictory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.is_contradictory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determines if two cells are contradictory. Returns a boolean.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bools.BoolCell.is_entailed_by">
-<tt class="descname">is_entailed_by</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.is_entailed_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.is_entailed_by" title="Permalink to this definition">¶</a></dt>
-<dd><p>If the other is as or more specific than self</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bools.BoolCell.is_equal">
-<tt class="descname">is_equal</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.is_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.is_equal" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests whether two Cells are equal. Returns a boolean.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bools.BoolCell.merge">
-<tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.merge" title="Permalink to this definition">¶</a></dt>
-<dd><p>Merges two BoolCells</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bools.BoolCell.to_dot">
-<tt class="descname">to_dot</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.to_dot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.to_dot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns value as a string</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bools.BoolCell.to_json">
-<tt class="descname">to_json</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.to_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.to_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns JSON representation of BoolCell</p>
-</dd></dl>
-
-</dd></dl>
-
+  <div class="section" id="bools">
+<h1>Bools<a class="headerlink" href="#bools" title="Permalink to this headline">¶</a></h1>
 </div>
 
 
@@ -127,12 +56,6 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
-                        title="previous chapter">Welcome to myUROP&#8217;s documentation!</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="cell.html"
-                        title="next chapter">Cell</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/bools.txt"
@@ -164,13 +87,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="right" >
-          <a href="cell.html" title="Cell"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="index.html" title="Welcome to myUROP’s documentation!"
-             >previous</a> |</li>
-        <li><a href="index.html">myUROP 1.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">beliefs 1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

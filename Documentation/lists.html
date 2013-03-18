@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,9 +7,9 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Lists &mdash; myUROP 1.0 documentation</title>
+    <title>Lists &mdash; beliefs 1.0 documentation</title>
     
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -26,9 +25,9 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="myUROP 1.0 documentation" href="index.html" />
+    <link rel="top" title="beliefs 1.0 documentation" href="index.html" />
     <link rel="next" title="Numeric" href="numeric.html" />
-    <link rel="prev" title="Lazy" href="lazy.html" /> 
+    <link rel="prev" title="Bools" href="bools.html" /> 
   </head>
   <body>
     <div class="related">
@@ -44,9 +43,9 @@
           <a href="numeric.html" title="Numeric"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="lazy.html" title="Lazy"
+          <a href="bools.html" title="Bools"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">myUROP 1.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">beliefs 1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -59,8 +58,8 @@
 <span id="lists"></span><h1>Lists<a class="headerlink" href="#module-lists" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="lists.LinearOrderedCell">
-<em class="property">class </em><tt class="descclassname">lists.</tt><tt class="descname">LinearOrderedCell</tt><big>(</big><em>ordered_domain</em>, <em>low=None</em>, <em>high=None</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="cell.html#cell.Cell" title="cell.Cell"><tt class="xref py py-class docutils literal"><span class="pre">cell.Cell</span></tt></a></p>
+<em class="property">class </em><tt class="descname">LinearOrderedCell</tt><big>(</big><em>ordered_domain</em>, <em>low=None</em>, <em>high=None</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">cell.Cell</span></tt></p>
 <p>A generalization of IntervalCell to non-numeric symbols</p>
 <dl class="method">
 <dt id="lists.LinearOrderedCell.coerce">
@@ -109,8 +108,8 @@ with the same domain</p>
 
 <dl class="class">
 <dt id="lists.ListCell">
-<em class="property">class </em><tt class="descclassname">lists.</tt><tt class="descname">ListCell</tt><big>(</big><em>value=None</em><big>)</big><a class="reference internal" href="_modules/lists.html#ListCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.ListCell" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="cell.html#cell.Cell" title="cell.Cell"><tt class="xref py py-class docutils literal"><span class="pre">cell.Cell</span></tt></a></p>
+<em class="property">class </em><tt class="descname">ListCell</tt><big>(</big><em>value=None</em><big>)</big><a class="reference internal" href="_modules/lists.html#ListCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.ListCell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">cell.Cell</span></tt></p>
 <p>ListCells contain ordered elements</p>
 <dl class="method">
 <dt id="lists.ListCell.append">
@@ -166,7 +165,7 @@ list (ie, this list is a prefix of the other)</p>
 
 <dl class="class">
 <dt id="lists.PrefixCell">
-<em class="property">class </em><tt class="descclassname">lists.</tt><tt class="descname">PrefixCell</tt><big>(</big><em>value=None</em><big>)</big><a class="reference internal" href="_modules/lists.html#PrefixCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.PrefixCell" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descname">PrefixCell</tt><big>(</big><em>value=None</em><big>)</big><a class="reference internal" href="_modules/lists.html#PrefixCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.PrefixCell" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#lists.ListCell" title="lists.ListCell"><tt class="xref py py-class docutils literal"><span class="pre">lists.ListCell</span></tt></a></p>
 <p>PrefixCells contain lists of paths</p>
 <dl class="method">
@@ -186,8 +185,8 @@ list (ie, this list is a prefix of the other)</p>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="lazy.html"
-                        title="previous chapter">Lazy</a></p>
+  <p class="topless"><a href="bools.html"
+                        title="previous chapter">Bools</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="numeric.html"
                         title="next chapter">Numeric</a></p>
@@ -226,9 +225,9 @@ list (ie, this list is a prefix of the other)</p>
           <a href="numeric.html" title="Numeric"
              >next</a> |</li>
         <li class="right" >
-          <a href="lazy.html" title="Lazy"
+          <a href="bools.html" title="Bools"
              >previous</a> |</li>
-        <li><a href="index.html">myUROP 1.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">beliefs 1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

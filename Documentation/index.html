@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,9 +7,9 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Welcome to myUROP’s documentation! &mdash; myUROP 1.0 documentation</title>
+    <title>Beliefs &mdash; beliefs 1.0 documentation</title>
     
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -26,8 +25,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="myUROP 1.0 documentation" href="#" />
-    <link rel="next" title="Bools" href="bools.html" /> 
+    <link rel="top" title="beliefs 1.0 documentation" href="#" />
+    <link rel="next" title="Beliefstate" href="beliefstate.html" /> 
   </head>
   <body>
     <div class="related">
@@ -40,9 +39,9 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="bools.html" title="Bools"
+          <a href="beliefstate.html" title="Beliefstate"
              accesskey="N">next</a> |</li>
-        <li><a href="#">myUROP 1.0 documentation</a> &raquo;</li> 
+        <li><a href="#">beliefs 1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -51,24 +50,22 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="welcome-to-myurop-s-documentation">
-<h1>Welcome to myUROP&#8217;s documentation!<a class="headerlink" href="#welcome-to-myurop-s-documentation" title="Permalink to this headline">¶</a></h1>
-<p>Contents:</p>
+  <div class="section" id="beliefs">
+<h1>Beliefs<a class="headerlink" href="#beliefs" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="bools.html">Bools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cell.html">Cell</a></li>
-<li class="toctree-l1"><a class="reference internal" href="colors.html">Colors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dicts.html">Dicts</a></li>
-<li class="toctree-l1"><a class="reference internal" href="lazy.html">Lazy</a></li>
-<li class="toctree-l1"><a class="reference internal" href="lists.html">Lists</a></li>
-<li class="toctree-l1"><a class="reference internal" href="numeric.html">Numeric</a></li>
-<li class="toctree-l1"><a class="reference internal" href="posets.html">Posets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sets.html">Sets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="spatial.html">Spatial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="strings.html">Strings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="beliefstate.html">Beliefstate</a></li>
 </ul>
 </div>
+<p>Here are <em>cell</em> data containers, <em class="xref std std-ref">cell</em> subclasses that are designed to accumulate and maintain the consistency of <em>partial information</em>:</p>
+<ul class="simple">
+<li><tt class="xref py py-class docutils literal"><span class="pre">bools.BoolCell</span></tt> three-valued logic of <cite>True</cite>, <cite>False</cite> and <cite>Unknown</cite>.</li>
+<li><a class="reference internal" href="dicts.html#dicts.DictCell" title="dicts.DictCell"><tt class="xref py py-class docutils literal"><span class="pre">dicts.DictCell</span></tt></a> a labeled set, like a Python <cite>dict</cite> that pairs attributes with cell values.</li>
+<li><a class="reference internal" href="numeric.html#numeric.IntervalCell" title="numeric.IntervalCell"><tt class="xref py py-class docutils literal"><span class="pre">numeric.IntervalCell</span></tt></a> a bounded interval or cardinal number</li>
+<li><a class="reference internal" href="lists.html#lists.LinearOrderedCell" title="lists.LinearOrderedCell"><tt class="xref py py-class docutils literal"><span class="pre">lists.LinearOrderedCell</span></tt></a> a bounded sequence of ordered symbols</li>
+<li><a class="reference internal" href="lists.html#lists.PrefixCell" title="lists.PrefixCell"><tt class="xref py py-class docutils literal"><span class="pre">lists.PrefixCell</span></tt></a> allows maintains sequences with shared elements</li>
+<li><a class="reference internal" href="posets.html#posets.PartialOrderedCell" title="posets.PartialOrderedCell"><tt class="xref py py-class docutils literal"><span class="pre">posets.PartialOrderedCell</span></tt></a> maintains a taxonomy of information</li>
+</ul>
 </div>
 <div class="section" id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
@@ -87,15 +84,15 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Welcome to myUROP&#8217;s documentation!</a><ul>
+<li><a class="reference internal" href="#">Beliefs</a><ul>
 </ul>
 </li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
 
   <h4>Next topic</h4>
-  <p class="topless"><a href="bools.html"
-                        title="next chapter">Bools</a></p>
+  <p class="topless"><a href="beliefstate.html"
+                        title="next chapter">Beliefstate</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/index.txt"
@@ -128,9 +125,9 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="bools.html" title="Bools"
+          <a href="beliefstate.html" title="Beliefstate"
              >next</a> |</li>
-        <li><a href="#">myUROP 1.0 documentation</a> &raquo;</li> 
+        <li><a href="#">beliefs 1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
