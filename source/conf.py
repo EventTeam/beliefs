@@ -43,7 +43,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'beliefs'
-copyright = u'2013, Nicolas Bravo'
+copyright = u'2013, Dustin Smith, Nicolas Bravo'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -243,9 +243,7 @@ texinfo_documents = [
 
 # Bibliographic Dublin Core info.
 epub_title = u'beliefs'
-epub_author = u'Nicolas Bravo'
-epub_publisher = u'Nicolas Bravo'
-epub_copyright = u'2013, Nicolas Bravo'
+epub_author = u'Dustin Smith'
 
 # The language of the text. It defaults to the language option
 # or en if the language is not set.
