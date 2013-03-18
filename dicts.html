@@ -7,11 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-<<<<<<< HEAD
     <title>Dicts &mdash; beliefs 1.0 documentation</title>
-=======
-    <title>Dicts &mdash; AIGRE 1.0 documentation</title>
->>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -29,13 +25,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-<<<<<<< HEAD
     <link rel="top" title="beliefs 1.0 documentation" href="index.html" /> 
-=======
-    <link rel="top" title="AIGRE 1.0 documentation" href="index.html" />
-    <link rel="next" title="Lazy" href="lazy.html" />
-    <link rel="prev" title="Colors" href="colors.html" /> 
->>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
   </head>
   <body>
     <div class="related">
@@ -47,17 +37,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-<<<<<<< HEAD
         <li><a href="index.html">beliefs 1.0 documentation</a> &raquo;</li> 
-=======
-        <li class="right" >
-          <a href="lazy.html" title="Lazy"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="colors.html" title="Colors"
-             accesskey="P">previous</a> |</li>
-        <li><a href="index.html">AIGRE 1.0 documentation</a> &raquo;</li> 
->>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
       </ul>
     </div>  
 
@@ -70,14 +50,8 @@
 <span id="dicts"></span><h1>Dicts<a class="headerlink" href="#module-dicts" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="dicts.DictCell">
-<<<<<<< HEAD
 <em class="property">class </em><tt class="descname">DictCell</tt><big>(</big><em>from_dict=None</em><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">cell.Cell</span></tt></p>
-<p>This is a wrapper for a dictionary of cells.  Can be compared with another
-=======
-<em class="property">class </em><tt class="descclassname">dicts.</tt><tt class="descname">DictCell</tt><big>(</big><em>from_dict=None</em><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is a wrapper for a dictionary of cells.  Can be compared with another
->>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
 DictCell.</p>
 <p>Unlike the other primitive structures, a DictCell cannot be coerced into something
 else.</p>
@@ -97,13 +71,6 @@ is inside the dictionary.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="dicts.DictCell.entails">
-<tt class="descname">entails</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell.entails"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell.entails" title="Permalink to this definition">¶</a></dt>
-<dd><p>Whether the target of the other belief state is strictly more
-general than the caller belief state</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="dicts.DictCell.get_value_from_path">
 <tt class="descname">get_value_from_path</tt><big>(</big><em>keypath</em><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell.get_value_from_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell.get_value_from_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the value at the end of keypath (or None)
@@ -111,15 +78,22 @@ keypath is a list of keys, e.g., [&#8220;key&#8221;, &#8220;subkey&#8221;, &#822
 </dd></dl>
 
 <dl class="method">
-<dt id="dicts.DictCell.is_contradictory">
-<tt class="descname">is_contradictory</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell.is_contradictory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell.is_contradictory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns True if the two DictCells are unmergeable.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="dicts.DictCell.is_entailed_by">
 <tt class="descname">is_entailed_by</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell.is_entailed_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell.is_entailed_by" title="Permalink to this definition">¶</a></dt>
 <dd><p>Whether all of self&#8217;s keys (and values) are in (and within) other&#8217;s</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dicts.DictCell.entails">
+<tt class="descname">entails</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell.entails"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell.entails" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether the target of the other belief state is strictly more
+general than the caller belief state</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dicts.DictCell.is_contradictory">
+<tt class="descname">is_contradictory</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell.is_contradictory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell.is_contradictory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the two DictCells are unmergeable.</p>
 </dd></dl>
 
 <dl class="method">
@@ -202,21 +176,11 @@ for JSON serialization.</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-<<<<<<< HEAD
         <li><a href="index.html">beliefs 1.0 documentation</a> &raquo;</li> 
-=======
-        <li class="right" >
-          <a href="lazy.html" title="Lazy"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="colors.html" title="Colors"
-             >previous</a> |</li>
-        <li><a href="index.html">AIGRE 1.0 documentation</a> &raquo;</li> 
->>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013, Nicolas Bravo.
+        &copy; Copyright 2013, Dustin Smith, Nicolas Bravo.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

@@ -8,7 +8,11 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
+<<<<<<< HEAD
     <title>Sets &mdash; beliefs 1.0 documentation</title>
+=======
+    <title>Sets &mdash; AIGRE 1.0 documentation</title>
+>>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -26,7 +30,11 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<<<<<<< HEAD
     <link rel="top" title="beliefs 1.0 documentation" href="index.html" />
+=======
+    <link rel="top" title="AIGRE 1.0 documentation" href="index.html" />
+>>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
     <link rel="next" title="Spatial" href="spatial.html" />
     <link rel="prev" title="Posets" href="posets.html" /> 
   </head>
@@ -46,7 +54,11 @@
         <li class="right" >
           <a href="posets.html" title="Posets"
              accesskey="P">previous</a> |</li>
+<<<<<<< HEAD
         <li><a href="index.html">beliefs 1.0 documentation</a> &raquo;</li> 
+=======
+        <li><a href="index.html">AIGRE 1.0 documentation</a> &raquo;</li> 
+>>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
       </ul>
     </div>  
 
@@ -61,8 +73,13 @@
 <dl class="class">
 <dt id="setCells.SetIntersectionCell">
 <em class="property">class </em><tt class="descclassname">setCells.</tt><tt class="descname">SetIntersectionCell</tt><big>(</big><em>domain</em>, <em>value_or_values=None</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">beliefs.cells.cell.Cell</span></tt></p>
-<p>Represents iterable unordered elements.</p>
+<dd><p>Represents iterable unordered elements.</p>
+<dl class="method">
+<dt id="setCells.SetIntersectionCell.stem">
+<tt class="descname">stem</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.stem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.stem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spawns a new SetCell of the same domain</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="setCells.SetIntersectionCell.coerce">
 <tt class="descname">coerce</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.coerce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.coerce" title="Permalink to this definition">¶</a></dt>
@@ -70,15 +87,16 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="setCells.SetIntersectionCell.contains">
-<tt class="descname">contains</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.contains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.contains" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns True iff value is in the set</p>
+<dt id="setCells.SetIntersectionCell.same_domain">
+<tt class="descname">same_domain</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.same_domain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.same_domain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cheap pointer comparison or symmetric difference operation
+to ensure domains are the same</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="setCells.SetIntersectionCell.get_values">
-<tt class="descname">get_values</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.get_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.get_values" title="Permalink to this definition">¶</a></dt>
-<dd><p>The main difference between Intersection/Union</p>
+<dt id="setCells.SetIntersectionCell.is_equal">
+<tt class="descname">is_equal</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.is_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.is_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>True iff all members are the same</p>
 </dd></dl>
 
 <dl class="method">
@@ -109,9 +127,15 @@ all members of the domain)</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="setCells.SetIntersectionCell.is_equal">
-<tt class="descname">is_equal</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.is_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.is_equal" title="Permalink to this definition">¶</a></dt>
-<dd><p>True iff all members are the same</p>
+<dt id="setCells.SetIntersectionCell.contains">
+<tt class="descname">contains</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.contains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.contains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True iff value is in the set</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="setCells.SetIntersectionCell.get_values">
+<tt class="descname">get_values</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.get_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.get_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>The main difference between Intersection/Union</p>
 </dd></dl>
 
 <dl class="method">
@@ -119,19 +143,6 @@ all members of the domain)</p>
 <tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.merge" title="Permalink to this definition">¶</a></dt>
 <dd><p>We can merge unless the merge results in an empty set &#8211; a
 contradiction</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="setCells.SetIntersectionCell.same_domain">
-<tt class="descname">same_domain</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.same_domain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.same_domain" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cheap pointer comparison or symmetric difference operation
-to ensure domains are the same</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="setCells.SetIntersectionCell.stem">
-<tt class="descname">stem</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.stem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.stem" title="Permalink to this definition">¶</a></dt>
-<dd><p>Spawns a new SetCell of the same domain</p>
 </dd></dl>
 
 <dl class="method">
@@ -145,20 +156,19 @@ to ensure domains are the same</p>
 <dl class="class">
 <dt id="setCells.SetUnionCell">
 <em class="property">class </em><tt class="descclassname">setCells.</tt><tt class="descname">SetUnionCell</tt><big>(</big><em>domain</em>, <em>value_or_values=None</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetUnionCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetUnionCell" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#setCells.SetIntersectionCell" title="setCells.SetIntersectionCell"><tt class="xref py py-class docutils literal"><span class="pre">setCells.SetIntersectionCell</span></tt></a></p>
-<p>SetUnionCell breaks monotonicity.
+<dd><p>SetUnionCell breaks monotonicity.
 Initially, its values are equal to its domain, and then after 1 or more updates, its values become the UNION of all of the updates</p>
-<dl class="method">
-<dt id="setCells.SetUnionCell.get_values">
-<tt class="descname">get_values</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/setCells.html#SetUnionCell.get_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetUnionCell.get_values" title="Permalink to this definition">¶</a></dt>
-<dd><p>The main difference between Intersection/Union</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="setCells.SetUnionCell.merge">
 <tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetUnionCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetUnionCell.merge" title="Permalink to this definition">¶</a></dt>
 <dd><p>We can merge unless the merge results in an empty set &#8211; a
 contradiction</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="setCells.SetUnionCell.get_values">
+<tt class="descname">get_values</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/setCells.html#SetUnionCell.get_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetUnionCell.get_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>The main difference between Intersection/Union</p>
 </dd></dl>
 
 </dd></dl>
@@ -214,7 +224,11 @@ contradiction</p>
         <li class="right" >
           <a href="posets.html" title="Posets"
              >previous</a> |</li>
+<<<<<<< HEAD
         <li><a href="index.html">beliefs 1.0 documentation</a> &raquo;</li> 
+=======
+        <li><a href="index.html">AIGRE 1.0 documentation</a> &raquo;</li> 
+>>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
       </ul>
     </div>
     <div class="footer">
