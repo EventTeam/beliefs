@@ -39,7 +39,22 @@ class RGBColorCell(Cell):
 
 
     def to_html(self):
-        """ Converts to Hex """
+        """
+        Converts to Hex
+
+        :returns: str
+
+        >>> b = RGBColorCell.from_name('black')
+        >>> w = RGBColorCell.from_name('white')
+        >>> t = RGBColorCell.from_name('teal')
+        >>> b.to_html()
+        '#000000'
+        >>> w.to_html()
+        '#ffffff'
+        >>> t.to_html()
+        '#008080'
+
+        """
         out = "#"
         if self.r == 0:
             out += "00"
@@ -78,7 +93,8 @@ class RGBColorCell(Cell):
 
     def membership_score(self, element):
         """
-        Fuzzy set gradable membership score. 
+        Fuzzy set gradable membership score.
+        
         See http://code.google.com/p/python-colormath/wiki/ColorDifferences
 
         :param element: A Color Cell
@@ -118,7 +134,11 @@ class RGBColorCell(Cell):
             
     def is_equal(self, other):
         """
-        Returns True if the distance is 0
+        Returns True if the distance, i.e. ``membership_score``, is 0
+
+        :param other: RGBColorCell
+        :returns: bool
+        :raises: Exception if *other* is not an instance of RGBColorCell
         """
         return self.membership_score(other) == 1.0
 
@@ -144,7 +164,8 @@ class RGBColorCell(Cell):
 
 # delta_e(c2, mode='cie1976')
 
-def test_rgb_color_cell():
+if __name__ == '__main__':
+#def test_rgb_color_cell():
     r0 = RGBColorCell()
     r1 = RGBColorCell.from_name('red')
     r2 = RGBColorCell.from_name('red')
@@ -173,7 +194,10 @@ def test_rgb_color_cell():
     b3 = RGBColorCell.from_name('medium_blue')
     b4 = RGBColorCell.from_name('cyan')
     b5 = RGBColorCell.from_name('teal')
+    print b5.to_html()
+    print r1.to_html()
+    print w.to_html()
 
 
-if __name__ == '__main__':
-    test_rgb_color_cell()
+'''if __name__ == '__main__':
+    test_rgb_color_cell()'''
