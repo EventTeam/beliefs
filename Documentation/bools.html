@@ -28,7 +28,7 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="AIGRE 1.0 documentation" href="index.html" />
     <link rel="next" title="Cell" href="cell.html" />
-    <link rel="prev" title="Welcome to myUROP’s documentation!" href="index.html" /> 
+    <link rel="prev" title="Welcome to AIGRE’s documentation!" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -44,7 +44,7 @@
           <a href="cell.html" title="Cell"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Welcome to myUROP’s documentation!"
+          <a href="index.html" title="Welcome to AIGRE’s documentation!"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">AIGRE 1.0 documentation</a> &raquo;</li> 
       </ul>
@@ -65,7 +65,11 @@
 <dl class="staticmethod">
 <dt id="bools.BoolCell.coerce">
 <em class="property">static </em><tt class="descname">coerce</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.coerce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.coerce" title="Permalink to this definition">¶</a></dt>
-<dd><p>Coerces a Bool, None, or int into Bit/Propositional form</p>
+<dd><p>Coerces a Bool, None, or int into Bit/Propositional form. If <em>value</em> is an int, must be -1, 0, or 1.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">T, F, and U can be used in place of <tt class="docutils literal"><span class="pre">True</span></tt>, <tt class="docutils literal"><span class="pre">False</span></tt>, and <tt class="docutils literal"><span class="pre">'UNKNOWN'</span></tt>, respectively.</p>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -78,6 +82,20 @@
 </tr>
 </tbody>
 </table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f1</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f1</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f2</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f2</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t1</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t1</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t2</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t2</span>
+<span class="go">True</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -88,7 +106,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>BoolCell, bool, int</em>) &#8211; The BoolCell or value that may entail self</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>BoolCell, bool, int</em>) &#8211; The BoolCell or coercible value that may entail self</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
 </tr>
@@ -96,17 +114,30 @@
 </tr>
 </tbody>
 </table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="bools.BoolCell.entails">
 <tt class="descname">entails</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.entails"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.entails" title="Permalink to this definition">¶</a></dt>
-<dd><p>Inverse of <tt class="docutils literal"><span class="pre">is_entailed_by</span></tt></p>
+<dd><p>Inverse of <tt class="docutils literal"><span class="pre">is_entailed_by</span></tt>. Returns True if self is as or more specific than other.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>BoolCell, bool, int</em>) &#8211; The BoolCell or value to check if it is entailed by self</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>BoolCell, bool, int</em>) &#8211; The BoolCell or coercible value to check if it is entailed by self</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
 </tr>
@@ -114,6 +145,23 @@
 </tr>
 </tbody>
 </table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">entails</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">entails</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="o">.</span><span class="n">entails</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="o">.</span><span class="n">entails</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span><span class="o">.</span><span class="n">entails</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span><span class="o">.</span><span class="n">entails</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -132,12 +180,21 @@
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-<dl class="method">
-<dt id="bools.BoolCell.to_dot">
-<tt class="descname">to_dot</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.to_dot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.to_dot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns value as a string</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -160,7 +217,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>BoolCell, bool, int</em>) &#8211; BoolCell or value to be tested</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>BoolCell, bool, int</em>) &#8211; BoolCell or coercible value to be tested</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
 </tr>
@@ -168,12 +225,22 @@
 </tr>
 </tbody>
 </table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="bools.BoolCell.merge">
 <tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/bools.html#BoolCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bools.BoolCell.merge" title="Permalink to this definition">¶</a></dt>
-<dd><p>Merges two BoolCells</p>
+<dd><p>Merges two BoolCells. A Contradiction is raised if the two BoolCells are contradictory.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -186,6 +253,17 @@
 </tr>
 </tbody>
 </table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
+<span class="go">&#39;UNKNOWN&#39;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -200,7 +278,7 @@
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
   <p class="topless"><a href="index.html"
-                        title="previous chapter">Welcome to myUROP&#8217;s documentation!</a></p>
+                        title="previous chapter">Welcome to AIGRE&#8217;s documentation!</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="cell.html"
                         title="next chapter">Cell</a></p>
@@ -239,7 +317,7 @@
           <a href="cell.html" title="Cell"
              >next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Welcome to myUROP’s documentation!"
+          <a href="index.html" title="Welcome to AIGRE’s documentation!"
              >previous</a> |</li>
         <li><a href="index.html">AIGRE 1.0 documentation</a> &raquo;</li> 
       </ul>

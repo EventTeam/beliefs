@@ -22,12 +22,28 @@ class BoolCell(Cell):
     @staticmethod
     def coerce(value):
         """
-        Coerces a Bool, None, or int into Bit/Propositional form
+        Coerces a Bool, None, or int into Bit/Propositional form. If *value* is an int, must be -1, 0, or 1.
+
+        .. note::
+            T, F, and U can be used in place of ``True``, ``False``, and ``'UNKNOWN'``, respectively.
         
         :param value: The value to coerce
         :type value: bool, int
         :returns:  BoolCell
         :raises: CellConstructionFailure, CoercionFailure
+
+        >>> f1 = BoolCell.coerce(0)
+        >>> f1
+        False
+        >>> f2 = BoolCell.coerce(F)
+        >>> f2
+        False
+        >>> t1 = BoolCell.coerce(1)
+        >>> t1
+        True
+        >>> t2 = BoolCell.coerce(T)
+        >>> t2
+        True
         
         """
         if isinstance(value, BoolCell):
@@ -49,10 +65,22 @@ class BoolCell(Cell):
         """
         Returns True if the other is as or more specific than self
 
-        :param other: The BoolCell or value that may entail self
+        :param other: The BoolCell or coercible value that may entail self
         :type other: BoolCell, bool, int
         :returns:  bool
         :raises: CellConstructionFailure, CoercionFailure
+
+        >>> x = BoolCell(T)
+        >>> y = BoolCell(F)
+        >>> z = BoolCell(U)
+        >>> x.is_entailed_by(U)
+        False
+        >>> y.is_entailed_by(F)
+        True
+        >>> y.is_entailed_by(U)
+        False
+        >>> z.is_entailed_by(x)
+        True
 
         """
         other = BoolCell.coerce(other)
@@ -62,12 +90,28 @@ class BoolCell(Cell):
 
     def entails(self, other):
         """
-        Inverse of ``is_entailed_by``
+        Inverse of ``is_entailed_by``. Returns True if self is as or more specific than other.
 
-        :param other: The BoolCell or value to check if it is entailed by self
+        :param other: The BoolCell or coercible value to check if it is entailed by self
         :type other: BoolCell, bool, int
         :returns:  bool
         :raises: CellConstructionFailure, CoercionFailure
+
+        >>> x = BoolCell(T)
+        >>> y = BoolCell(F)
+        >>> z = BoolCell(U)
+        >>> x.entails(T)
+        True
+        >>> x.entails(U)
+        True
+        >>> y.entails(T)
+        False
+        >>> y.entails(F)
+        True
+        >>> z.entails(U)
+        True
+        >>> z.entails(F)
+        False
 
         """
         other = BoolCell.coerce(other)
@@ -82,16 +126,26 @@ class BoolCell(Cell):
         :returns:  bool
         :raises: CellConstructionFailure, CoercionFailure
 
+        >>> x = BoolCell(T)
+        >>> y = BoolCell(F)
+        >>> z = BoolCell(U)
+        >>> x.is_contradictory(y)
+        True
+        >>> y.is_contradictory(x)
+        True
+        >>> z.is_contradictory(x)
+        False
+        >>> z.is_contradictory(y)
+        False
+        >>> z.is_contradictory(U)
+        False
+
         """
         other = BoolCell.coerce(other)
         if self.value == U or other.value == U or (self.value == other.value):
             return False
         else:
             return True
-
-    def to_dot(self):
-        """ Returns value as a string"""
-        return "%s" % (self.value)
 
     def to_json(self):
         """ Returns JSON representation of BoolCell"""
@@ -105,10 +159,19 @@ class BoolCell(Cell):
         """
         Tests whether two Cells are equal. Returns a boolean.
 
-        :param other: BoolCell or value to be tested
+        :param other: BoolCell or coercible value to be tested
         :type other: BoolCell, bool, int
         :returns: bool
         :raises: CoercionFailure
+
+        >>> x = BoolCell(T)
+        >>> y = BoolCell(F)
+        >>> x.is_equal(x)
+        True
+        >>> x.is_equal(T)
+        True
+        >>> y.is_equal(x)
+        False
         
         """
         try:
@@ -119,13 +182,22 @@ class BoolCell(Cell):
 
     def merge(self, other):
         """
-        Merges two BoolCells
+        Merges two BoolCells. A Contradiction is raised if the two BoolCells are contradictory.
 
         :param other: BoolCell or coerce-able value to be merged
         :type other: BoolCell, bool, int
         :returns: BoolCell
         :raises: CellConstructionFailure, CoercionFailure, Contradiction
-        
+
+        >>> v = BoolCell(U)
+        >>> w = BoolCell(U)
+        >>> z = BoolCell(U)
+        >>> v.merge(T)
+        True
+        >>> z.merge(F)
+        False
+        >>> w.merge(U)
+        'UNKNOWN'
         """
         other = BoolCell.coerce(other)
         if self.is_equal(other):
