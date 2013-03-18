@@ -8,7 +8,12 @@ class IntervalCell(Cell):
 
     def __init__(self, low=None, high=None):
         """
-        Creates a new IntervalCell with values restricted to between `low` and `high`.
+        Creates a new IntervalCell with values restricted to between *low* and *high*.
+
+        :param low,high: The boundaries of the interval
+        :type low,high: float,int
+        :raises: CellConstructionFailure
+        
         """
         self.low = -np.inf
         self.high = np.inf
@@ -24,13 +29,23 @@ class IntervalCell(Cell):
     @staticmethod
     def coerce(value):
         """
-        Takes a number (float, int) or a two-valued integer and returns the
-        [low, high] in the standard interval form
+        Takes in either a single number (float, int), a list, or a tuple and returns the
+        [low, high] in the standard interval form. In the case of a single *value*, the low and high will both be the single value. In the case of a list or tuple, the low and high will be the min and max of the collection, respectively.
 
-        :param value: 
-        :type value: int,float, complex
+        :param value: The the number or collection of numbers to be used for the low and high boundaries
+        :type value: int, float, complex, list, tuple
         :returns: IntervalCell
         :raises: Exception
+
+        >>> a = IntervalCell.coerce(5)
+        >>> a
+        5.00
+        >>> b = IntervalCell.coerce([3,7])
+        >>> b
+        [3.00,7.00]
+        >>> c = IntervalCell.coerce((1,6,5,9,2))
+        >>> c
+        [1.00,9.00]
         
         """
         is_number = lambda x: isinstance(x, (int, float, complex)) #is x an instance of those things
@@ -57,7 +72,16 @@ class IntervalCell(Cell):
             raise Exception("Don't know how to coerce %s" % (type(value)))
 
     def stem(self):
-        """ Creates a new instance """
+        """
+        Creates a new instance with bounds of 0 to infinity
+
+        :returns: IntervalCell
+
+        >>> x = IntervalCell(1,1)
+        >>> y = x.stem()
+        >>> y
+        [0.00,inf]
+        """
         return self.__class__(0, np.inf)
 
     def size(self):
@@ -65,17 +89,34 @@ class IntervalCell(Cell):
         Number of possible values in the interval.  Boundaries are inclusive
 
         :returns: int -- Length of interval
+
+        >>> a = IntervalCell(1,2)
+        >>> b = IntervalCell(12,19)
+        >>> a.size()
+        2
+        >>> b.size()
+        8
         """
         return (self.high - self.low) + 1 
 
     def is_contradictory(self, other):
         """
-        Determines whether other and self can coexist. Two intervals are contradictory if they are disjoint, i.e. if the intersection of self and other is empty
+        Determines whether other and self can coexist. Two intervals are contradictory if they are disjoint, i.e. if their intersection is empty
 
         :param other: IntervalCell or coercible value
         :returns: bool
         :raises: Exception
-        
+
+        >>> w = IntervalCell(1,2)
+        >>> x = IntervalCell(1,1)
+        >>> y = IntervalCell(2,2)
+        >>> z = IntervalCell(0,3)
+        >>> x.is_contradictory(y)
+        True
+        >>> w.is_contradictory(z)
+        False
+        >>> x.is_contradictory(w)
+        False
         """
         other = IntervalCell.coerce(other)
         assert other.low <= other.high, "Low must be <= high"
@@ -91,7 +132,16 @@ class IntervalCell(Cell):
         :param other: IntervalCell or coercible value
         :returns: bool
         :raises: Exception
-        
+
+        >>> x = IntervalCell(1,1)
+        >>> y = IntervalCell(2,2)
+        >>> z = IntervalCell(0,3)
+        >>> z.is_entailed_by(x)
+        True
+        >>> z.is_entailed_by(y)
+        True
+        >>> x.is_entailed_by(y)
+        False
         """
         other = IntervalCell.coerce(other)
         return other.low >= self.low and other.high <= self.high
@@ -103,6 +153,15 @@ class IntervalCell(Cell):
         :param other: IntervalCell or coercible value
         :returns: bool
         :raises: Exception
+
+        >>> x = IntervalCell(1,1)
+        >>> z = IntervalCell(0,3)
+        >>> x.is_equal(1)
+        True
+        >>> z.is_equal([0,3])
+        True
+        >>> x.is_equal(z)
+        False
         
         """
         other = IntervalCell.coerce(other)
@@ -110,11 +169,36 @@ class IntervalCell(Cell):
 
     def merge(self, other):
         """
-        Merges the two values
+        Merges the two values. The *self* argument is modified, while *other* is not.
 
         :param other: IntervalCell or coercible value
         :returns: bool
         :raises: Exception
+
+        >>> x = IntervalCell(0,3)
+        >>> y = IntervalCell(2,2)
+        >>> a = x.merge(y)
+        >>> a
+        2.00
+        
+        .. note::
+            ``merge`` modifies the *self* argument as a side effect. 
+
+            >>> w = IntervalCell(1,7)
+            >>> z = IntervalCell(3,9)
+            >>> b = w.merge(z)
+            >>> b
+            [3.00,7.00]
+        
+            w has been modified.
+        
+            >>> w
+            [3.00,7.00]
+        
+            z has not.
+        
+            >>> z
+            [3.00,9.00]
         
         """
         other = IntervalCell.coerce(other)
@@ -234,6 +318,15 @@ class IntervalCell(Cell):
         :type function: function
         :returns: IntervalCell
         :raises: Exception
+
+        >>> a = IntervalCell(1,4)
+        >>> b = IntervalCell(3,5)
+        >>> result = a.map(b,lambda x,y: x+y)
+        >>> result
+        [4.00,9.00]
+        >>> result = a.map(b,lambda x,y: x-y)
+        >>> result
+        [-4.00,1.00]
         """
         other = IntervalCell.coerce(other)
         # check the arity of the function
@@ -260,7 +353,15 @@ class IntervalCell(Cell):
         return hval
 
     def get_tuple(self):
-        """ Returns (low, high) tuple """
+        """
+        Returns (low, high) tuple
+
+        >>> x = IntervalCell(1,2)
+        >>> xTuple = x.get_tuple()
+        >>> xTuple
+        (1,2)
+
+        """
         return (self.low, self.high)
 
     '''def to_dot(self):
@@ -275,3 +376,8 @@ class IntervalCell(Cell):
     __eq__ = is_equal
     __len__ = size
 
+if __name__ == "__main__":
+    w = IntervalCell(1,2)
+    x = IntervalCell(1,1)
+    y = IntervalCell(2,2)
+    z = IntervalCell(0,3)

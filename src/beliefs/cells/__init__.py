@@ -12,6 +12,7 @@ from lists import *
 from strings import *
 from posets import *
 from dicts import *
+from exceptions import *
 
 # special cells
 from colors import *
