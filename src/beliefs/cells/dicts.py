@@ -13,6 +13,9 @@ class DictCell(Cell):
 
     Unlike the other primitive structures, a DictCell cannot be coerced into something
     else.
+
+    :param from_dict: Optional parameter specifying initial dictionary, where the value of each (key,value) pair must be a Cell. Defaults to an empty dictionary.
+    :type from_dict: dict
     """
     HASATTR = 0
 
@@ -74,8 +77,9 @@ class DictCell(Cell):
 
     def contains(self, key_or_keypath):
         """ Allows the 'in' operator to work for checking if a particular key (or keypath)
-        is inside the dictionary.
+        is inside the dictionary. 
 
+        :param key_or_keypath: A single key or a path of keys in the form of a list
         :returns: bool"""
         if isinstance(key_or_keypath, list):
             if len(key_or_keypath) == 0:
@@ -96,6 +100,10 @@ class DictCell(Cell):
         """
         Returns the value at the end of keypath (or None)
         keypath is a list of keys, e.g., ["key", "subkey", "subsubkey"]
+
+        :param keypath: A list of keys representing a path through nested dictionaries
+        :type keypath: list
+        :returns: value associated with final key in *keypath*
         """
         if isinstance(keypath, list):
             if len(keypath) == 0:
@@ -111,6 +119,10 @@ class DictCell(Cell):
     def is_entailed_by(self, other):
         """
         Whether all of self's keys (and values) are in (and within) other's
+
+        :param other: A DictCell to check
+        :type other: DictCell
+        :returns: bool
         """
         for (s_key, s_val) in self:
             if s_key in other:
@@ -125,11 +137,22 @@ class DictCell(Cell):
         """ Whether the target of the other belief state is strictly more
         general than the caller belief state
 
+        :param other: A DictCell to check
+        :type other: DictCell
+        :returns: bool
+
         """
         return other.is_entailed_by(self)
 
     def is_contradictory(self, other):
-        """ Returns True if the two DictCells are unmergeable.  """
+        """
+        Returns True if the two DictCells are unmergeable, i.e. if the two DictCells share a key, but the Cells associated with those keys are unMergeable.
+
+        :param other: DictCell to check
+        :type other: DictCell
+        :returns: bool
+        :raises: Exception
+        """
         if not isinstance(other, DictCell):
             raise Exception("Incomparable")
         for key, val in self:
@@ -140,7 +163,11 @@ class DictCell(Cell):
 
     def is_equal(self, other):
         """ Two DictCells are equal when they share ALL Keys,  and all of their 
-        is_equal() methods return True.  This ensures substructure equality.
+        ``is_equal()`` methods return True.  This ensures substructure equality.
+
+        :parameter other: DictCell to compare
+        :type other: DictCell
+        :returns: bool
         """
         if not isinstance(other, DictCell):
             return False
@@ -171,6 +198,12 @@ class DictCell(Cell):
         """
         Merges two complex structures (by recursively merging their parts).
         Missing-parts do not trigger contradictions.
+
+        :param other: DictCell to merge
+        :type other: DictCell
+        :returns: DictCell
+        :raises: Exception, Contradiction
+        
         """
         if not isinstance(other, DictCell):
             raise Exception("Incomparable")
@@ -209,6 +242,8 @@ class DictCell(Cell):
         """
         This method converts the DictCell into a python `dict`.  This is useful
         for JSON serialization.
+
+        :returns: dict
         """
         output = {}
         for key, value in self.__dict__['p'].iteritems():
@@ -231,15 +266,27 @@ class DictCell(Cell):
         return output
 
     def keys(self):
-        """ Returns a list of the top-level keys in the DictCell"""
+        """
+        Returns a list of the top-level keys in the DictCell
+
+        :returns: list
+        """
         return [k for k, _ in self]
         
     def values(self):
-        """ Returns a list of the top-level values in the DictCell"""
+        """
+        Returns a list of the top-level values in the DictCell
+
+        :returns: list
+        """
         return [v for _, v in self]
 
     def items(self):
-        """ Returns both keys and values in dictionary """
+        """
+        Returns both keys and values in dictionary
+
+        :returns: list of tuples
+        """
         return [(k,v) for k, v in self]
 
     __eq__ = is_equal

@@ -8,11 +8,11 @@ Beliefs
 
 Here are :py:class:`Cell` data containers, :ref:`cell` subclasses that are designed to accumulate and maintain the consistency of *partial information*:
 
-- :py:class:`bools.BoolCell` three-valued logic of `True`, `False` and `Unknown`.
+- :py:class:`bools.BoolCell` three-valued logic of `True`, `False`, and `Unknown`.
 - :py:class:`dicts.DictCell` a labeled set, like a Python `dict` that pairs attributes with cell values.
 - :py:class:`numeric.IntervalCell` a bounded interval or cardinal number
 - :py:class:`lists.LinearOrderedCell` a bounded sequence of ordered symbols
-- :py:class:`lists.PrefixCell` allows maintains sequences with shared elements
+- :py:class:`lists.PrefixCell` maintains sequences with shared elements
 - :py:class:`posets.PartialOrderedCell` maintains a taxonomy of information
 
 
