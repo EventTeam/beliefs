@@ -3,6 +3,11 @@ from cell import *
 class LinearOrderedCell(Cell):
     """
     A generalization of IntervalCell to non-numeric symbols
+
+    :param ordered_domain: An ordered sequence of symbols
+    :type ordered_domain: list
+    :param low,high: Symbols in the domain that mark the lower and upper bounds
+    :raises: CellConstructionFailure
     """
     def __init__(self, ordered_domain, low=None, high=None):
         """
