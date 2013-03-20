@@ -4,7 +4,7 @@ class LinearOrderedCell(Cell):
     """
     A generalization of IntervalCell to non-numeric symbols
 
-    :param ordered_domain: An ordered sequence of symbols
+    :param ordered_domain: An ordered sequence of symbols. Must not contain duplicate entries.
     :type ordered_domain: list
     :param low,high: Symbols in the domain that mark the lower and upper bounds
     :raises: CellConstructionFailure
@@ -43,15 +43,20 @@ class LinearOrderedCell(Cell):
                 "Lower bound must be <= upper "
 
     def stem(self):
-        """ Creates a new instance without any values """
+        """ Creates a new instance without any values
+
+        :returns: LinearOrderedCell
+        """
         return self.__class__(self.domain)
 
     def coerce(self, value):
         """
-        Takes one or two values in the domain and returns a LinearOrderedCell
-        with the same domain
+        Takes one or more values in the domain and returns a LinearOrderedCell with that domain. If the input is a single value, the low and high bounds will both be set to that value. If the input is a list or a tuple, the low and high bounds will be set to the min and max elements of the list or tuple. 
 
-        :param value: A single value in the domain, or a 2-element list or tuple of values in the domain
+        .. note::
+            Unlike the ``coerce`` methods in many of the other modules, this is **not** a static method.
+
+        :param value: A single value in the domain, or a list or tuple of values in the domain
         :returns: LinearOrderedCell
         :raises: Exception
         """
@@ -79,6 +84,12 @@ class LinearOrderedCell(Cell):
         :param val: value in the domain
         :returns: int -- index of value in the domain. Returns -1 if val is None
 
+        >>> v = LinearOrderedCell(['animal','dog','poodle','toy poodle'], 'animal', 'toy poodle')
+        >>> v.to_i('dog')
+        1
+        >>> v.to_i('toy poodle')
+        3
+
         """
         if val is None:
             return -1
@@ -86,11 +97,21 @@ class LinearOrderedCell(Cell):
 
     def is_contradictory(self, other):
         """
-        Whether other and self can coexist
+        Whether other and self can coexist. Two LinearOrderedCells are contradictory if there is on overlap between their boundaries.
 
         :param other: A LinearOrderedCell or coercible value
         :returns: bool
         :raises: Exception
+
+        >>> x = LinearOrderedCell(['animal','dog','poodle','toy poodle'], 'animal', 'dog')
+        >>> y = LinearOrderedCell(['animal','dog','poodle','toy poodle'], 'animal', 'toy poodle')
+        >>> z = LinearOrderedCell(['animal','dog','poodle','toy poodle'], 'poodle', 'toy poodle')
+        >>> x.is_contradictory(z)
+        True
+        >> x.is_contradictory(y)
+        False
+        >>> y.is_contradictory(z)
+        False
         
         """
         other = self.coerce(other)
@@ -108,6 +129,18 @@ class LinearOrderedCell(Cell):
         :param other: A LinearOrderedCell or coercible value
         :returns: bool
         :raises: Exception
+
+        >>> x = LinearOrderedCell(['animal','dog','poodle','toy poodle'], 'animal', 'poodle')
+        >>> y = LinearOrderedCell(['animal','dog','poodle','toy poodle'], 'dog', 'dog')
+        >>> z = LinearOrderedCell(['animal','dog','poodle','toy poodle'], 'poodle', 'toy poodle')
+        >>> x.is_entailed_by(z)
+        False
+        >>> x.is_entailed_by(y)
+        True
+        >>> y.is_entailedy_by(x)
+        False
+        >>> z.is_entailed_by(y)
+        False
         
         """
         other = self.coerce(other)
@@ -122,6 +155,14 @@ class LinearOrderedCell(Cell):
         :param other: A LinearOrderedCell or coercible value
         :returns: bool
         :raises: Exception
+
+        >>> x = LinearOrderedCell(['animal','dog','poodle','toy poodle'], 'animal', 'poodle')
+        >>> y = LinearOrderedCell(['animal','dog'], 'dog', 'dog')
+        >>> z = LinearOrderedCell(['dog','toy poodle','animal','poodle'], 'animal', 'poodle')
+        >>> x.is_equal(y)
+        False
+        >>> x.is_equal(z)
+        True
         
         """
         other = self.coerce(other)
@@ -129,25 +170,38 @@ class LinearOrderedCell(Cell):
                 and self.low == other.low \
                 and self.high == other.high
 
-    def to_dot(self):
+    '''def to_dot(self):
         """
         A string representation of the Cell
 
-        :returns: If the domain consits of a single value, that value is returned. Otherwise, the empty string is returned.
+        :returns: If the domain consists of a single value, that value is returned. Otherwise, the empty string is returned.
 
         """
         if self.low == self.high:
             return self.low
         else:
-            return ""
+            return ""'''
 
     def merge(self, other):
         """
         Merges the two values
 
+        .. note::
+            This method **will** modify the *self* parameter
+
         :param other: A LinearOrderedCell or coercible value
         :returns: LinearOrderedCell
-        :raises: Contradiction
+        :raises: Exception, Contradiction
+
+        >>> x = LinearOrderedCell(['animal','dog','poodle','toy poodle'], 'animal', 'poodle')
+        >>> y = LinearOrderedCell(['animal','dog','poodle','toy poodle'], 'dog', 'poodle')
+        >>> z = LinearOrderedCell(['animal','dog','poodle','toy poodle'], 'poodle', 'toy poodle')
+        >>> x.merge(y)
+        [dog,poodle]
+        >>> x
+        [dog, poodle]
+        >>> x.merge(z)
+        [poodle,poodle]
         
         """
         other = self.coerce(other)
@@ -181,43 +235,52 @@ class LinearOrderedCell(Cell):
     __eq__ = is_equal
 
 
-class ListCell(Cell):
+class PrefixCell(Cell):
     """
-    ListCells contain ordered elements
+    PrefixCells contain ordered elements
+
+    :param value: Optional parameter specifying initial list. Defaults to the empty list.
+    :type value: list
+    :raises: CellContstructionFailure
     """
     def __init__(self, value=None):
         """
-        Creates a new ListCell, optionally with an initial value.
+        Creates a new PrefixCell, optionally with an initial value.
         """
         if value:
             if isinstance(value, list):
                 self.value = value
             else:
-                raise CellConstructionException("ListCells must be given a list")
+                raise CellConstructionFailure("PrefixCells must be given a list")
         else:
             self.value = []
 
     @staticmethod
     def coerce(value):
         """
-        Turns a value into a ListCell
+        Turns a value into a PrefixCell
 
         :param value: The value to be coerced
-        :returns: ListCell
+        :type value: list, PrefixCell
+        :returns: PrefixCell
         
         """
-        if isinstance(value, ListCell):
+        if isinstance(value, PrefixCell):
             return value
         elif isinstance(value, (list)):
-            return ListCell(value)
+            return PrefixCell(value)
         else:
-            return ListCell([value])
+            return PrefixCell([value])
 
     def size(self):
         """
         Returns the number of elements in the list
 
         :returns: int -- number of elements in the list
+
+        >>> x = PrefixCell(['red','blue','green'])
+        >>> x.size()
+        3
         """
         if self.value is None:
             return 0
@@ -227,7 +290,23 @@ class ListCell(Cell):
     def is_contradictory(self, other):
         """
         Two lists are contradictory if the shorter one is not a prefix of the
-        other. (Very strict definition -- could be generalized to subsequence)
+        other. (Very strict definition -- could be generalized to subsequence) It does not matter whether *self* or *other* is the shorter one.
+
+        Empty lists are never contradictory.
+
+        :param other: The PrefixCell to test
+        :type other: list
+        :returns: bool
+
+        >>> x = PrefixCell([1,2,3])
+        >>> y = PrefixCell([1,2])
+        >>> z = PrefixCell(['a','b','c'])
+        >>> x.is_contradictory(y)
+        False
+        >>> y.is_contradictory(z)
+        True
+        >>> z.is_contradictory(PrefixCell([]))
+        False
         """
         if other.size() > self.size():
             return other.is_contradictory(self)
@@ -252,11 +331,18 @@ class ListCell(Cell):
         Returns True iff the values in this list can be entailed by the other
         list (ie, this list is a prefix of the other)
 
-        :param other: ListCell or coercible value
+        :param other: PrefixCell or coercible value
         :returns: bool
+
+        >>> x = PrefixCell(['red','orange','yellow'])
+        >>> y = PrefixCell(['red','orange','yellow','green','blue','indigo','violet'])
+        >>> x.is_entailed_by(y)
+        True
+        >>> y.is_entailed_by(x)
+        False
         
         """
-        other = ListCell.coerce(other)
+        other = PrefixCell.coerce(other)
         if other.size() < self.size():
             # other is bigger, can't be entailed
             return False
@@ -281,8 +367,18 @@ class ListCell(Cell):
     def is_equal(self, other):
         """
         Whether the lists are equal
+
+        :param other: The value or PrefixCell to test
+        :returns: bool
+
+        >>> x = PrefixCell([1,2])
+        >>> y = PrefixCell([2,1])
+        >>> x.is_equal(y)
+        False
+        >>> x.is_equal([1,2])
+        True
         """
-        other = ListCell.coerce(other)
+        other = PrefixCell.coerce(other)
         if len(other.value) != len(self.value):
             return False
         
@@ -297,13 +393,25 @@ class ListCell(Cell):
         
     def merge(self, other):
         """
-        Merges two Lists
+        Merges two Lists.
 
-        :param other: A ListCell or coercible value
-        :returns: ListCell
+        .. note::
+            This method **will** modify the *self* parameter.
+
+        :param other: A PrefixCell or coercible value
+        :returns: PrefixCell
+        :raises: Contradiction
+
+        >>> x = PrefixCell([1,2])
+        >>> y = PrefixCell([1,2,3])
+        >>> z = x.merge(y)
+        >>> z
+        [1,2,3]
+        >>> x
+        [1,2,3]
         
         """
-        other = ListCell.coerce(other)
+        other = PrefixCell.coerce(other)
         if self.is_equal(other):
             # pick among dependencies
             return self
@@ -322,7 +430,12 @@ class ListCell(Cell):
 
     def append(self, el):
         """
-        Idiosynractic method for adding an element to a list
+        Idiosynractic method for adding an element to a list. Modifies the *self* parameter.
+
+        >>> x = PrefixCell(['a','b'])
+        >>> x.append('c')
+        >>> x
+        [a,b,c]
         """
         if self.value is None:
             self.value = [el]
@@ -331,7 +444,13 @@ class ListCell(Cell):
 
     def get_values(self):
         """
-        Returns a list containing the elements
+        Returns a list containing the elements.
+
+        :returns: list
+
+        >>> x = PrefixCell(['big','blue','ball'])
+        >>> x.get_values()
+        ['big','blue','ball']
         """
         if self.value == None:
             return []
@@ -345,47 +464,22 @@ class ListCell(Cell):
         if self.value == None:
             return ""
         else:
-            return '[' + ', '.join(self.value) + ']'
+            return '[' + ', '.join([str(i) for i in self.value]) + ']'
 
     __str__ = __repr__
     __eq__ = is_equal
 
 
-class PrefixCell(ListCell):
-    """
-    PrefixCells contain lists of paths
-    """
+if __name__ == "__main__":
+    v = LinearOrderedCell(['animal','dog','poodle','toy poodle'], 'animal', 'toy poodle')
+    w = LinearOrderedCell(['animal','dog','poodle','toy poodle'], 'dog', "toy poodle")
+    x = LinearOrderedCell(['animal','dog','poodle','toy poodle'], 'animal', 'poodle')
+    y = LinearOrderedCell(['animal','dog','poodle','toy poodle'], 'dog', 'dog')
+    z = LinearOrderedCell(['animal','dog','poodle','toy poodle'], 'poodle', 'toy poodle')
 
-    def merge(self, other):
-        """
-        Merges two prefixes
-
-        :param other: A ListCell or coercible value
-        :returns: PrefixCell
-        
-        """
-        other = PrefixCell.coerce(other)
-        if self.is_equal(other):
-            # pick among dependencies
-            return self
-        elif other.is_entailed_by(self):
-            return self
-        elif self.is_entailed_by(other):
-            self.value = other.value
-        elif self.is_contradictory(other):
-            raise Contradiction("Cannot merge prefix '%s' with '%s'" % \
-                    (self, other))
-        else:
-            if len(self.value) > len(other.value):
-                self.value = other.value[:]
-            # otherwise, return self
-        return self
-
-    def __repr__(self):
-        if self.value == None:
-            return ""
-        else:
-            return 'p[' + ', '.join(self.value) + ']'
-
-    __str__ = __repr__
+    vpc = PrefixCell(["a", "b", "c","d"])
+    wpc = PrefixCell([2,3])
+    xpc = PrefixCell([1,2,3])
+    ypc = PrefixCell(["a", "b","c"])
+    zpc = PrefixCell([1,2])
 
