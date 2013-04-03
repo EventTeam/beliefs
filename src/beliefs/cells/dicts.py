@@ -82,6 +82,7 @@ class DictCell(Cell):
         :param key_or_keypath: A single key or a path of keys in the form of a list
         :returns: bool"""
         if isinstance(key_or_keypath, list):
+            print 'was instance'
             if len(key_or_keypath) == 0:
                 # empty list is root
                 return False
@@ -89,11 +90,14 @@ class DictCell(Cell):
             next_key = None
             for next_key in key_or_keypath:
                 if next_key in val:
+                    print 'nextxkye was in val'
                     val = val[next_key]
                 else:
+                    print 'nextkey wasnt in val'
                     return False
             return True
         else:
+            print 'was not instance list'
             return key_or_keypath in self.__dict__['p']
             
     def get_value_from_path(self, keypath):
@@ -228,14 +232,20 @@ class DictCell(Cell):
     def __repr__(self, indent=0):
         """ Pretty prints a string representing the structure of the tree.  """
         result = ""
-        for i, (key, val) in enumerate(self):
-            if i != 0:  result += " " * indent
-            if isinstance(val, DictCell):
+        for i, key in list(enumerate(self.__dict__)):
+            
+            if i != 0:
+                
+                result += " " * indent
+            if isinstance(self[key], DictCell):
+                
                 result += "%s : " % (key)
-                result += val.__repr__(indent+len(key)+3)
+                result += self[key].__repr__(indent+len(key)+3)
             else:
-                result += "%s : %s " % (key, val)
+                
+                result += "%s : %s " % (key, self[key])
             result += "\n"
+        
         return result 
 
     def to_dict(self):
@@ -292,4 +302,10 @@ class DictCell(Cell):
     __eq__ = is_equal
     __contains__ = contains
 
-
+if __name__ == "__main__":
+    a = DictCell()
+    a['a'] = 1
+    a['b'] = {}
+    a['b']['1'] = {}
+    a['b']['1']['2'] = {}
+    print a.contains(['b','1','2'])

@@ -6,6 +6,12 @@ from beliefs.cells import *
 class SetIntersectionCell(Cell):
     """
     Represents iterable unordered elements.
+
+    :param domain: Initial domain
+    :type domain: iterable
+    :param value_or_values: Optional default values. All values must be in the specified domain.
+    :type value_or_values: list
+    :raises: Exception
     """
     def __init__(self, domain, value_or_values=None):
         """
@@ -28,12 +34,34 @@ class SetIntersectionCell(Cell):
         return clz(*arg)
 
     def stem(self):
-        """ Spawns a new SetCell of the same domain"""
+        """
+        Spawns a new SetCell of the same domain
+
+        :returns: SetIntersectionCell
+
+        >>> a = SetIntersectionCell([1,2,3])
+        >>> b = a.stem()
+        >>> b
+        {1,2,3}
+
+        """
         return self._stem(self.domain)
 
     def coerce(self, value):
         """
         Ensures that a value is a SetCell
+
+        :param value: A Cell or value in ``self``'s domain
+        :returns: SetIntersectionCell
+        :raises: CellConstructionFailure
+
+        >>> a = SetIntersectionCell([1,2,3])
+        >>> b = a.coerce([1,2])
+        >>> b
+        {1,2}
+        >>> c = a.coerce(1)
+        >>> c
+        {1}
         """
         if hasattr(value, 'values') and hasattr(value, 'domain'):
             return value
@@ -53,24 +81,59 @@ class SetIntersectionCell(Cell):
         """
         Cheap pointer comparison or symmetric difference operation
         to ensure domains are the same
+
+        :param other: SetCell to be compared
+        :type other: SetCell
+        :returns: bool
+
+        >>> a = SetIntersectionCell([1,2,3])
+        >>> b = SetIntersectionCell([2,3,1])
+        >>> c = SetIntersectionCell([1,2])
+        >>> a.same_domain(b)
+        True
+        >>> a.same_domain(c)
+        False
         """
         return self.domain == other.domain or \
                 len(self.domain.symmetric_difference(set(other.domain))) == 0 
     def is_equal(self, other):
         """
         True iff all members are the same
+
+        :param other: SetCell to be compared
+        :type other: SetCell
+        :returns: bool
+        :raises: CellConstructionFailure
+
+        >>> a = SetIntersectionCell(range(10))
+        >>> b = SetIntersectionCell(range(10),[1,3,5])
+        >>> c = SetIntersectionCell([1,3,5])
+        >>> a.is_equal(b)
+        False
+        >>> b.is_equal(c)
+        True
         """
         other = self.coerce(other)
         return len(self.get_values().symmetric_difference(other.get_values())) == 0
 
     def is_contradictory(self, other):
         """
-        What does it mean for a set to contradict another? If a merge results
-        in the empty set -- when both sets are disjoint.
+        What does it mean for one set to contradict another? Two sets are contradictory when they are disjoint.
 
-        CONTRADICTION: self = {4} other = {3}
-        NOT CONTRADICTION: self = {4} other = {3,4}
-        NOT CONTRADICTION: self = {3,4} other = {3}
+        :param other: A SetCell to be compared
+        :type other: SetCell
+        :returns: bool
+        :raises: CellConstructionFailure
+
+        >>> a = SetIntersectionCell(['a','b','c'])
+        >>> b = SetIntersectionCell(['d','e','f'])
+        >>> c = SetIntersectionCell(['c','d'])
+        >>> a.is_contradictory(b)
+        True
+        >>> a.is_contradictory(c)
+        False
+        >>> b.is_contradictory(c)
+        False
         """
         other = self.coerce(other)
         # contradictory if both values are disjoint
@@ -87,9 +150,24 @@ class SetIntersectionCell(Cell):
         Fewer members = more information (exception is empty set, which means
         all members of the domain)
 
-         (1) when self is empty and others is not (equal to containing the
-          entire domain)
-         (2) when other contains more members than self
+        If the two SetCells do not have the same domain, this method returns ``False``.
+
+        If the two SetCells have the same domain, then *self* is entailed by *other* if ``self.values`` is a subset of ``other.values``, or if ``other.values`` is empty (``None``).
+
+
+         :param other: A SetCell to be tested
+         :type other: SetCell
+         :returns: bool
+
+        >>> a = SetIntersectionCell(range(10),[1,2,3])
+        >>> b = SetIntersectionCell(range(5),[1,2,3])
+        >>> c = SetIntersectionCell(range(10),[1,2])
+        >>> a.is_entailed_by(b)
+        False
+        >>> a.is_entailed_by(c)
+        True
+        >>> c.is_entailed_by(a)
+        False
         
         """
         if not self.same_domain(other):
@@ -108,11 +186,33 @@ class SetIntersectionCell(Cell):
     def contains(self, value):
         """
         Returns True iff value is in the set
+
+        :param other: A value that may or may not be in the domain of *self*.
+        :returns: bool
+
+        >>> a = SetIntersectionCell(['red','blue','green'],['red','blue'])
+        >>> b = SetIntersectionCell(['red','blue','green'])
+        >>> a.contains('red')
+        True
+        >>> a.contains('green')
+        False
+        >>> b.contains('green')
+        True
         """
         return value in self.get_values()
 
     def get_values(self):
-        """ The main difference between Intersection/Union """
+        """ Returns the values of the set, or the domain as a set if no values were specified at construction.
+
+        :returns: set
+
+        >>> x = SetIntersectionCell(['a','b','c'])
+        >>> y = SetIntersectionCell(['a','b','c'],['a','b'])
+        >>> x.get_values()
+        set(['a', 'c', 'b'])
+        >>> y.get_values()
+        set(['a', 'b'])
+        """
         if self.values:
             return self.values
         else:
@@ -121,7 +221,24 @@ class SetIntersectionCell(Cell):
     def merge(self, other):
         """
         We can merge unless the merge results in an empty set -- a
-        contradiction
+        contradiction. This method results in the intersection of the two SetCells.
+
+        .. note::
+            This method modifies the *self* argument.
+
+        :param other: SetCell to merge with
+        :type other: SetCell
+        :returns: SetCell
+        :raises: Contradiction, CellConstructionFailure
+
+        >>> a = SetIntersectionCell(range(10),range(10))
+        >>> b = SetIntersectionCell(range(10),[1,2,3])
+        >>> a.merge(b)
+        {1,2,3}
+        >>> c = SetIntersectionCell(range(7),[2,3,4])
+        >>> a.merge(c)
+        {2,3}
+        
         """
         other = self.coerce(other)
         if self.is_equal(other):
@@ -147,9 +264,7 @@ class SetIntersectionCell(Cell):
         """ Python-specific representation"""
         return "{" + ", ".join([ str(v) for v in self.get_values()]) + "}"
 
-    def to_dot(self):
-        """ For Graphviz rendering """
-        return ",".join(self.get_values())
+    
 
     def __hash__(self):
         """
@@ -167,13 +282,26 @@ class SetIntersectionCell(Cell):
 
 
 class SetUnionCell(SetIntersectionCell):
-    """ SetUnionCell breaks monotonicity.
+    """ SetUnionCell inherits from SetIntersectionCell and breaks monotonicity.
     Initially, its values are equal to its domain, and then after 1 or more updates, its values become the UNION of all of the updates"""
 
     def merge(self, other):
         """
-        We can merge unless the merge results in an empty set -- a
-        contradiction
+        We can merge unless the two sets are contradictory, i.e. they are disjoint. The resulting merge will be the union of the two sets.
+
+        .. note::
+            This method will modify the *self* argument.
+
+        :param other: SetCell to merge with
+        :type other: SetCell
+        :returns: SetCell
+        :raises: Contradiction, CellConstructionFailure
+
+        >>> a = SetUnionionCell(range(10),range(5))
+        >>> b = SetUnionionCell(range(10),range(3,8))
+        >>> a.merge(b)
+        {0,1,2,3,4,5,6,7,8}
+        
         """
         other = self.coerce(other)
         if self.is_equal(other):
@@ -190,14 +318,6 @@ class SetUnionCell(SetIntersectionCell):
             else:
                 self.values = other.values.copy()
         return self
-
-
-    def get_values(self):
-        """ The main difference between Intersection/Union """
-        if self.values:
-            return self.values
-        else:
-            return self.domain
 
 
 class TypedSetCell(SetIntersectionCell):

@@ -12,10 +12,8 @@ class LazyCell(Cell):
 
     Question:
         How to handle dynamic properties?
-          - When we update_intension(), the members that are saved will be
-            filtered against the criteria of the prototype. Should we save ALL
-            properties on Yahoo search, or just the ones that
-        How to handle when a property has changed?
+    Answer:
+        When we ``update_intension()``, the members that are saved will be filtered against the criteria of the prototype.
     """
     def __init__(self, prototype):
         """
@@ -44,8 +42,10 @@ class LazyCell(Cell):
         Size of LazyCell:  the size of the intension plus accounting for
         excluded and included additions.
 
-        The exclusions are assumed to be part of the set
-        The inclusions are assumed to NOT be part of the intension
+        The exclusions are assumed to be part of the set.
+        The inclusions are assumed to **NOT** be part of the intension.
+
+        :returns: int -- size of LazyCell
         """
         return self._size_full_intension \
                     - len(self.exclude)\
@@ -74,6 +74,8 @@ class LazyCell(Cell):
     def is_entailed_by(self, other):
         """
         Means merging other with self does not produce any new information.
+
+        :returns: boolean
         """
         if not set(self.include.keys()).issubset(set(other.include.keys())):
             return False
@@ -91,6 +93,8 @@ class LazyCell(Cell):
 
         If the merge does not produce any new information (or contradiction)
         then these are equal.
+
+        :returns: boolean
         """
         print type(self.prototype), type(other.prototype)
         if not self.prototype.is_equal(other.prototype):
@@ -106,7 +110,9 @@ class LazyCell(Cell):
             
     def get_instances(self):
         """
-        Returns the members of the LazyDict
+        Returns the members of the LazyDict in sorted order, as an iterator
+
+        :returns: iter
         """
         if self._update_members: self.update()
         return iter(sorted(self.members.iteritems()))
@@ -115,11 +121,16 @@ class LazyCell(Cell):
         """
         Is contradiction means that a merge of the new information with the
         LazyCell will result in 0 members and is over constrained.
+
+        :returns: boolean
         """
         raise NotImplemented
 
     def merge(self, other):
-        """ Other is some description of a parameter that is responsible for generating the instances
+        """
+        Other is some description of a parameter that is responsible for generating the instances
+
+        :returns: boolean
         """
         raise NotImplemented
 

@@ -63,25 +63,25 @@
 cells.  LazyCells are constrained to be within the value of their prototype</p>
 <dl class="docutils">
 <dt>Question:</dt>
-<dd><dl class="first docutils">
-<dt>How to handle dynamic properties?</dt>
-<dd><ul class="first last simple">
-<li>When we update_intension(), the members that are saved will be
-filtered against the criteria of the prototype. Should we save ALL
-properties on Yahoo search, or just the ones that</li>
-</ul>
-</dd>
-</dl>
-<p class="last">How to handle when a property has changed?</p>
-</dd>
+<dd>How to handle dynamic properties?</dd>
+<dt>Answer:</dt>
+<dd>When we <tt class="docutils literal"><span class="pre">update_intension()</span></tt>, the members that are saved will be filtered against the criteria of the prototype.</dd>
 </dl>
 <dl class="method">
 <dt id="lazy.LazyCell.size">
 <tt class="descname">size</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/lazy.html#LazyCell.size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lazy.LazyCell.size" title="Permalink to this definition">¶</a></dt>
 <dd><p>Size of LazyCell:  the size of the intension plus accounting for
 excluded and included additions.</p>
-<p>The exclusions are assumed to be part of the set
-The inclusions are assumed to NOT be part of the intension</p>
+<p>The exclusions are assumed to be part of the set.
+The inclusions are assumed to <strong>NOT</strong> be part of the intension.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">int &#8211; size of LazyCell</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -107,6 +107,14 @@ The methods responsibilities are:</p>
 <dt id="lazy.LazyCell.is_entailed_by">
 <tt class="descname">is_entailed_by</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lazy.html#LazyCell.is_entailed_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lazy.LazyCell.is_entailed_by" title="Permalink to this definition">¶</a></dt>
 <dd><p>Means merging other with self does not produce any new information.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -122,12 +130,28 @@ The methods responsibilities are:</p>
 </dl>
 <p>If the merge does not produce any new information (or contradiction)
 then these are equal.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="lazy.LazyCell.get_instances">
 <tt class="descname">get_instances</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/lazy.html#LazyCell.get_instances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lazy.LazyCell.get_instances" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the members of the LazyDict</p>
+<dd><p>Returns the members of the LazyDict in sorted order, as an iterator</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">iter</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -135,12 +159,28 @@ then these are equal.</p>
 <tt class="descname">is_contradiction</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lazy.html#LazyCell.is_contradiction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lazy.LazyCell.is_contradiction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Is contradiction means that a merge of the new information with the
 LazyCell will result in 0 members and is over constrained.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="lazy.LazyCell.merge">
 <tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lazy.html#LazyCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lazy.LazyCell.merge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Other is some description of a parameter that is responsible for generating the instances</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
