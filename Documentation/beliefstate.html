@@ -72,7 +72,15 @@ about the relational constraints (such as arity size), and linguistic decisions.
 <dt id="beliefstate.BeliefState.set_multistate">
 <tt class="descname">set_multistate</tt><big>(</big><em>boolean</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.set_multistate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.set_multistate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the multistate parameter indicating whether or not the state
-represents a single belief, or numerous beliefstates</p>
+represents a single belief, or numerous beliefstates. By default, this parameter is set to <tt class="docutils literal"><span class="pre">True</span></tt>, indicating numerous beliefstates.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>boolean</strong> (<em>bool</em>) &#8211; A boolean that is <tt class="docutils literal"><span class="pre">True</span></tt> when the state represents multiple beliefs and <tt class="docutils literal"><span class="pre">False</span></tt> when it represents a single belief.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -80,6 +88,14 @@ represents a single belief, or numerous beliefstates</p>
 <tt class="descname">get_multistate</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.get_multistate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.get_multistate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the multistate parameter indicating whether or not the state
 represents a single belief, or numerous beliefstates</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">bool &#8211; <tt class="docutils literal"><span class="pre">True</span></tt> if the state represents multiple beliefs, <tt class="docutils literal"><span class="pre">False</span></tt> if the state represents a single belief.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -87,19 +103,52 @@ represents a single belief, or numerous beliefstates</p>
 <tt class="descname">set_pos</tt><big>(</big><em>pos</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.set_pos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.set_pos" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the beliefstates&#8217;s part of speech, <cite>pos</cite>, and then executes
 any deferred effects that are keyed by that pos tag.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pos</strong> (<em>str</em>) &#8211; The part of speech of the beliefstate</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">int,float &#8211; The cost of the deferred effects associated with this part of speech</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="beliefstate.BeliefState.get_pos">
 <tt class="descname">get_pos</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.get_pos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.get_pos" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns Part of Speech</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">str &#8211; The part of speech for this BeliefState. BeliefStates are initialized with a default pos of &#8216;S&#8217;</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="beliefstate.BeliefState.add_deferred_effect">
 <tt class="descname">add_deferred_effect</tt><big>(</big><em>effect</em>, <em>pos</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.add_deferred_effect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.add_deferred_effect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pushes an (pos, effect) tuple onto a stack to later be executed if the
+<dd><p>Pushes a (pos, effect) tuple onto a stack to later be executed if the
 state reaches the &#8216;pos&#8217;.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>effect</strong> (<em>function</em>) &#8211; A function that takes one argument and returns a number representing the cost associated with this pos</li>
+<li><strong>pos</strong> (<em>str</em>) &#8211; Part of Speech</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last">Exception, Contradiction</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -108,32 +157,112 @@ state reaches the &#8216;pos&#8217;.</p>
 <dd><p>Evaluates deferred effects that are triggered by the prefix of the
 pos on the current beliefstate. For instance, if the effect is triggered
 by the &#8216;NN&#8217; pos, then the effect will be triggered by &#8216;NN&#8217; or &#8216;NNS&#8217;.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pos</strong> (<em>str</em>) &#8211; A part of speech</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">number &#8211; Represents the cost of the deferred effects associated with <em>pos</em>. Can be int or float.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="beliefstate.BeliefState.set_environment_variable">
 <tt class="descname">set_environment_variable</tt><big>(</big><em>key</em>, <em>val</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.set_environment_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.set_environment_variable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets a variable if that variable is not already set</p>
+<dd><p>Sets a variable if that variable has not already been set</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>key</strong> &#8211; The key for the environment variable</li>
+<li><strong>val</strong> &#8211; The value that will be assigned to <em>key</em></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last">Contradiction &#8211; raised if <em>key</em> has already been set to a value other than <em>val</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="beliefstate.BeliefState.get_environment_variable">
+<tt class="descname">get_environment_variable</tt><big>(</big><em>key</em>, <em>default=None</em>, <em>pop=False</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.get_environment_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.get_environment_variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the value associated with <em>key</em>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>key</strong> &#8211; The lookup key</li>
+<li><strong>default</strong> &#8211; This value is returned in the event that no value is associated with <em>key</em></li>
+<li><strong>pop</strong> (<em>bool</em>) &#8211; Determines whether <em>key</em> is removed from the Environment Variables when it is found.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The value associated with <em>key</em></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="beliefstate.BeliefState.has_contextset">
 <tt class="descname">has_contextset</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.has_contextset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.has_contextset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns True if the BeliefState has a context set defined &#8211; meaning a set
+<dd><p>Returns <tt class="docutils literal"><span class="pre">True</span></tt> if the BeliefState has a context set defined &#8211; meaning a set
 of external referents.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">bool &#8211; Whether a contextset is defined</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="beliefstate.BeliefState.iter_breadth_first">
 <tt class="descname">iter_breadth_first</tt><big>(</big><em>root=None</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.iter_breadth_first"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.iter_breadth_first" title="Permalink to this definition">¶</a></dt>
 <dd><p>Traverses the belief state&#8217;s structure breadth-first</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>root</strong> &#8211; Optional starting point for the search</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Generator</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="beliefstate.BeliefState.find_path">
 <tt class="descname">find_path</tt><big>(</big><em>test_function=None</em>, <em>on_targets=False</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.find_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.find_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>General helper method that iterates breadth-first over the contextset&#8217;s
-cells and returns a path where the test_function is True</p>
+cells and returns a path where the <em>test_function</em> is <tt class="docutils literal"><span class="pre">True</span></tt></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>test_function</strong> (<em>function</em>) &#8211; A function that takes two arguments and returns a boolean</li>
+<li><strong>on_targets</strong> (<em>bool</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Generator &#8211; represents the path</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -141,12 +270,46 @@ cells and returns a path where the test_function is True</p>
 <tt class="descname">get_nth_unique_value</tt><big>(</big><em>keypath</em>, <em>n</em>, <em>reverse=False</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.get_nth_unique_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.get_nth_unique_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the <a href="#id1"><span class="problematic" id="id2">`</span></a>n-1`th unique value, or raises
 a contradiction if that is out of bounds</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>keypath</strong> (<em>list</em>) &#8211; </li>
+<li><strong>n</strong> (<em>int</em>) &#8211; An integer representing which unique value to return</li>
+<li><strong>reverse</strong> (<em>bool</em>) &#8211; Specifies the ordering of the values</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The &#8216;n-1&#8217;th unique value</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last">Contradiction</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="beliefstate.BeliefState.get_ordered_values">
 <tt class="descname">get_ordered_values</tt><big>(</big><em>keypath</em>, <em>reverse=False</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.get_ordered_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.get_ordered_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the contextset&#8217;s values for the specified keypath.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>keypath</strong> &#8211; </li>
+<li><strong>reverse</strong> (<em>bool</em>) &#8211; Specifies the ordering of the values</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">OrderedDict &#8211; Dictionary of sorted values</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -159,18 +322,46 @@ the path)</p>
 <p>These paths are not pointers to the objects themselves, but tuples of
 prefixes that allow us to (attempt) to look up that object in any
 belief state.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>keys</strong> (<em>list,set</em>) &#8211; A collection of keys</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Generator</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="beliefstate.BeliefState.get_parts">
 <tt class="descname">get_parts</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.get_parts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.get_parts" title="Permalink to this definition">¶</a></dt>
 <dd><p>Searches for all DictCells (with nested structure)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Generator</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="beliefstate.BeliefState.get_paths_for_attribute">
 <tt class="descname">get_paths_for_attribute</tt><big>(</big><em>attribute_name</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.get_paths_for_attribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.get_paths_for_attribute" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a path list to all attributes that have with a particular name.</p>
+<dd><p>Returns a path list to all attributes that have a particular name.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>attribute_name</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Generator</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -180,12 +371,46 @@ belief state.</p>
 from the first target that has that keypath (This could mess up if the
 member its copying from has a different Cell or domain for that keypath.)
 Second, this merges that cell with the value</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>keypath</strong> (<em>list</em>) &#8211; </li>
+<li><strong>value</strong> &#8211; </li>
+<li><strong>op</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The result of calling the <em>op</em> method of the Cell at the end of <em>keypath</em> on <em>value</em></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Rasise :</th><td class="field-body"><p class="first last">CellConstructionFailure</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="beliefstate.BeliefState.add_cell">
 <tt class="descname">add_cell</tt><big>(</big><em>keypath</em>, <em>cell</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.add_cell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.add_cell" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a new cell to the end of <cite>keypath</cite> of type <cite>cell</cite></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>keypath</strong> (<em>list</em>) &#8211; A sequence of keys that specify a path through nested dictionaries</li>
+<li><strong>cell</strong> &#8211; The cell to be added to the end of keypath</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The <em>cell</em> object that was passed in as a parameter</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -193,9 +418,23 @@ Second, this merges that cell with the value</p>
 <tt class="descname">entails</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.entails"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.entails" title="Permalink to this definition">¶</a></dt>
 <dd><p>One beliefstate entails another beliefstate iff the other state&#8217;s cells are
 all equal or more general than the caller&#8217;s parts.  That means the other 
-state must have at least all of the same keys/components.</p>
-<p>Note: this only compares the items in the DictCell, not <cite>pos</cite>,
-<cite>environment_variables</cite> or <cite>deferred_effects</cite>.</p>
+state must at least have all of the same keys/components.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">this only compares the items in the DictCell, not <cite>pos</cite>,`environment_variables` or <cite>deferred_effects</cite>.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>BeliefState</em>) &#8211; The BeliefState to compare with</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -205,8 +444,22 @@ state must have at least all of the same keys/components.</p>
 implies the other beliefstate, meaning it contains at least the same
 structure (for all structures) and all values (for all defined values).</p>
 <p>Inverse of <cite>entails</cite>.</p>
-<p>Note: this only compares the items in the DictCell, not <cite>pos</cite>,
-<cite>environment_variables</cite> or <cite>deferred_effects</cite>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">this only compares the items in the DictCell, not <cite>pos</cite>, <cite>environment_variables</cite> or <cite>deferred_effects</cite>.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>BeliefState</em>) &#8211; BeliefState to compare with</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -214,8 +467,20 @@ structure (for all structures) and all values (for all defined values).</p>
 <tt class="descname">is_equal</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.is_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.is_equal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Two beliefstates are equal if all of their part names are equal and all
 of their cell&#8217;s values return True for is_equal().</p>
-<p>Note: this only compares the items in the DictCell, not <cite>pos</cite>,
-<cite>environment_variables</cite> or <cite>deferred_effects</cite>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">this only compares the items in the DictCell, not <cite>pos</cite>, <cite>environment_variables</cite> or <cite>deferred_effects</cite>.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>BeliefState</em>) &#8211; BeliefState to compare with</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -223,8 +488,20 @@ of their cell&#8217;s values return True for is_equal().</p>
 <tt class="descname">is_contradictory</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.is_contradictory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.is_contradictory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Two beliefstates are incompatible if the other beliefstates&#8217;s cells
 are not consistent with or accessible from the caller.</p>
-<p>Note: this only compares the items in the DictCell, not <cite>pos</cite>,
-<cite>environment_variables</cite> or <cite>deferred_effects</cite>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">this only compares the items in the DictCell, not <cite>pos</cite>, <cite>environment_variables</cite> or <cite>deferred_effects</cite>.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>BeliefState</em>) &#8211; BeliefState to compare with</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -236,22 +513,51 @@ one that calculates the size of generating all combinations, but doesn&#8217;t
 take into account the relational constraints (such as those imposed by 
 gradable adjectives).  The second is an exhaustive enumeration of the
 members.</p>
-<p>If there are $n$ targets (the result of <cite>self.number_of_singleton_referents()</cite>) 
-then there are generally $2^{n}-1$ valid belief states.</p>
+<p>If there are n targets (the result of <cite>self.number_of_singleton_referents()</cite>) 
+then there are generally (2^n)-1 valid belief states.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">int &#8211; Size of the contextset</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="beliefstate.BeliefState.referents">
 <tt class="descname">referents</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.referents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.referents" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns all members of the context set that are compatible with the current beliefstate.
-Warning: the number of referents can be quadradic in elements of singleton referents/cells.  
+<dd><p>Returns all members of the context set that are compatible with the current beliefstate.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">the number of referents can be quadratic in elements of singleton referents/cells.
 Call <cite>size()</cite> method instead to compute size only, without ennumerating them.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list &#8211; Members of contextset that are compatible with beliefstate</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="beliefstate.BeliefState.iter_referents">
 <tt class="descname">iter_referents</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.iter_referents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.iter_referents" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates members of the context set that are compatible with the current beliefstate.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Generator</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -259,6 +565,14 @@ Call <cite>size()</cite> method instead to compute size only, without ennumerati
 <tt class="descname">iter_referents_tuples</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.iter_referents_tuples"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.iter_referents_tuples" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates tuples of indices representing members of the context 
 set that are compatible with the current beliefstate.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Generator</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -267,13 +581,36 @@ set that are compatible with the current beliefstate.</p>
 <dd><p>Returns the number of singleton members of the contextset (cells in domain) that are
 compatible with the current belief state.</p>
 <p>This is the size of the union of all referent sets.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">int &#8211; The number of singleton members of the contextset</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body">Exception &#8211; Raised when no contextset is defined for the BeliefState</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="beliefstate.BeliefState.iter_singleton_referents">
 <tt class="descname">iter_singleton_referents</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.iter_singleton_referents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.iter_singleton_referents" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterator of all of the singleton members of the context set.</p>
-<p>NOTE: this evaluates cells one-at-a-time, and does not handle relational constraints.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This evaluates cells one at a time, and does not handle relational constraints.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Generator</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -282,6 +619,14 @@ compatible with the current belief state.</p>
 <dd><p>Copies the BeliefState by recursively deep-copying all of
 its parts.  Domains are not copied, as they do not change
 during the interpretation or generation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">BeliefState</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>

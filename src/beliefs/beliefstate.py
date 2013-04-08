@@ -19,7 +19,7 @@ class BeliefState(DictCell):
     """
     def __init__(self, contextset=None):
         """ 
-        Initializes an empty beliefsstate, and stores the contextset (if specified) 
+        Initializes an empty beliefstate, and stores the contextset (if specified) 
         into self.contextset. 
          
         By default, beliefstates are given the 'S' part of speech and an empty
@@ -42,18 +42,33 @@ class BeliefState(DictCell):
         DictCell.__init__(self, default_structure)
    
     def set_multistate(self, boolean):
-        """ Sets the multistate parameter indicating whether or not the state
-        represents a single belief, or numerous beliefstates """
+        """
+        Sets the multistate parameter indicating whether or not the state
+        represents a single belief, or numerous beliefstates. By default, this parameter is set to ``True``, indicating numerous beliefstates.
+
+        :param boolean: A boolean that is ``True`` when the state represents multiple beliefs and ``False`` when it represents a single belief.
+        :type boolean: bool
+        """
         self.__dict__['multistate'] = boolean
 
     def get_multistate(self):
-        """ Returns the multistate parameter indicating whether or not the state
-        represents a single belief, or numerous beliefstates """
+        """
+        Returns the multistate parameter indicating whether or not the state
+        represents a single belief, or numerous beliefstates
+
+        :returns: bool -- ``True`` if the state represents multiple beliefs, ``False`` if the state represents a single belief.
+
+        """
         return self.__dict__['multistate']
 
     def set_pos(self, pos):
-        """ Sets the beliefstates's part of speech, `pos`, and then executes
+        """
+        Sets the beliefstates's part of speech, `pos`, and then executes
         any deferred effects that are keyed by that pos tag.
+
+        :param pos: The part of speech of the beliefstate
+        :type pos: str
+        :returns: int,float -- The cost of the deferred effects associated with this part of speech
         """
         self.__dict__['pos'] = pos
         # if any deferred effects are keyed by this pos tag, evaluate them, and
@@ -61,12 +76,24 @@ class BeliefState(DictCell):
         return self.execute_deferred_effects(pos)
 
     def get_pos(self):
-        """ Returns Part of Speech"""
+        """
+        Returns Part of Speech
+
+        :returns: str -- The part of speech for this BeliefState. BeliefStates are initialized with a default pos of 'S'
+        """
         return self.__dict__['pos']
 
     def add_deferred_effect(self, effect, pos):
-        """ Pushes an (pos, effect) tuple onto a stack to later be executed if the
-        state reaches the 'pos'."""
+        """
+        Pushes a (pos, effect) tuple onto a stack to later be executed if the
+        state reaches the 'pos'.
+        
+        :param effect: A function that takes one argument and returns a number representing the cost associated with this pos
+        :type effect: function
+        :param pos: Part of Speech
+        :type pos: str
+        :raises: Exception, Contradiction
+        """
         if not isinstance(pos, (unicode, str)):
             raise Exception("Invalid POS tag. Must be string not %d" % (type(pos)))
         if self['speaker_model']['is_syntax_stacked'] == True:
@@ -77,9 +104,16 @@ class BeliefState(DictCell):
             raise Contradiction("Speaker Model undefined")
 
     def execute_deferred_effects(self, pos):
-        """ Evaluates deferred effects that are triggered by the prefix of the
+        """
+        Evaluates deferred effects that are triggered by the prefix of the
         pos on the current beliefstate. For instance, if the effect is triggered
-        by the 'NN' pos, then the effect will be triggered by 'NN' or 'NNS'."""
+        by the 'NN' pos, then the effect will be triggered by 'NN' or 'NNS'.
+
+        :param pos: A part of speech
+        :type pos: str
+        :returns: number -- Represents the cost of the deferred effects associated with *pos*. Can be int or float.
+
+        """
         costs = 0
         for entry in self.__dict__['deferred_effects']:
             effect_pos, effect = entry
@@ -90,13 +124,29 @@ class BeliefState(DictCell):
         return costs
 
     def set_environment_variable(self, key, val):
-        """ Sets a variable if that variable is not already set """
+        """
+        Sets a variable if that variable has not already been set
+
+        :param key: The key for the environment variable
+        :param val: The value that will be assigned to *key*
+        :raises: Contradiction -- raised if *key* has already been set to a value other than *val*
+
+        """
         if self.get_environment_variable(key) in [None, val]:
             self.__dict__['environment_variables'][key] = val
         else:
             raise Contradiction
 
     def get_environment_variable(self, key, default=None, pop=False):
+        """
+        Returns the value associated with *key*.
+
+        :param key: The lookup key
+        :param default: This value is returned in the event that no value is associated with *key*
+        :param pop: Determines whether *key* is removed from the Environment Variables when it is found.
+        :type pop: bool
+        :returns: The value associated with *key*
+        """
         if key in self.__dict__['environment_variables']:
             val = self.__dict__['environment_variables'][key]
             if pop:
@@ -107,13 +157,21 @@ class BeliefState(DictCell):
 
     def has_contextset(self):
         """
-        Returns True if the BeliefState has a context set defined -- meaning a set
+        Returns ``True`` if the BeliefState has a context set defined -- meaning a set
         of external referents.
+
+        :returns: bool -- Whether a contextset is defined
         """
         return self.__dict__['contextset'] is not None
 
     def iter_breadth_first(self, root=None):
-        """ Traverses the belief state's structure breadth-first """
+        """
+        Traverses the belief state's structure breadth-first
+
+        :param root: Optional starting point for the search
+        :returns: Generator
+        
+        """
         if root == None:
             root = self
         yield root
@@ -130,7 +188,13 @@ class BeliefState(DictCell):
     def find_path(self, test_function=None, on_targets=False):
         """
         General helper method that iterates breadth-first over the contextset's
-        cells and returns a path where the test_function is True
+        cells and returns a path where the *test_function* is ``True``
+
+        :param test_function: A function that takes two arguments and returns a boolean
+        :type test_function: function
+        :param on_targets: 
+        :type on_targets: bool
+        :returns: Generator -- represents the path
         """
         assert self.has_contextset(), "need context set"
 
@@ -169,6 +233,15 @@ class BeliefState(DictCell):
         """
         Returns the `n-1`th unique value, or raises
         a contradiction if that is out of bounds
+
+        :param keypath:
+        :type keypath: list
+        :param n: An integer representing which unique value to return
+        :type n: int
+        :param reverse: Specifies the ordering of the values
+        :type reverse: bool
+        :returns: The 'n-1'th unique value
+        :raises: Contradiction
         """
         unique_values = self.get_ordered_values(keypath, reverse).keys()
         if 0 <= n < len(unique_values):
@@ -179,6 +252,11 @@ class BeliefState(DictCell):
     def get_ordered_values(self, keypath, reverse=False):
         """
         Retrieves the contextset's values for the specified keypath.
+
+        :param keypath: 
+        :param reverse: Specifies the ordering of the values
+        :type reverse: bool
+        :returns: OrderedDict -- Dictionary of sorted values
         """
         values = defaultdict(int)  # value -> ct 
         if keypath[0] == 'target':
@@ -204,6 +282,10 @@ class BeliefState(DictCell):
         These paths are not pointers to the objects themselves, but tuples of
         prefixes that allow us to (attempt) to look up that object in any
         belief state.
+
+        :param keys: A collection of keys
+        :type keys: list,set
+        :returns: Generator
         """
         if not isinstance(keys, (list, set)):
             keys = [keys]
@@ -215,12 +297,18 @@ class BeliefState(DictCell):
     def get_parts(self):
         """
         Searches for all DictCells (with nested structure)
+
+        :returns: Generator
         """
         return self.find_path(lambda x: isinstance(x[1], DictCell), on_targets=True)
 
     def get_paths_for_attribute(self, attribute_name):
         """
-        Returns a path list to all attributes that have with a particular name.
+        Returns a path list to all attributes that have a particular name.
+
+        :param attribute_name:
+        :type attribute_name:
+        :returns: Generator
         """
         has_name = lambda name, structure:  name == attribute_name
         return self.find_path(has_name, on_targets=True)
@@ -231,6 +319,16 @@ class BeliefState(DictCell):
         from the first target that has that keypath (This could mess up if the
         member its copying from has a different Cell or domain for that keypath.)
         Second, this merges that cell with the value
+
+        :param keypath:
+        :type keypath: list
+        :param value:
+        :type value:
+        :param op:
+        :type op:
+        :returns: The result of calling the *op* method of the Cell at the end of *keypath* on *value*
+        :rasise: CellConstructionFailure
+        
         """
         if keypath not in self:
             first_referent = None
@@ -266,7 +364,15 @@ class BeliefState(DictCell):
         return getattr(cell, op)(value)
    
     def add_cell(self, keypath, cell):
-        """ Adds a new cell to the end of `keypath` of type `cell`"""
+        """
+        Adds a new cell to the end of `keypath` of type `cell`
+
+        :param keypath: A sequence of keys that specify a path through nested dictionaries
+        :type keypath: list
+        :param cell: The cell to be added to the end of keypath
+        :returns: The *cell* object that was passed in as a parameter
+
+        """
         keypath = keypath[:] # copy
         inner = self  # the most inner dict where cell is added
         cellname = keypath  # the name of the cell
@@ -286,10 +392,15 @@ class BeliefState(DictCell):
         """
         One beliefstate entails another beliefstate iff the other state's cells are
         all equal or more general than the caller's parts.  That means the other 
-        state must have at least all of the same keys/components.  
+        state must at least have all of the same keys/components.  
 
-        Note: this only compares the items in the DictCell, not `pos`,
-        `environment_variables` or `deferred_effects`.
+        .. note::
+            this only compares the items in the DictCell, not `pos`,`environment_variables` or `deferred_effects`.
+
+        :param other: The BeliefState to compare with
+        :type other: BeliefState
+        :returns: bool
+        :raises: Exception
         """
         return other.is_entailed_by(self)
 
@@ -301,8 +412,13 @@ class BeliefState(DictCell):
         
         Inverse of `entails`.
 
-        Note: this only compares the items in the DictCell, not `pos`,
-        `environment_variables` or `deferred_effects`.
+        .. note::
+            this only compares the items in the DictCell, not `pos`, `environment_variables` or `deferred_effects`.
+
+        :param other: BeliefState to compare with
+        :type other: BeliefState
+        :returns: bool
+        :raises: Exception
         """
         for (s_key, s_val) in self:
             if s_key in other:
@@ -319,8 +435,12 @@ class BeliefState(DictCell):
         Two beliefstates are equal if all of their part names are equal and all
         of their cell's values return True for is_equal().
 
-        Note: this only compares the items in the DictCell, not `pos`,
-        `environment_variables` or `deferred_effects`.
+        .. note::
+            this only compares the items in the DictCell, not `pos`, `environment_variables` or `deferred_effects`.
+
+        :param other: BeliefState to compare with
+        :type other: BeliefState
+        :returns: bool
         """
         for (this, that) in itertools.izip_longest(self, other):
             if this[0] != that[0]:
@@ -335,8 +455,12 @@ class BeliefState(DictCell):
         """ Two beliefstates are incompatible if the other beliefstates's cells
          are not consistent with or accessible from the caller.
          
-        Note: this only compares the items in the DictCell, not `pos`,
-        `environment_variables` or `deferred_effects`.
+        .. note::
+            this only compares the items in the DictCell, not `pos`, `environment_variables` or `deferred_effects`.
+
+        :param other: BeliefState to compare with
+        :type other: BeliefState
+        :returns: bool
         """
         for (s_key, s_val) in self:
             if s_key in other and s_val.is_contradictory(other[s_key]):
@@ -352,8 +476,11 @@ class BeliefState(DictCell):
         gradable adjectives).  The second is an exhaustive enumeration of the
         members.
         
-        If there are $n$ targets (the result of `self.number_of_singleton_referents()`) 
-        then there are generally $2^{n}-1$ valid belief states.
+        If there are n targets (the result of `self.number_of_singleton_referents()`) 
+        then there are generally (2^n)-1 valid belief states.
+
+        :returns: int -- Size of the contextset
+        :raises: Exception
         """
         n = self.number_of_singleton_referents()
 
@@ -386,9 +513,14 @@ class BeliefState(DictCell):
             raise Exception(message)
 
     def referents(self):
-        """ Returns all members of the context set that are compatible with the current beliefstate.
-        Warning: the number of referents can be quadradic in elements of singleton referents/cells.  
-        Call `size()` method instead to compute size only, without ennumerating them.
+        """
+        Returns all members of the context set that are compatible with the current beliefstate.
+
+        .. warning::
+            the number of referents can be quadratic in elements of singleton referents/cells.
+            Call `size()` method instead to compute size only, without ennumerating them.
+
+        :returns: list -- Members of contextset that are compatible with beliefstate
         """
         if not self.__dict__['multistate']:
             # we get here when there was a branch
@@ -398,7 +530,11 @@ class BeliefState(DictCell):
             return list(self.iter_referents())
     
     def iter_referents(self):
-        """ Generates members of the context set that are compatible with the current beliefstate. """
+        """
+        Generates members of the context set that are compatible with the current beliefstate.
+
+        :returns: Generator
+        """
         if not self.__dict__['multistate']:
             # we get here when there was a branch
             yield [r for _, r in self.iter_singleton_referents()]
@@ -414,8 +550,12 @@ class BeliefState(DictCell):
                 yield  elements
 
     def iter_referents_tuples(self):
-        """ Generates tuples of indices representing members of the context 
-        set that are compatible with the current beliefstate. """
+        """
+        Generates tuples of indices representing members of the context 
+        set that are compatible with the current beliefstate.
+
+        :returns: Generator
+        """
         if not self.__dict__['multistate']:
             # we get here when there was a branch
             yield tuple([int(i) for i, _ in self.iter_singleton_referents()])
@@ -436,6 +576,9 @@ class BeliefState(DictCell):
         compatible with the current belief state.
 
         This is the size of the union of all referent sets.
+
+        :returns: int -- The number of singleton members of the contextset
+        :raises: Exception -- Raised when no contextset is defined for the BeliefState
         """
         if self.__dict__['contextset']:
             ct = 0
@@ -449,7 +592,12 @@ class BeliefState(DictCell):
         """
         Iterator of all of the singleton members of the context set.
 
-        NOTE: this evaluates cells one-at-a-time, and does not handle relational constraints.
+        .. note::
+            This evaluates cells one at a time, and does not handle relational constraints.
+
+        
+        :returns: Generator
+        :raises: Exception
         """
         try:
             for member in self.__dict__['contextset'].cells:
@@ -463,6 +611,8 @@ class BeliefState(DictCell):
         Copies the BeliefState by recursively deep-copying all of
         its parts.  Domains are not copied, as they do not change
         during the interpretation or generation.
+
+        :returns: BeliefState
         """
         copied = BeliefState(self.__dict__['contextset']) 
         for key in ['environment_variables', 'deferred_effects', 'multistate', 'pos', 'p']:
