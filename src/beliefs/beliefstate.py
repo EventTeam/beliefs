@@ -484,9 +484,12 @@ class BeliefState(DictCell):
         """
         n = self.number_of_singleton_referents()
 
+        if len(self.__dict__['deferred_effects']) != 0:
+            return -1 
+
         if not self.__dict__['multistate']:
             if self['speaker_goals']['targetset_arity'].is_contradictory(n):
-                raise Contradiction("Invalid targetset airity")
+                return 0
             return n
 
         low, high = self['speaker_goals']['targetset_arity'].get_tuple()
