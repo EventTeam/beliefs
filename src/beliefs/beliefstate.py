@@ -34,8 +34,10 @@ class BeliefState(DictCell):
         self.__dict__['deferred_effects'] = []
         self.__dict__['multistate'] = True 
 
+        print "DICT", DictCell
         default_structure = {'target': DictCell(),
                 'speaker_goals': {'targetset_arity': IntervalCell(),
+                                  'distractors_arity': IntervalCell(),
                                   'is_in_commonground': BoolCell()},
                 'speaker_model': {'is_syntax_stacked': BoolCell(F)}}
 
@@ -363,12 +365,18 @@ class BeliefState(DictCell):
         then there are generally $2^{n}-1$ valid belief states.
         """
         n = self.number_of_singleton_referents()
+        print "SIngular refers", n
+        n_distractors = len(self.contextset.cells) - n
 
         if len(self.__dict__['deferred_effects']) != 0:
             return -1 
 
         if not self.__dict__['multistate']:
             if self['speaker_goals']['targetset_arity'].is_contradictory(n):
+                logging.error("CONTRADICTORY %i TARGETSET" % (n))
+                return 0
+            if self['speaker_goals']['distractors_arity'].is_contradictory(n_distractors):
+                logging.error("CONTRADICTORY %i DISTRACTORS" % (n_distractors))
                 return 0
             return n
 
@@ -385,6 +393,7 @@ class BeliefState(DictCell):
                 return 0
             return (2**n)-n-1
         elif low > n:
+            return n
             # inconsistent
             return 0
         elif low == high:
@@ -417,13 +426,15 @@ class BeliefState(DictCell):
             # we get here when there was a branch
             yield [r for _, r in self.iter_singleton_referents()]
         else:
-            low, high = self['speaker_goals']['targetset_arity'].get_tuple()
-            min_size = max(1, low)
-            max_size = min(high + 1, self.number_of_singleton_referents()+1)
+            tlow, thigh = self['speaker_goals']['targetset_arity'].get_tuple()
+            dlow, dhigh = self['speaker_goals']['distractors_arity'].get_tuple()
+            singletons  = list(self.iter_singleton_referents())
+            t = len(singletons)
+            low = max(1, tlow)
+            high = min([t+ 1,  thigh+1, t-(dlow+1)])
             #if low == 2: min_size = max_size-1 # weird hack
-            iterable = list(self.iter_singleton_referents())
-            for elements in itertools.chain.from_iterable(itertools.combinations(iterable, r) \
-                    for r in range(min_size, max_size)):
+            for elements in itertools.chain.from_iterable(itertools.combinations(singletons, r) \
+                    for r in reversed(xrange(low, high))):
                 yield  elements
 
     def iter_referents_tuples(self):
@@ -437,13 +448,15 @@ class BeliefState(DictCell):
             #logging.error("NOT MULISTATE")
             yield tuple([int(i) for i, _ in self.iter_singleton_referents()])
         else:
-            low, high = self['speaker_goals']['targetset_arity'].get_tuple()
-            min_size = max(1, low)
-            max_size = min(high + 1, self.number_of_singleton_referents()+1)
-            #logging.error("MULISTATE %i %i" % (min_size, max_size))
-            iterable = list([int(i) for i,_ in self.iter_singleton_referents()])
-            for elements in itertools.chain.from_iterable(itertools.combinations(iterable, r) \
-                    for r in range(min_size, max_size)):
+            tlow, thigh = self['speaker_goals']['targetset_arity'].get_tuple()
+            dlow, dhigh = self['speaker_goals']['distractors_arity'].get_tuple()
+            singletons = list([int(i) for i,_ in self.iter_singleton_referents()])
+            t = len(singletons)
+            low = max(1, tlow)
+            high = min([t+ 1,  thigh+1, t-(dlow+1)])
+            #if low == 2: min_size = max_size-1 # weird hack
+            for elements in itertools.chain.from_iterable(itertools.combinations(singletons, r) \
+                    for r in reversed(xrange(low, high))):
                 yield  elements
 
     def number_of_singleton_referents(self):
@@ -460,6 +473,12 @@ class BeliefState(DictCell):
             return ct
         else:
             raise Exception("self.contextset must be defined")
+
+    def number_of_singleton_distractors(self):
+        """
+        Returns the number of ruled out members of the context set
+        """
+        return len(self.contextset.cells) - self.number_of_singleton_referents()
 
     def iter_singleton_referents(self):
         """
@@ -517,6 +536,4 @@ class BeliefState(DictCell):
         return hashval
 
     __eq__ = is_equal
-
-
 
