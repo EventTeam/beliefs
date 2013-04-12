@@ -186,18 +186,8 @@ def choose(n, k):
         return 0
 
 def binomial_range(n, k_low, k_high):
-    """
-    nCk = n! / k!(n-k)!
-    nCk + nC(k-1) = (n+1)! / k!(n-k+1)!
-
-    Therefore...
-
-    \sum_{k=i}^{j}\binom{N}{k} = \frac{(N + j - i)!}{j!(N-i)!}
-    """
-    diff = k_high - k_low
-    if k_low > k_high or k_high < 0 or k_high > n: return 0
-    if k_high == 0 or k_high == n: return 1
-    return factorial(n+diff) // (factorial(k_high) * factorial(n-k_low))
+    if k_low > k_high: return 0
+    return sum([choose(n, i) for i in range(k_low, k_high+1)])
 
 def test_next_word():
     s1 = "the blue home".split()

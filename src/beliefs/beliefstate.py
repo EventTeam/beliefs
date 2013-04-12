@@ -34,7 +34,6 @@ class BeliefState(DictCell):
         self.__dict__['deferred_effects'] = []
         self.__dict__['multistate'] = True 
 
-        print "DICT", DictCell
         default_structure = {'target': DictCell(),
                 'speaker_goals': {'targetset_arity': IntervalCell(),
                                   'distractors_arity': IntervalCell(),
@@ -365,8 +364,11 @@ class BeliefState(DictCell):
         then there are generally $2^{n}-1$ valid belief states.
         """
         n = self.number_of_singleton_referents()
-        print "SIngular refers", n
-        n_distractors = len(self.contextset.cells) - n
+        targets = list(self.iter_referents_tuples())
+        n_targets = len(targets)
+        if n == 0 or n_targets == 0:
+            return  0
+        min_target_size = min([n-len(t) for t in targets])
 
         if len(self.__dict__['deferred_effects']) != 0:
             return -1 
@@ -375,34 +377,15 @@ class BeliefState(DictCell):
             if self['speaker_goals']['targetset_arity'].is_contradictory(n):
                 logging.error("CONTRADICTORY %i TARGETSET" % (n))
                 return 0
-            if self['speaker_goals']['distractors_arity'].is_contradictory(n_distractors):
-                logging.error("CONTRADICTORY %i DISTRACTORS" % (n_distractors))
+            if self['speaker_goals']['distractors_arity'].is_contradictory(min_target_size):
+                logging.error("CONTRADICTORY %i DISTRACTORS" % (min_target_size))
                 return 0
             return n
 
-        low, high = self['speaker_goals']['targetset_arity'].get_tuple()
-        if low <= 0 and high >= n:
-            # no constraints on size
-            return (2**n)-1
-        elif low == high == 1:
-            # singular
-            return n
-        elif low == 2 and high > n:
-            # plural
-            if n == 1:
-                return 0
-            return (2**n)-n-1
-        elif low > n:
-            return n
-            # inconsistent
-            return 0
-        elif low == high:
-            # single arity constraint, return nCk
-            k = low
-            return choose(n, k)
-        else:
-            message = "low=%i high=%i n=%i" % (low, high, n)
-            raise Exception(message)
+        tlow, thigh = self['speaker_goals']['targetset_arity'].get_tuple()
+        dlow, dhigh = self['speaker_goals']['distractors_arity'].get_tuple()
+        
+        return binomial_range(n, max(tlow,1), min([n-max(dlow,0),thigh,n]))
 
     def referents(self):
         """ Returns all members of the context set that are compatible with the current beliefstate.
@@ -431,10 +414,11 @@ class BeliefState(DictCell):
             singletons  = list(self.iter_singleton_referents())
             t = len(singletons)
             low = max(1, tlow)
-            high = min([t+ 1,  thigh+1, t-(dlow+1)])
+            high = min([t+ 1,  thigh+1])
             #if low == 2: min_size = max_size-1 # weird hack
-            for r in reversed(xrange(low, high)):
-                for elements in itertools.chain.from_iterable(itertools.combinations(singletons, r):
+            for elements in itertools.chain.from_iterable(itertools.combinations(singletons, r) \
+                for r in reversed(xrange(low, high))):
+                if dlow <= t-len(elements) <= dhigh:
                     yield  elements
 
     def iter_referents_tuples(self):
@@ -453,11 +437,12 @@ class BeliefState(DictCell):
             singletons = list([int(i) for i,_ in self.iter_singleton_referents()])
             t = len(singletons)
             low = max(1, tlow)
-            high = min([t+ 1,  thigh+1, t-(dlow+1)])
+            high = min([t+1,  thigh+1])
             #if low == 2: min_size = max_size-1 # weird hack
             for elements in itertools.chain.from_iterable(itertools.combinations(singletons, r) \
                     for r in reversed(xrange(low, high))):
-                yield  elements
+                if dlow <= t-len(elements) <= dhigh:
+                    yield  elements
 
     def number_of_singleton_referents(self):
         """
