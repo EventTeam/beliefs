@@ -429,14 +429,15 @@ class BeliefState(DictCell):
             # we get here when there was a branch
             yield tuple([int(i) for i, _ in self.iter_singleton_referents()])
         else:
-            low, high = self['speaker_goals']['targetset_arity'].get_tuple()
-            min_size = max(1, low)
-            max_size = min(high + 1, self.number_of_singleton_referents()+1)
-            if low == 2:
-                min_size = max_size-1 # weird hack
-            iterable = list([int(i) for i,_ in self.iter_singleton_referents()])
-            for elements in itertools.chain.from_iterable(itertools.combinations(iterable, r) \
-                    for r in range(min_size, max_size)):
+            tlow, thigh = self['speaker_goals']['targetset_arity'].get_tuple()
+            dlow, dhigh = self['speaker_goals']['distractors_arity'].get_tuple()
+            singletons = list([int(i) for i,_ in self.iter_singleton_referents()])
+            t = len(singletons)
+            low = max(1, tlow)
+            high = min([t+ 1,  thigh+1, t-(dlow+1)])
+            #if low == 2: min_size = max_size-1 # weird hack
+            for elements in itertools.chain.from_iterable(itertools.combinations(singletons, r) \
+                    for r in reversed(xrange(low, high))):
                 yield  elements
 
     def number_of_singleton_referents(self):
