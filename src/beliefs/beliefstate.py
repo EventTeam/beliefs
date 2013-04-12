@@ -433,9 +433,9 @@ class BeliefState(DictCell):
             low = max(1, tlow)
             high = min([t+ 1,  thigh+1, t-(dlow+1)])
             #if low == 2: min_size = max_size-1 # weird hack
-            for elements in itertools.chain.from_iterable(itertools.combinations(singletons, r) \
-                    for r in reversed(xrange(low, high))):
-                yield  elements
+            for r in reversed(xrange(low, high)):
+                for elements in itertools.chain.from_iterable(itertools.combinations(singletons, r):
+                    yield  elements
 
     def iter_referents_tuples(self):
         """ Generates tuples of indices representing members of the context 
