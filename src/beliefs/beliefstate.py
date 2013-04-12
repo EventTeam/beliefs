@@ -34,7 +34,6 @@ class BeliefState(DictCell):
         self.__dict__['deferred_effects'] = []
         self.__dict__['multistate'] = True 
 
-        print "DICT", DictCell
         default_structure = {'target': DictCell(),
                 'speaker_goals': {'targetset_arity': IntervalCell(),
                                   'distractors_arity': IntervalCell(),
@@ -358,7 +357,6 @@ class BeliefState(DictCell):
         then there are generally $2^{n}-1$ valid belief states.
         """
         n = self.number_of_singleton_referents()
-        print "SIngular refers", n
         n_distractors = len(self.contextset.cells) - n
 
         if len(self.__dict__['deferred_effects']) != 0:
