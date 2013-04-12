@@ -160,6 +160,16 @@ def next_tokens_in_sequence(observed, current):
     else:
         return []
 
+def factorial(n, start=1):
+    result = 1
+    assert start <= n
+    for i in xrange(start, abs(n)+1):
+        result *= i
+    if n >= 0:
+        return result
+    else:
+        return -result
+
 def choose(n, k):
     """
     A fast way to calculate binomial coefficients by Andrew Dalke (contrib).
@@ -174,6 +184,20 @@ def choose(n, k):
         return ntok // ktok
     else:
         return 0
+
+def binomial_range(n, k_low, k_high):
+    """
+    nCk = n! / k!(n-k)!
+    nCk + nC(k-1) = (n+1)! / k!(n-k+1)!
+
+    Therefore...
+
+    \sum_{k=i}^{j}\binom{N}{k} = \frac{(N + j - i)!}{j!(N-i)!}
+    """
+    diff = k_high - k_low
+    if k_low > k_high or k_high < 0 or k_high > n: return 0
+    if k_high == 0 or k_high == n: return 1
+    return factorial(n+diff) // (factorial(k_high) * factorial(n-k_low))
 
 def test_next_word():
     s1 = "the blue home".split()

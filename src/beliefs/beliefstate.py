@@ -34,8 +34,10 @@ class BeliefState(DictCell):
         self.__dict__['deferred_effects'] = []
         self.__dict__['multistate'] = True 
 
+        print "DICT", DictCell
         default_structure = {'target': DictCell(),
                 'speaker_goals': {'targetset_arity': IntervalCell(),
+                                  'distractors_arity': IntervalCell(),
                                   'is_in_commonground': BoolCell()},
                 'speaker_model': {'is_syntax_stacked': BoolCell(F)}}
 
@@ -84,13 +86,10 @@ class BeliefState(DictCell):
         for entry in self.__dict__['deferred_effects']:
             effect_pos, effect = entry
             if pos.startswith(effect_pos):
+                logging.info("Executing deferred effect" + str(effect))
                 costs += effect(self)
                 self.__dict__['deferred_effects'].remove(entry)
         return costs
-
-    def has_deferred_effects(self):
-        """ Whether or not there are effects that have not been executed."""
-        return len(self.__dict__['deferred_effects']) != 0
 
     def set_environment_variable(self, key, val):
         """ Sets a variable if that variable is not already set """
@@ -100,10 +99,6 @@ class BeliefState(DictCell):
             raise Contradiction
 
     def get_environment_variable(self, key, default=None, pop=False):
-        """ Returns a variable by its key.  Takes two optional arguments:
-           Default = what to return if the variable doesn't exist 
-           Pop = if the variable is removed after it is returned
-        """
         if key in self.__dict__['environment_variables']:
             val = self.__dict__['environment_variables'][key]
             if pop:
@@ -363,12 +358,15 @@ class BeliefState(DictCell):
         then there are generally $2^{n}-1$ valid belief states.
         """
         n = self.number_of_singleton_referents()
+        print "SIngular refers", n
+        n_distractors = len(self.contextset.cells) - n
 
         if len(self.__dict__['deferred_effects']) != 0:
             return -1 
 
         if not self.__dict__['multistate']:
             if self['speaker_goals']['targetset_arity'].is_contradictory(n):
+                logging.error("CONTRADICTORY %i TARGETSET" % (n))
                 return 0
             return n
 
@@ -385,6 +383,7 @@ class BeliefState(DictCell):
                 return 0
             return (2**n)-n-1
         elif low > n:
+            return n
             # inconsistent
             return 0
         elif low == high:
@@ -400,9 +399,7 @@ class BeliefState(DictCell):
         Warning: the number of referents can be quadradic in elements of singleton referents/cells.  
         Call `size()` method instead to compute size only, without ennumerating them.
         """
-        if self.has_deferred_effects():
-            return []
-        elif not self.__dict__['multistate']:
+        if not self.__dict__['multistate']:
             # we get here when there was a branch
             return [r for _, r in self.iter_singleton_referents()]
         else:
@@ -411,16 +408,15 @@ class BeliefState(DictCell):
     
     def iter_referents(self):
         """ Generates members of the context set that are compatible with the current beliefstate. """
-        if self.has_deferred_effects():
-            yield []
-        elif not self.__dict__['multistate']:
+        if not self.__dict__['multistate']:
             # we get here when there was a branch
             yield [r for _, r in self.iter_singleton_referents()]
         else:
             low, high = self['speaker_goals']['targetset_arity'].get_tuple()
             min_size = max(1, low)
             max_size = min(high + 1, self.number_of_singleton_referents()+1)
-            #if low == 2: min_size = max_size-1 # weird hack
+            if low == 2:
+                min_size = max_size-1 # weird hack
             iterable = list(self.iter_singleton_referents())
             for elements in itertools.chain.from_iterable(itertools.combinations(iterable, r) \
                     for r in range(min_size, max_size)):
@@ -429,18 +425,15 @@ class BeliefState(DictCell):
     def iter_referents_tuples(self):
         """ Generates tuples of indices representing members of the context 
         set that are compatible with the current beliefstate. """
-        if self.has_deferred_effects():
-            #logging.error("DEFERRED_EFFECTS")
-            yield []
-        elif not self.__dict__['multistate']:
+        if not self.__dict__['multistate']:
             # we get here when there was a branch
-            #logging.error("NOT MULISTATE")
             yield tuple([int(i) for i, _ in self.iter_singleton_referents()])
         else:
             low, high = self['speaker_goals']['targetset_arity'].get_tuple()
             min_size = max(1, low)
             max_size = min(high + 1, self.number_of_singleton_referents()+1)
-            #logging.error("MULISTATE %i %i" % (min_size, max_size))
+            if low == 2:
+                min_size = max_size-1 # weird hack
             iterable = list([int(i) for i,_ in self.iter_singleton_referents()])
             for elements in itertools.chain.from_iterable(itertools.combinations(iterable, r) \
                     for r in range(min_size, max_size)):
@@ -460,6 +453,12 @@ class BeliefState(DictCell):
             return ct
         else:
             raise Exception("self.contextset must be defined")
+
+    def number_of_singleton_distractors(self):
+        """
+        Returns the number of ruled out members of the context set
+        """
+        return len(self.contextset.cells) - self.number_of_singleton_referents()
 
     def iter_singleton_referents(self):
         """
@@ -504,7 +503,7 @@ class BeliefState(DictCell):
             hashval += hash(ekey) + hash(kval)
 
         for effect in self.__dict__['deferred_effects']:
-            hashval += hash(effect) 
+            hashval += hash(effect)
 
         # hash dictionary
         for value in self.__dict__['p']:
@@ -517,6 +516,4 @@ class BeliefState(DictCell):
         return hashval
 
     __eq__ = is_equal
-
-
 
