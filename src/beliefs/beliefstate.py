@@ -375,7 +375,6 @@ class BeliefState(DictCell):
 
         if not self.__dict__['multistate']:
             if self['speaker_goals']['targetset_arity'].is_contradictory(n):
-                logging.error("CONTRADICTORY %i TARGETSET" % (n))
                 return 0
             if self['speaker_goals']['distractors_arity'].is_contradictory(min_target_size):
                 logging.error("CONTRADICTORY %i DISTRACTORS" % (min_target_size))
