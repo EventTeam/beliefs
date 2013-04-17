@@ -98,7 +98,7 @@ class IntervalCell(Cell):
         elif self.is_entailed_by(other):
             self.low, self.high = other.low, other.high
         elif self.is_contradictory(other):
-            raise Contradiction("Cannot merge intervals %s  and %s" % (str(self), str(other)))
+            raise Contradiction("Cannot merge intervals")
         else:
             # information in both
             self.low = max(self.low, other.low)

@@ -86,13 +86,10 @@ class BeliefState(DictCell):
         for entry in self.__dict__['deferred_effects']:
             effect_pos, effect = entry
             if pos.startswith(effect_pos):
+                logging.info("Executing deferred effect" + str(effect))
                 costs += effect(self)
                 self.__dict__['deferred_effects'].remove(entry)
         return costs
-
-    def has_deferred_effects(self):
-        """ Whether or not there are effects that have not been executed."""
-        return len(self.__dict__['deferred_effects']) != 0
 
     def set_environment_variable(self, key, val):
         """ Sets a variable if that variable is not already set """
@@ -102,10 +99,6 @@ class BeliefState(DictCell):
             raise Contradiction
 
     def get_environment_variable(self, key, default=None, pop=False):
-        """ Returns a variable by its key.  Takes two optional arguments:
-           Default = what to return if the variable doesn't exist 
-           Pop = if the variable is removed after it is returned
-        """
         if key in self.__dict__['environment_variables']:
             val = self.__dict__['environment_variables'][key]
             if pop:
@@ -387,7 +380,6 @@ class BeliefState(DictCell):
             if self['speaker_goals']['targetset_arity'].is_contradictory(n):
                 return 0
             if self['speaker_goals']['distractors_arity'].is_contradictory(min_target_size):
-                #logging.error("CONTRADICTORY %i DISTRACTORS" % (min_target_size))
                 return 0
             return n
 
@@ -401,9 +393,7 @@ class BeliefState(DictCell):
         Warning: the number of referents can be quadradic in elements of singleton referents/cells.  
         Call `size()` method instead to compute size only, without ennumerating them.
         """
-        if self.has_deferred_effects():
-            return []
-        elif not self.__dict__['multistate']:
+        if not self.__dict__['multistate']:
             # we get here when there was a branch
             return [r for _, r in self.iter_singleton_referents()]
         else:
@@ -412,9 +402,7 @@ class BeliefState(DictCell):
     
     def iter_referents(self):
         """ Generates members of the context set that are compatible with the current beliefstate. """
-        if self.has_deferred_effects():
-            yield []
-        elif not self.__dict__['multistate']:
+        if not self.__dict__['multistate']:
             # we get here when there was a branch
             yield [r for _, r in self.iter_singleton_referents()]
         else:
@@ -433,12 +421,8 @@ class BeliefState(DictCell):
     def iter_referents_tuples(self):
         """ Generates tuples of indices representing members of the context 
         set that are compatible with the current beliefstate. """
-        if self.has_deferred_effects():
-            #logging.error("DEFERRED_EFFECTS")
-            yield []
-        elif not self.__dict__['multistate']:
+        if not self.__dict__['multistate']:
             # we get here when there was a branch
-            #logging.error("NOT MULISTATE")
             yield tuple([int(i) for i, _ in self.iter_singleton_referents()])
         else:
             tlow, thigh = self['speaker_goals']['targetset_arity'].get_tuple()
@@ -517,7 +501,7 @@ class BeliefState(DictCell):
             hashval += hash(ekey) + hash(kval)
 
         for effect in self.__dict__['deferred_effects']:
-            hashval += hash(effect) 
+            hashval += hash(effect)
 
         # hash dictionary
         for value in self.__dict__['p']:
