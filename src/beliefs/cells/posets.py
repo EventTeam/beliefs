@@ -6,6 +6,10 @@ from networkx.algorithms.shortest_paths.generic import has_path
 
 class PartialOrderedCell(Cell):
     """
+
+    .. Note::
+        This class should not be instantiated directly, but rather it should be subclassed.
+        
     Generalizes the LinearOrderedCell to include represent po-sets.  Instead of
     being initialized with a list, this requires an instance of nx.DiGraph: a
     directed graph.
@@ -27,6 +31,63 @@ class PartialOrderedCell(Cell):
 
     Contradictions mean that there is a directed path between one of the lower
     boundaries and the root.
+    
+    :parameter dag: Represents the generalization structure
+    :type dag: nx.DiGraph
+    :parameter lower: Optional parameter. Defaults to the empty set
+    :type lower: set
+    :parameter upper: Optional parameter. Defaults to the empty set
+    :type upper: set
+
+    .. Note::
+        All of the following code examples in this module will be based on the following code block:
+
+        .. code-block:: python
+    
+            class POC_A(PartialOrderedCell):
+                # partial ordered test
+                def __init__(self):
+                    dag = None
+                    if not self.has_domain():
+                        # only initialize once
+                        dag = nx.DiGraph()
+                        dag.add_edge("thing", "vehicle")
+                        dag.add_edge("vehicle", "car")
+                        dag.add_edge("vehicle", "truck")
+                    PartialOrderedCell.__init__(self, dag)
+                    
+            class POC_B(PartialOrderedCell):
+                # partial ordered test
+                def __init__(self):
+                    dag = None
+                    if not self.has_domain():
+                        # only initialize once
+                        dag = nx.DiGraph()
+                        dag.add_edge("thing", "person")
+                        dag.add_edge("person", "actress")
+                        dag.add_edge("person", "writer")
+                        dag.add_edge("person", "producer")
+                    PartialOrderedCell.__init__(self, dag)
+
+            class POC_C(PartialOrderedCell):
+                # partial ordered test
+                def __init__(self):
+                    dag = None
+                    if not self.has_domain():
+                        # only initialize once
+                        dag = nx.DiGraph()
+                        dag.add_edge("thing", "person")
+                        dag.add_edge("person", "actress")
+                        dag.add_edge("person", "director")
+                        dag.add_edge("director", "good-director")
+                        dag.add_edge("director", "bad-director")
+                        dag.add_edge("person", "writer")
+                        dag.add_edge("person", "producer")
+                        dag.add_edge("thing", "vehicle")
+                        dag.add_edge("vehicle", "car")
+                        dag.add_edge("vehicle", "truck")
+                
+                    PartialOrderedCell.__init__(self, dag)
     """
     domain_map = {}
     def __init__(self, dag, lower=None, upper=None):
@@ -65,7 +126,14 @@ class PartialOrderedCell(Cell):
 
     @classmethod
     def set_domain(clz, dag):
-        """ Sets the domain.  Should only be called once per class instantiation. """
+        """
+        Sets the domain.  Should only be called once per class instantiation.
+
+        :paramater dag:
+        :type dag: nx.DiGraph
+        :raises: CellConstructionFailure -- Raised if *dag* is empty, not  directed, not acyclic, or not connected
+
+        """
         logging.info("Setting domain for poset %s" % clz.__name__)
         if nx.number_of_nodes(dag) == 0:
             raise CellConstructionFailure("Empty DAG structure.")
@@ -84,12 +152,23 @@ class PartialOrderedCell(Cell):
         
     @classmethod
     def has_domain(clz):
-        """ Returns True iff the class' domain is specified """
+        """
+        Returns True iff the class' domain is specified
+
+        :returns: bool
+
+        """
         return clz in clz.domain_map
         
     def get_values(self):
         """
         Returns positive members of the poset
+
+        :returns: set
+
+        >>> examplePOC = TestPOC()
+        >>> examplePOC.get_values()
+        set(['producer', 'thing', 'car', 'writer', 'actress', 'director', 'person', 'bad-director', 'truck', 'vehicle', 'good-director'])
         """
         if not self.__values_computed:
             self.__compute_values()
@@ -100,6 +179,12 @@ class PartialOrderedCell(Cell):
         Returns just the upper and lower boundaries
         [upper, lower] representing the most general positive
         boundaries and the most specific lower boundaries
+
+        :returns: tuple -- The first item in the tuple is a set representing the upper boundary, and the second item is a set representing the lower boundary
+
+        >>> examplePOC = TestPOC()
+        >>> examplePOC.get_boundaries()
+        (set([]), set([]))     
         """
         if not self.__values_computed:
             self.__compute_values()
@@ -111,6 +196,12 @@ class PartialOrderedCell(Cell):
         root nodes.  If a path exists between a root node and another entry in
         `self.upper` we can ignore the root node because it has been
         specialized by one of its successors.
+
+        :returns: set -- represents the new upper boundary
+
+        >>> examplePOC = TestPOC()
+        >>> examplePOC.compute_upper_bound()
+        set(['thing'])
         """
         nub = set()
         for root in self.roots - self.upper:
@@ -137,7 +228,7 @@ class PartialOrderedCell(Cell):
                      or child in agenda):
                      seen.add(child)
                      agenda.append(child)
-        # if a node is in both sets, it meens our boundary is collapsed
+        # if a node is in both sets, it means our boundary is collapsed
         conflated = self.lower.intersection(self.upper)
         self.values = seen.union(nub) - conflated
         self.__values_computed = True
@@ -146,21 +237,30 @@ class PartialOrderedCell(Cell):
         """
         Computes whether two Partial Orderings have the same generalization
         structure.
+
+        :param other: The other partial ordering to compare with
+        :type other: PartialOrderedCell
+        :returns: bool
         """
         domain = self.get_domain()
         other_domain = other.get_domain()
         # if they share the same instance of memory for the domain
-        if domain == other_domain:
+        return domain == other_domain
+        '''if domain == other_domain:
             return True
         else:
             return False
             # same domain, slow version
-            #return len(set(domain).symmetric_difference(set(other_domain))) == 0
+            # return len(set(domain).symmetric_difference(set(other_domain))) == 0'''
         
         
     def is_equal(self, other):
         """
         Computes whether two Partial Orderings contain the same information
+
+        :param other: The other partial ordering to compare with
+        :type other: PartialOrderedCell
+        :returns: bool
         """
         if not (hasattr(other, 'get_domain') or hasattr(other, 'upper') or hasattr(other, 'lower')):
             other = self.coerce(other)
@@ -179,8 +279,11 @@ class PartialOrderedCell(Cell):
         
         Approach: Looks for ways to rule out entailment.  If none are found, 
         returns True
-        """
 
+        :param other: The other partial ordering to compare with
+        :type other: PartialOrderedCell
+        :returns: bool
+        """
         
         if not self.is_domain_equal(other):
             return False
@@ -245,7 +348,11 @@ class PartialOrderedCell(Cell):
     
     def is_contradictory(self, other):
         """
-        Does the merge yield the empty set? 
+        Does the merge yield the empty set?
+
+        :param other: The other partial ordering to compare with
+        :type other: PartialOrderedCell
+        :returns: bool
         """
         if not self.is_domain_equal(other):
             return True
@@ -267,6 +374,12 @@ class PartialOrderedCell(Cell):
     def coerce(self, other, is_positive=True):
         """
         Only copies a pointer to the new domain's cell
+
+        :param other: A compatible cell, or value in *self*'s domain
+        :param is_positive: Optional parameter. Specifies whether *other* is positive, in which case it becomes an upper bound, or negative, in which case it becomes a lower bound
+        :type is_positive: bool
+        :returns: PartialOrderedCell
+        :raises: CellConstructionFailure
         """
         if hasattr(other, 'get_domain') and hasattr(other, 'lower') and hasattr(other, 'upper'):
             if self.is_domain_equal(other):
@@ -295,11 +408,20 @@ class PartialOrderedCell(Cell):
                     " outside order's domain . (Other = %s) " % (str(other),))
 
     def merge(self, other, is_positive=True):
-        """ Combines the partial order with either (1) a value in the partial 
+        """
+        Combines the partial order with either (1) a value in the partial 
         order's domain, or (2) another partial order with the same domain.
 
         When combining with a value, an optional `is_positive` parameter can
         be set to False, meaning that the merged value should be excluded.
+
+        :param other: Another partial ordering or a value in *self*'s domain
+        :param is_positive: Optional parameter. Specifies whether *other* is positive, in which case it becomes an upper bound, or negative, in which case it becomes a lower bound
+        :type is_positive: bool
+        :returns: PartialOrderedCell
+        :raises: * CellConstructionFailure -- raised if *other* is not coercible
+                 * Contradiction -- raised if *self* and *other* cannot be merged
+        
         """
         other = self.coerce(other, is_positive)
         # the above coercion forces equal domains, and raises an 
@@ -349,12 +471,16 @@ class PartialOrderedCell(Cell):
         """
         Return the number of members in the partial ordering (between and
         including the boundaries)
+
+        :returns: int -- greater than or equal to zero
         """
         return len(self.get_values())
 
     def to_dot(self):
         """
-        Outputs a version that can be deisplayed or seralized
+        Outputs a version that can be displayed or seralized
+
+        :returns: dict -- keys are 'upper' and 'lower', values are the corresponding lists
         """
         return {'lower': list(self.lower),
                 'upper': list(self.upper)}
@@ -374,36 +500,80 @@ class PartialOrderedCell(Cell):
     __len__ = size
 
     def get_refinement_options(self):
-        """ Returns possible specializations for the upper values in the taxonomy """
+        """
+        Returns possible specializations for the upper values in the taxonomy
+
+        :returns: generator
+
+        """
         domain = self.get_domain()
         for upper_value in self.upper:
             for suc in domain.successors(upper_value):
                 yield suc
 
     def get_relaxation_options(self):
-        """ Returns possible generalizations for the upper values in the taxonomy """
+        """
+        Returns possible generalizations for the upper values in the taxonomy
+
+        :returns: generator
+
+        """
         domain = self.get_domain()
         for upper_value in self.upper:
             for suc in domain.predecessors(upper_value):
                 yield suc
 
     def most_specific_members(self):
-        """ Returns the upper nodes or, if they are empty, the root nodes """
+        """
+        Returns the upper nodes or, if they are empty, the root nodes
+
+        :returns: set
+
+        """
         if len(self.upper) == 0: 
             return self.roots
         else:
             return self.upper
 
     def to_dotfile(self):
-        """ Writes a DOT graphviz file of the domain structure, and returns the filename"""
+        """
+        Writes a DOT graphviz file of the domain structure, and returns the filename
+
+        :returns: str
+
+        """
         domain = self.get_domain()
         filename = "%s.dot" % (self.__class__.__name__)
         nx.write_dot(domain, filename)
         return filename
 
 if __name__ == '__main__':
+    class POC_A(PartialOrderedCell):
+        # partial ordered test
+        def __init__(self):
+            dag = None
+            if not self.has_domain():
+                # only initialize once
+                dag = nx.DiGraph()
+                dag.add_edge("thing", "vehicle")
+                dag.add_edge("vehicle", "car")
+                dag.add_edge("vehicle", "truck")
+            PartialOrderedCell.__init__(self, dag)
+                    
+    class POC_B(PartialOrderedCell):
+        # partial ordered test
+        def __init__(self):
+            dag = None
+            if not self.has_domain():
+                # only initialize once
+                dag = nx.DiGraph()
+                dag.add_edge("thing", "person")
+                dag.add_edge("person", "actress")
+                dag.add_edge("person", "writer")
+                dag.add_edge("person", "producer")
+            PartialOrderedCell.__init__(self, dag)
 
-    class TestPOC(PartialOrderedCell):
+    class POC_C(PartialOrderedCell):
         # partial ordered test
         def __init__(self):
             dag = None
@@ -421,10 +591,11 @@ if __name__ == '__main__':
                 dag.add_edge("vehicle", "car")
                 dag.add_edge("vehicle", "truck")
                 
-            PartialOrderedCell.__init__(self, dag)
+                PartialOrderedCell.__init__(self, dag)
 
-    t = TestPOC()
-    t.merge("person")
+    a = POC_A()
+    b = POC_B()
+    '''t.merge("person")
     print list(t.get_refinement_options())
     print list(t.get_relaxation_options())
-    print t
+    print t'''
