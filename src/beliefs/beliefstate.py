@@ -118,10 +118,13 @@ class BeliefState(DictCell):
         for entry in self.__dict__['deferred_effects']:
             effect_pos, effect = entry
             if pos.startswith(effect_pos):
-                logging.info("Executing deferred effect" + str(effect))
                 costs += effect(self)
                 self.__dict__['deferred_effects'].remove(entry)
         return costs
+
+    def has_deferred_effects(self):
+        """ Whether or not there are effects that have not been executed."""
+        return len(self.__dict__['deferred_effects']) != 0
 
     def set_environment_variable(self, key, val):
         """
@@ -147,6 +150,7 @@ class BeliefState(DictCell):
         :type pop: bool
         :returns: The value associated with *key*
         """
+        
         if key in self.__dict__['environment_variables']:
             val = self.__dict__['environment_variables'][key]
             if pop:
@@ -525,7 +529,9 @@ class BeliefState(DictCell):
 
         :returns: list -- Members of contextset that are compatible with beliefstate
         """
-        if not self.__dict__['multistate']:
+        if self.has_deferred_effects():
+            return []
+        elif not self.__dict__['multistate']:
             # we get here when there was a branch
             return [r for _, r in self.iter_singleton_referents()]
         else:
@@ -538,15 +544,17 @@ class BeliefState(DictCell):
 
         :returns: Generator
         """
-        if not self.__dict__['multistate']:
+        
+        if self.has_deferred_effects():
+            yield []
+        elif not self.__dict__['multistate']:
             # we get here when there was a branch
             yield [r for _, r in self.iter_singleton_referents()]
         else:
             low, high = self['speaker_goals']['targetset_arity'].get_tuple()
             min_size = max(1, low)
             max_size = min(high + 1, self.number_of_singleton_referents()+1)
-            if low == 2:
-                min_size = max_size-1 # weird hack
+            #if low == 2: min_size = max_size-1 # weird hack
             iterable = list(self.iter_singleton_referents())
             for elements in itertools.chain.from_iterable(itertools.combinations(iterable, r) \
                     for r in range(min_size, max_size)):
@@ -559,15 +567,19 @@ class BeliefState(DictCell):
 
         :returns: Generator
         """
-        if not self.__dict__['multistate']:
+        
+        if self.has_deferred_effects():
+            #logging.error("DEFERRED_EFFECTS")
+            yield []
+        elif not self.__dict__['multistate']:
             # we get here when there was a branch
+            #logging.error("NOT MULTISTATE")
             yield tuple([int(i) for i, _ in self.iter_singleton_referents()])
         else:
             low, high = self['speaker_goals']['targetset_arity'].get_tuple()
             min_size = max(1, low)
             max_size = min(high + 1, self.number_of_singleton_referents()+1)
-            if low == 2:
-                min_size = max_size-1 # weird hack
+            #logging.error("MULISTATE %i %i" % (min_size, max_size))
             iterable = list([int(i) for i,_ in self.iter_singleton_referents()])
             for elements in itertools.chain.from_iterable(itertools.combinations(iterable, r) \
                     for r in range(min_size, max_size)):
@@ -641,7 +653,7 @@ class BeliefState(DictCell):
             hashval += hash(ekey) + hash(kval)
 
         for effect in self.__dict__['deferred_effects']:
-            hashval += hash(effect)
+            hashval += hash(effect) 
 
         # hash dictionary
         for value in self.__dict__['p']:

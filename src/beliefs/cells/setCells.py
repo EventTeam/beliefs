@@ -264,7 +264,9 @@ class SetIntersectionCell(Cell):
         """ Python-specific representation"""
         return "{" + ", ".join([ str(v) for v in self.get_values()]) + "}"
 
-    
+    def to_dot(self):
+        """ For Graphviz rendering """
+        return ",".join(self.get_values())
 
     def __hash__(self):
         """
