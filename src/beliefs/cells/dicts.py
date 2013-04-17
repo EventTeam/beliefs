@@ -235,6 +235,10 @@ class DictCell(Cell):
 
         return output
 
+    def empty(self):
+        """ Returns True iff the dictionary doesn't have any keys """
+        return self.__dict__['p'].keys() == []
+
     def keys(self):
         """ Returns a list of the top-level keys in the DictCell"""
         return [k for k, _ in self]

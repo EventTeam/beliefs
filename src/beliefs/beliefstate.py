@@ -35,6 +35,7 @@ class BeliefState(DictCell):
         self.__dict__['multistate'] = True 
 
         default_structure = {'target': DictCell(),
+                             'anti_target': DictCell(),
                 'speaker_goals': {'targetset_arity': IntervalCell(),
                                   'distractors_arity': IntervalCell(),
                                   'is_in_commonground': BoolCell()},
@@ -240,9 +241,16 @@ class BeliefState(DictCell):
         member its copying from has a different Cell or domain for that keypath.)
         Second, this merges that cell with the value
         """
+        keypath = keypath[:] # copy it 
+        negated = self.get_environment_variable('negated', pop=True, default=False)
+        if negated and keypath[0] == "target":
+            keypath[0] = "anti_target"
+        elif negated and keypath[0] == "anti_target":
+            raise Exception("Attempt to modify anti_target directly")
+
         if keypath not in self:
             first_referent = None
-            if keypath[0] == 'target':
+            if keypath[0] in ['target', 'anti_target']:
                 has_targets = False 
                 for _, referent in self.iter_singleton_referents():
                     has_targets = True
@@ -263,8 +271,9 @@ class BeliefState(DictCell):
                 self.add_cell(keypath, cell)
             else:
                 # should we allow merging undefined components outside of target?
-                raise NotImplemented
+                raise Exception("Could not find Keypath %s" % (str(keypath)))
 
+        # break down keypaths into 
         cell = self
         if not isinstance(keypath, list):
             keypath = [keypath]
@@ -330,8 +339,9 @@ class BeliefState(DictCell):
         Note: this only compares the items in the DictCell, not `pos`,
         `environment_variables` or `deferred_effects`.
         """
+        return hash(self) == hash(other)
         for (this, that) in itertools.izip_longest(self, other):
-            if this[0] != that[0]:
+            if that[0] is None or this[0] != that[0]:
                 # compare key names
                 return False
             if not this[1].is_equal(that[1]):
@@ -377,7 +387,7 @@ class BeliefState(DictCell):
             if self['speaker_goals']['targetset_arity'].is_contradictory(n):
                 return 0
             if self['speaker_goals']['distractors_arity'].is_contradictory(min_target_size):
-                logging.error("CONTRADICTORY %i DISTRACTORS" % (min_target_size))
+                #logging.error("CONTRADICTORY %i DISTRACTORS" % (min_target_size))
                 return 0
             return n
 
@@ -472,7 +482,7 @@ class BeliefState(DictCell):
         """
         try:
             for member in self.__dict__['contextset'].cells:
-                if self['target'].is_entailed_by(member):
+                if self['target'].is_entailed_by(member) and (self['anti_target'].empty() or not self['anti_target'].is_entailed_by(member)):
                     yield member['num'], member
         except KeyError:
             raise Exception("No contextset defined")
