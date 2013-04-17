@@ -38,15 +38,12 @@ class DictCell(Cell):
                             "an instance of Cell, not %s" % (type(val)))
         self.__dict__['p'] = from_dict
 
-    def __setattr__(self, k, val):
-        """ Merges or creates a new valalue for a property in the dictionary """
+    def __setattr__(self, k, v):
+        """ Merges or creates a new value for a property in the dictionary """
         if k in self.__dict__['p']:
-            return self[k].merge(val)
+            return self[k].merge(v)
         else:
-            # this can only be used when adding a new cell
-            if not hasattr(val, 'merge'):
-                raise AttributeError("Property %s doesn't exist " % (str(k)))
-            self.__dict__['p'][k] = val
+            self.__dict__['p'][k] = v
             return self[k]
 
     def __getitem__(self, k):
@@ -69,11 +66,7 @@ class DictCell(Cell):
         if k in self.__dict__['p']:
             return self.p[k].merge(val)
         else:
-            # this can only be used when adding a new cell
-            if not hasattr(val, 'merge'):
-                raise AttributeError("Property %s doesn't exist " % (str(k)))
-            self.__dict__['p'][k] = val
-            return self.__dict__['p']
+            return object.__setattr__(self, k, val)
 
     def __delitem__(self, k):
         """ Deletes an attribute k """
