@@ -1,5 +1,5 @@
 from models import *
-from models.offline import *
+#from models.offline import *
 from lexica.shapes.shape_contextset import *
 
 from belief_utils import *
@@ -24,6 +24,9 @@ def yellow(belief):
 
 def has_distractors(belief):
     belief.merge(['speaker_goals', 'distractors_arity'], 1, '__ge__')
+
+def negate(belief):
+    belief.set_environment_variable('negated', True)
 
 new_beliefstate = sc.get_beliefstate_constructor()
 
@@ -99,3 +102,9 @@ print "DLOW", dlow, t-dlow
 print binomial_range(t, max(tlow,1), min([t-max(dlow,0),thigh,t]))
 assert len(b.referents()) == b.size() == len(list(b.iter_referents_tuples()))
 
+""" test negated version of b."""
+b2 = new_beliefstate()
+negate(b2)
+yellow(b2)
+has_distractors(b2)
+assert hash(b2) != hash(b)

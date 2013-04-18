@@ -35,7 +35,7 @@ class BeliefState(DictCell):
         self.__dict__['multistate'] = True 
 
         default_structure = {'target': DictCell(),
-                             'anti_target': DictCell(),
+                             'distractor': DictCell(),
                 'speaker_goals': {'targetset_arity': IntervalCell(),
                                   'distractors_arity': IntervalCell(),
                                   'is_in_commonground': BoolCell()},
@@ -234,16 +234,17 @@ class BeliefState(DictCell):
         member its copying from has a different Cell or domain for that keypath.)
         Second, this merges that cell with the value
         """
+        negated = False
         keypath = keypath[:] # copy it 
-        negated = self.get_environment_variable('negated', pop=True, default=False)
-        if negated and keypath[0] == "target":
-            keypath[0] = "anti_target"
-        elif negated and keypath[0] == "anti_target":
-            raise Exception("Attempt to modify anti_target directly")
+        if keypath[0] == 'target':
+            # only pull negated if it can potentially modify target
+            negated = self.get_environment_variable('negated', pop=True, default=False)
+            if negated:
+                keypath[0] = "distractor"
 
         if keypath not in self:
             first_referent = None
-            if keypath[0] in ['target', 'anti_target']:
+            if keypath[0] in ['target', 'distractor']:
                 has_targets = False 
                 for _, referent in self.iter_singleton_referents():
                     has_targets = True
@@ -254,7 +255,7 @@ class BeliefState(DictCell):
                     # this happens when none of the available targets have the
                     # path that is attempted to being merged to
                     if has_targets:
-                        raise CellConstructionFailure("Cannot merge; no targe: %s" \
+                        raise CellConstructionFailure("Cannot merge; no target: %s" \
                             % (str(keypath)))
                     else:
                         # this will always happen when size is 0
@@ -466,7 +467,7 @@ class BeliefState(DictCell):
         """
         try:
             for member in self.__dict__['contextset'].cells:
-                if self['target'].is_entailed_by(member) and (self['anti_target'].empty() or not self['anti_target'].is_entailed_by(member)):
+                if self['target'].is_entailed_by(member) and (self['distractor'].empty() or not self['distractor'].is_entailed_by(member)):
                     yield member['num'], member
         except KeyError:
             raise Exception("No contextset defined")
@@ -504,8 +505,8 @@ class BeliefState(DictCell):
             hashval += hash(effect)
 
         # hash dictionary
-        for value in self.__dict__['p']:
-            hashval += hash(self.__dict__['p'][value])
+        for key, value in self.__dict__['p'].items():
+            hashval += hash(value) * hash(key)
 
         # -2 is a reserved value 
         if hashval == -2:
