@@ -34,3 +34,4 @@ nosetests.xml
 .project
 .pydevproject
 .__gae_username
+.__gae_password
