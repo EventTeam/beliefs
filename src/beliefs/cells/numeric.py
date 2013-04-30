@@ -1,4 +1,6 @@
-from .cell import *
+#from .cell import *
+from beliefs.cells import *
+
 import numpy as np
 import traceback
 class IntervalCell(Cell):
@@ -241,6 +243,26 @@ class IntervalCell(Cell):
         else:
             return None
 
+    def __abs__(self):
+        """ Absolute value """
+        if self.low == self.high:
+            return abs(self.low)
+        else:
+            return IntervalCell(min(abs(self.low), abs(self.high)), max(abs(self.low), abs(self.high)))
+
     __eq__ = is_equal
     __len__ = size
+
+if __name__ == '__main__':
+
+    def test_absolute_values():
+        # for intervals
+        x = IntervalCell(1,20)
+        y = IntervalCell(19,100)
+        assert abs(x-y) == abs(y-x)
+
+        # for single numbers
+        x = IntervalCell(19,19)
+        y = IntervalCell(20,20)
+        assert abs(x-y) == abs(y-x)
 

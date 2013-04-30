@@ -35,10 +35,10 @@ class BeliefState(DictCell):
 
         default_structure = {'target': DictCell(),
                              'distractor': DictCell(),
-                'speaker_goals': {'targetset_arity': IntervalCell(),
-                                  'contrast_arity': IntervalCell(),
-                                  'is_in_commonground': BoolCell()},
-                'speaker_model': {'is_syntax_stacked': BoolCell(F)}}
+                             'targetset_arity': IntervalCell(),
+                             'contrast_arity': IntervalCell(),
+                             'is_in_commonground': BoolCell(),
+                'speaker_model': {'is_syntax_stacked': BoolCell(T)}}
 
         DictCell.__init__(self, default_structure)
 
@@ -72,12 +72,17 @@ class BeliefState(DictCell):
         pos on the current beliefstate. For instance, if the effect is triggered
         by the 'NN' pos, then the effect will be triggered by 'NN' or 'NNS'."""
         costs = 0
+        to_delete = []
         for entry in self.__dict__['deferred_effects']:
             effect_pos, effect = entry
             if pos.startswith(effect_pos):
-                #logging.info("Executing deferred effect" + str(effect))
+                logging.info("Executing deferred effect" + str(effect))
                 costs += effect(self)
-                self.__dict__['deferred_effects'].remove(entry)
+                to_delete.append(entry)
+        # we delete afterwards, because Python cannot delete from a list that
+        # is being iterated over without screwing up the iteration.
+        for entry in to_delete:
+            self.__dict__['deferred_effects'].remove(entry)
         return costs
 
     def set_environment_variable(self, key, val):
@@ -98,8 +103,8 @@ class BeliefState(DictCell):
 
     def has_contextset(self):
         """
-        Returns True if the BeliefState has a context set defined -- meaning a set
-        of external referents.
+        Returns True if the BeliefState has a context set defined -- meaning a 
+        list of external referents.
         """
         return self.__dict__['contextset'] is not None
 
@@ -156,20 +161,21 @@ class BeliefState(DictCell):
                     yield entry
 
 
-    def get_nth_unique_value(self, keypath, n, reverse=False):
+    def get_nth_unique_value(self, keypath, n, distance_from):
         """
         Returns the `n-1`th unique value, or raises
         a contradiction if that is out of bounds
         """
-        unique_values = self.get_ordered_values(keypath, reverse).keys()
+        unique_values = self.get_ordered_values(keypath, distance_from).keys()
         if 0 <= n < len(unique_values):
             return unique_values[n]
         else:
             raise Contradiction("n-th Unique value out of range: " + str(n))
 
-    def get_ordered_values(self, keypath, reverse=False):
+    def get_ordered_values(self, keypath, distance_from):
         """
-        Retrieves the contextset's values for the specified keypath.
+        Retrieves the contextset's values sorted by their distance from the
+        min, max, or mid value.
         """
         values = defaultdict(int)  # value -> ct 
         if keypath[0] == 'target':
@@ -181,11 +187,27 @@ class BeliefState(DictCell):
             if hasattr(value, 'low') and value.low != value.high:
                 return {}
             values[value] += 1
-        # sort the values
-        values_sorted = OrderedDict()
-        for key in sorted(values.keys(), reverse=reverse):
-            values_sorted[key] = values[key]
-        return values_sorted
+
+        # sort the values 
+        sort_from = None
+
+        if distance_from == 'min':
+            sort_from = min(values.keys())
+        elif distance_from == 'max':
+            sort_from = max(values.keys())
+        else:
+            # sort by distance to mean
+            sorted_values = sorted(values)
+            l = len(sorted_values)
+            if l % 2 == 0:
+                sort_from = sorted_values[l//2-1:l//2+1] / 2.
+            else:
+                sort_from = sorted_values[l//2]
+        # build and return ordered {value -> count} mapping
+        results = OrderedDict()
+        for key in sorted(values.keys(), key=lambda v: abs(v-sort_from)):
+            results[key] = values[key]
+        return results 
 
     def get_paths_for_attribute_set(self, keys):
         """
@@ -352,15 +374,9 @@ class BeliefState(DictCell):
         return False 
 
     def size(self):
-        """ Returns the size of the context set.
+        """ Returns the size of the belief state.
 
-        There are two routines that can be used to do this.  The first is a fast
-        one that calculates the size of generating all combinations, but doesn't
-        take into account the relational constraints (such as those imposed by 
-        gradable adjectives).  The second is an exhaustive enumeration of the
-        members.
-        
-        If there are $n$ targets (the result of `self.number_of_singleton_referents()`) 
+        Initially if there are $n$ consistent members, (the result of `self.number_of_singleton_referents()`) 
         then there are generally $2^{n}-1$ valid belief states.
         """
         n = self.number_of_singleton_referents()
@@ -372,52 +388,52 @@ class BeliefState(DictCell):
         if len(self.__dict__['deferred_effects']) != 0:
             return -1 
 
-
-        tlow, thigh = self['speaker_goals']['targetset_arity'].get_tuple()
-        dlow, dhigh = self['speaker_goals']['contrast_arity'].get_tuple()
+        tlow, thigh = self['targetset_arity'].get_tuple()
+        clow, chigh = self['contrast_arity'].get_tuple()
         
-        return binomial_range(n, max(tlow,1), min([n-max(dlow,0),thigh,n]))
+        return binomial_range(n, max(tlow,1), min([n-max(clow,0),thigh,n]))
 
     def referents(self):
-        """ Returns all members of the context set that are compatible with the current beliefstate.
+        """ Returns all target sets that are compatible with the current beliefstate.
         Warning: the number of referents can be quadradic in elements of singleton referents/cells.  
-        Call `size()` method instead to compute size only, without ennumerating them.
+        Call `size()` method instead to compute size only, without enumerating them.
         """
         # all groupings of singletons
         return list(self.iter_referents())
     
     def iter_referents(self):
-        """ Generates members of the context set that are compatible with the current beliefstate. """
-        tlow, thigh = self['speaker_goals']['targetset_arity'].get_tuple()
-        dlow, dhigh = self['speaker_goals']['contrast_arity'].get_tuple()
-        singletons  = list(self.iter_singleton_referents())
-        t = len(singletons)
+        """ Generates target sets that are compatible with the current beliefstate. """
+        tlow, thigh = self['targetset_arity'].get_tuple()
+        clow, chigh = self['contrast_arity'].get_tuple()
+
+        referents = list(self.iter_singleton_referents())
+        t = len(referents)
         low = max(1, tlow)
-        high = min([t+ 1,  thigh+1])
-        #if low == 2: min_size = max_size-1 # weird hack
-        for elements in itertools.chain.from_iterable(itertools.combinations(singletons, r) \
-            for r in reversed(xrange(low, high))):
-            if dlow <= t-len(elements) <= dhigh:
-                yield  elements
+        high = min([t,  thigh])
+
+        for targets in itertools.chain.from_iterable(itertools.combinations(referents, r) \
+            for r in reversed(xrange(low, high+1))):
+            if clow <= t-len(targets) <= chigh:
+                yield  targets
 
     def iter_referents_tuples(self):
-        """ Generates tuples of indices representing members of the context 
-        set that are compatible with the current beliefstate. """
-        tlow, thigh = self['speaker_goals']['targetset_arity'].get_tuple()
-        dlow, dhigh = self['speaker_goals']['contrast_arity'].get_tuple()
+        """ Generates target sets (as tuples of indicies) that are compatible with
+        the current beliefstate."""
+        tlow, thigh = self['targetset_arity'].get_tuple()
+        clow, chigh = self['contrast_arity'].get_tuple()
         singletons = list([int(i) for i,_ in self.iter_singleton_referents()])
         t = len(singletons)
         low = max(1, tlow)
-        high = min([t+1,  thigh+1])
+        high = min([t,  thigh])
         #if low == 2: min_size = max_size-1 # weird hack
         for elements in itertools.chain.from_iterable(itertools.combinations(singletons, r) \
-                for r in reversed(xrange(low, high))):
-            if dlow <= t-len(elements) <= dhigh:
+                for r in reversed(xrange(low, high+1))):
+            if clow <= t-len(elements) <= chigh:
                 yield  elements
 
     def number_of_singleton_referents(self):
         """
-        Returns the number of singleton members of the contextset (cells in domain) that are
+        Returns the number of singleton members of the referring domain (cells) that are
         compatible with the current belief state.
 
         This is the size of the union of all referent sets.
@@ -429,12 +445,6 @@ class BeliefState(DictCell):
             return ct
         else:
             raise Exception("self.contextset must be defined")
-
-    def number_of_singleton_distractors(self):
-        """
-        Returns the number of ruled out members of the context set
-        """
-        return len(self.contextset.cells) - self.number_of_singleton_referents()
 
     def iter_singleton_referents(self):
         """
