@@ -168,6 +168,7 @@ class BeliefState(DictCell):
         """
         unique_values = self.get_ordered_values(keypath, distance_from)
         if 0 <= n < len(unique_values):
+            logging.error("%i th unique value is %s" % (n, str(unique_values[n])))
             return unique_values[n]
         else:
             raise Contradiction("n-th Unique value out of range: " + str(n))
