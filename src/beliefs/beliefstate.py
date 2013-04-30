@@ -166,7 +166,7 @@ class BeliefState(DictCell):
         Returns the `n-1`th unique value, or raises
         a contradiction if that is out of bounds
         """
-        unique_values = self.get_ordered_values(keypath, distance_from).keys()
+        unique_values = self.get_ordered_values(keypath, distance_from)
         if 0 <= n < len(unique_values):
             return unique_values[n]
         else:
@@ -177,7 +177,7 @@ class BeliefState(DictCell):
         Retrieves the contextset's values sorted by their distance from the
         min, max, or mid value.
         """
-        values = defaultdict(int)  # value -> ct 
+        values = []
         if keypath[0] == 'target':
             # instances start with 'target' prefix, but 
             # don't contain it, so we remove it here.
@@ -185,28 +185,32 @@ class BeliefState(DictCell):
         for _, instance in self.iter_singleton_referents():
             value = instance.get_value_from_path(keypath)
             if hasattr(value, 'low') and value.low != value.high:
-                return {}
-            values[value] += 1
+                return []
+            values.append(float(value))
 
-        # sort the values 
-        sort_from = None
+        values = np.array(values)
+        anchor = values.min()
+        diffs = values - anchor
+        if distance_from == 'max':
+            anchor = values.max()
+            diffs = anchor - values
+        if distance_from == 'mean':
+            anchor = values.mean()
+            diffs = abs(anchor - values)
 
-        if distance_from == 'min':
-            sort_from = min(values.keys())
-        elif distance_from == 'max':
-            sort_from = max(values.keys())
-        else:
-            # sort by distance to mean
-            sorted_values = sorted(values)
-            l = len(sorted_values)
-            if l % 2 == 0:
-                sort_from = sorted_values[l//2-1:l//2+1] / 2.
-            else:
-                sort_from = sorted_values[l//2]
-        # build and return ordered {value -> count} mapping
-        results = OrderedDict()
-        for key in sorted(values.keys(), key=lambda v: abs(v-sort_from)):
-            results[key] = values[key]
+        sdiffs = np.unique(diffs)
+        sdiffs.sort()
+        results = []
+        
+        for el in sdiffs:
+            mask = diffs == el
+            vals = values[mask]
+            if distance_from == 'max':
+                results.append(IntervalCell(vals.min(), np.inf))
+            elif distance_from == 'min':
+                results.append(IntervalCell(-np.inf, vals.max()))
+            elif distance_from == 'mean':
+                results.append(IntervalCell(vals.min(), vals.max()))
         return results 
 
     def get_paths_for_attribute_set(self, keys):
