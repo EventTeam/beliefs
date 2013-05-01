@@ -189,6 +189,8 @@ class BeliefState(DictCell):
                 return []
             values.append(float(value))
 
+        if len(values) == 0:
+            return []
         values = np.array(values)
         anchor = values.min()
         diffs = values - anchor
