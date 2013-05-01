@@ -1,7 +1,6 @@
 from .cell import *
-
 import numpy as np
-import traceback
+
 class IntervalCell(Cell):
     """
     Implements an interval cell along with interval algebra
@@ -99,8 +98,8 @@ class IntervalCell(Cell):
         elif self.is_entailed_by(other):
             self.low, self.high = other.low, other.high
         elif self.is_contradictory(other):
-            if other.low == 0 and other.high == 0:
-                for line in traceback.format_stack(): print line.strip()
+            import traceback
+            for line in traceback.format_stack(): print line.strip()
 
             raise Contradiction("Cannot merge [%0.2f, %0.2f] with [%0.2f, %0.2f]" \
                     % (self.low, self.high, other.low, other.high))
@@ -224,9 +223,9 @@ class IntervalCell(Cell):
         return self.low <= other <= self.high
 
     def __hash__(self):
-        """ Unqiue hash for interval """
+        """ Unique hash for interval """
         hval = 0
-        hval = hash(self.low) + hash(self.high)
+        hval = hash(self.low) * 2  + hash(self.high) * 3 + hash(self.high-self.low) * 5 
         return hval
 
     def get_tuple(self):
@@ -265,3 +264,26 @@ if __name__ == '__main__':
         y = IntervalCell(20,20)
         assert abs(x-y) == abs(y-x)
 
+
+
+def test_hashes():
+    """ Tests for cases where LOW and HIGH values of the interval
+    have the same sum, the same diff, etc. """
+
+    def alldiff(iterable, f=lambda x: x):
+        mapped = map(f, iterable)
+        return len(mapped) == len(set(mapped))
+
+
+    test_cases = []
+    test_cases += [IntervalCell(2,2)]
+    test_cases += [IntervalCell()]
+    test_cases += [IntervalCell(1,3)]
+    test_cases += [IntervalCell(0,4)]
+    test_cases += [IntervalCell(0,2)]
+    test_cases += [IntervalCell(2,5)]
+    test_cases += [IntervalCell(-3,-1)]
+    assert alldiff(test_cases, hash)
+
+    # float / int equivalence
+    assert hash(IntervalCell(0,2)) == hash(IntervalCell(0.0,2.0))
