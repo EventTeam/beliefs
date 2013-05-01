@@ -506,10 +506,3 @@ class BeliefState(DictCell):
     __eq__ = is_equal
 
 
-def alldiff(iterable, f=lambda x: x):
-    mapped = map(f, iterable)
-    return len(mapped) == len(set(mapped))
-
-assert alldiff([1,2,3,4,5])
-
-
