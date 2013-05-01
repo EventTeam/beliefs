@@ -35,35 +35,12 @@ class BeliefState(DictCell):
 
         default_structure = {'target': DictCell(),
                              'distractor': DictCell(),
-                'speaker_goals': {'targetset_arity': IntervalCell(),
-                                  'contrast_arity': IntervalCell(),
-                                  'is_in_commonground': BoolCell()},
-                'speaker_model': {'is_syntax_stacked': BoolCell(F)}}
+                             'targetset_arity': IntervalCell(),
+                             'contrast_arity': IntervalCell(),
+                             'is_in_commonground': BoolCell(),
+                'speaker_model': {'is_syntax_stacked': BoolCell(T)}}
 
         DictCell.__init__(self, default_structure)
-<<<<<<< HEAD
-   
-    def set_multistate(self, boolean):
-        """
-        Sets the multistate parameter indicating whether or not the state
-        represents a single belief, or numerous beliefstates. By default, this parameter is set to ``True``, indicating numerous beliefstates.
-
-        :param boolean: A boolean that is ``True`` when the state represents multiple beliefs and ``False`` when it represents a single belief.
-        :type boolean: bool
-        """
-        self.__dict__['multistate'] = boolean
-
-    def get_multistate(self):
-        """
-        Returns the multistate parameter indicating whether or not the state
-        represents a single belief, or numerous beliefstates
-
-        :returns: bool -- ``True`` if the state represents multiple beliefs, ``False`` if the state represents a single belief.
-
-        """
-        return self.__dict__['multistate']
-=======
->>>>>>> 95f623869eb671e83255726411668bd725743b1b
 
     def set_pos(self, pos):
         """
@@ -119,12 +96,17 @@ class BeliefState(DictCell):
 
         """
         costs = 0
+        to_delete = []
         for entry in self.__dict__['deferred_effects']:
             effect_pos, effect = entry
             if pos.startswith(effect_pos):
-                #logging.info("Executing deferred effect" + str(effect))
+                logging.info("Executing deferred effect" + str(effect))
                 costs += effect(self)
-                self.__dict__['deferred_effects'].remove(entry)
+                to_delete.append(entry)
+        # we delete afterwards, because Python cannot delete from a list that
+        # is being iterated over without screwing up the iteration.
+        for entry in to_delete:
+            self.__dict__['deferred_effects'].remove(entry)
         return costs
 
     def set_environment_variable(self, key, val):
@@ -234,7 +216,7 @@ class BeliefState(DictCell):
                     yield entry
 
 
-    def get_nth_unique_value(self, keypath, n, reverse=False):
+    def get_nth_unique_value(self, keypath, n, distance_from):
         """
         Returns the `n-1`th unique value, or raises
         a contradiction if that is out of bounds
@@ -248,22 +230,24 @@ class BeliefState(DictCell):
         :returns: The 'n-1'th unique value
         :raises: Contradiction
         """
-        unique_values = self.get_ordered_values(keypath, reverse).keys()
+        unique_values = self.get_ordered_values(keypath, distance_from)
         if 0 <= n < len(unique_values):
+            logging.error("%i th unique value is %s" % (n, str(unique_values[n])))
             return unique_values[n]
         else:
             raise Contradiction("n-th Unique value out of range: " + str(n))
 
-    def get_ordered_values(self, keypath, reverse=False):
+    def get_ordered_values(self, keypath, distance_from):
         """
-        Retrieves the contextset's values for the specified keypath.
+        Retrieves the contextset's values sorted by their distance from the
+        min, max, or mid value.
 
         :param keypath: 
         :param reverse: Specifies the ordering of the values
         :type reverse: bool
         :returns: OrderedDict -- Dictionary of sorted values
         """
-        values = defaultdict(int)  # value -> ct 
+        values = []
         if keypath[0] == 'target':
             # instances start with 'target' prefix, but 
             # don't contain it, so we remove it here.
@@ -271,13 +255,33 @@ class BeliefState(DictCell):
         for _, instance in self.iter_singleton_referents():
             value = instance.get_value_from_path(keypath)
             if hasattr(value, 'low') and value.low != value.high:
-                return {}
-            values[value] += 1
-        # sort the values
-        values_sorted = OrderedDict()
-        for key in sorted(values.keys(), reverse=reverse):
-            values_sorted[key] = values[key]
-        return values_sorted
+                return []
+            values.append(float(value))
+
+        values = np.array(values)
+        anchor = values.min()
+        diffs = values - anchor
+        if distance_from == 'max':
+            anchor = values.max()
+            diffs = anchor - values
+        if distance_from == 'mean':
+            anchor = values.mean()
+            diffs = abs(anchor - values)
+
+        sdiffs = np.unique(diffs)
+        sdiffs.sort()
+        results = []
+        
+        for el in sdiffs:
+            mask = diffs == el
+            vals = values[mask]
+            if distance_from == 'max':
+                results.append(IntervalCell(vals.min(), np.inf))
+            elif distance_from == 'min':
+                results.append(IntervalCell(-np.inf, vals.max()))
+            elif distance_from == 'mean':
+                results.append(IntervalCell(vals.min(), vals.max()))
+        return results 
 
     def get_paths_for_attribute_set(self, keys):
         """
@@ -490,16 +494,10 @@ class BeliefState(DictCell):
         return False 
 
     def size(self):
-        """ Returns the size of the context set.
+        """ Returns the size of the belief state.
 
-        There are two routines that can be used to do this.  The first is a fast
-        one that calculates the size of generating all combinations, but doesn't
-        take into account the relational constraints (such as those imposed by 
-        gradable adjectives).  The second is an exhaustive enumeration of the
-        members.
-        
-        If there are n targets (the result of `self.number_of_singleton_referents()`) 
-        then there are generally (2^n)-1 valid belief states.
+        Initially if there are $n$ consistent members, (the result of `self.number_of_singleton_referents()`) 
+        then there are generally $2^{n}-1$ valid belief states.
 
         :returns: int -- Size of the contextset
         :raises: Exception
@@ -513,101 +511,69 @@ class BeliefState(DictCell):
         if len(self.__dict__['deferred_effects']) != 0:
             return -1 
 
-
-        tlow, thigh = self['speaker_goals']['targetset_arity'].get_tuple()
-        dlow, dhigh = self['speaker_goals']['contrast_arity'].get_tuple()
+        tlow, thigh = self['targetset_arity'].get_tuple()
+        clow, chigh = self['contrast_arity'].get_tuple()
         
-        return binomial_range(n, max(tlow,1), min([n-max(dlow,0),thigh,n]))
+        return binomial_range(n, max(tlow,1), min([n-max(clow,0),thigh,n]))
 
     def referents(self):
         """
-        Returns all members of the context set that are compatible with the current beliefstate.
+        Returns all target sets that are compatible with the current beliefstate.
 
         .. warning::
             the number of referents can be quadratic in elements of singleton referents/cells.
             Call `size()` method instead to compute size only, without ennumerating them.
 
         :returns: list -- Members of contextset that are compatible with beliefstate
+        
         """
         # all groupings of singletons
         return list(self.iter_referents())
     
     def iter_referents(self):
-<<<<<<< HEAD
-        """
-        Generates members of the context set that are compatible with the current beliefstate.
+        """ Generates target sets that are compatible with the current beliefstate.
 
         :returns: Generator
         """
-        
-        if not self.__dict__['multistate']:
-            # we get here when there was a branch
-            yield [r for _, r in self.iter_singleton_referents()]
-        else:
-            low, high = self['speaker_goals']['targetset_arity'].get_tuple()
-            min_size = max(1, low)
-            max_size = min(high + 1, self.number_of_singleton_referents()+1)
-            if low == 2:
-                min_size = max_size-1 # weird hack
-            iterable = list(self.iter_singleton_referents())
-            for elements in itertools.chain.from_iterable(itertools.combinations(iterable, r) \
-                    for r in range(min_size, max_size)):
-                yield  elements
+        tlow, thigh = self['targetset_arity'].get_tuple()
+        clow, chigh = self['contrast_arity'].get_tuple()
 
-    def iter_referents_tuples(self):
-        """
-        Generates tuples of indices representing members of the context 
-        set that are compatible with the current beliefstate.
-
-        :returns: Generator
-        """
-        
-        if not self.__dict__['multistate']:
-            # we get here when there was a branch
-            yield tuple([int(i) for i, _ in self.iter_singleton_referents()])
-        else:
-            tlow, thigh = self['speaker_goals']['targetset_arity'].get_tuple()
-            dlow, dhigh = self['speaker_goals']['distractors_arity'].get_tuple()
-            singletons = list([int(i) for i,_ in self.iter_singleton_referents()])
-            t = len(singletons)
-            low = max(1, tlow)
-            high = min([t+ 1,  thigh+1, t-(dlow+1)])
-            #if low == 2: min_size = max_size-1 # weird hack
-            for elements in itertools.chain.from_iterable(itertools.combinations(singletons, r) \
-                    for r in reversed(xrange(low, high))):
-=======
-        """ Generates members of the context set that are compatible with the current beliefstate. """
-        tlow, thigh = self['speaker_goals']['targetset_arity'].get_tuple()
-        dlow, dhigh = self['speaker_goals']['contrast_arity'].get_tuple()
-        singletons  = list(self.iter_singleton_referents())
-        t = len(singletons)
+        referents = list(self.iter_singleton_referents())
+        t = len(referents)
         low = max(1, tlow)
-        high = min([t+ 1,  thigh+1])
-        #if low == 2: min_size = max_size-1 # weird hack
-        for elements in itertools.chain.from_iterable(itertools.combinations(singletons, r) \
-            for r in reversed(xrange(low, high))):
-            if dlow <= t-len(elements) <= dhigh:
-                yield  elements
+        high = min([t, thigh])
+
+        for targets in itertools.chain.from_iterable(itertools.combinations(referents, r) \
+            for r in reversed(xrange(low, high+1))):
+            if clow <= t-len(targets) <= chigh:
+                yield targets
 
     def iter_referents_tuples(self):
-        """ Generates tuples of indices representing members of the context 
-        set that are compatible with the current beliefstate. """
-        tlow, thigh = self['speaker_goals']['targetset_arity'].get_tuple()
-        dlow, dhigh = self['speaker_goals']['contrast_arity'].get_tuple()
+        """ Generates target sets (as tuples of indicies) that are compatible with
+        the current beliefstate.
+
+        :returns: Generator
+        """
+        tlow, thigh = self['targetset_arity'].get_tuple()
+        clow, chigh = self['contrast_arity'].get_tuple()
         singletons = list([int(i) for i,_ in self.iter_singleton_referents()])
         t = len(singletons)
         low = max(1, tlow)
-        high = min([t+1,  thigh+1])
+        high = min([t, thigh])
         #if low == 2: min_size = max_size-1 # weird hack
         for elements in itertools.chain.from_iterable(itertools.combinations(singletons, r) \
-                for r in reversed(xrange(low, high))):
-            if dlow <= t-len(elements) <= dhigh:
->>>>>>> 95f623869eb671e83255726411668bd725743b1b
-                yield  elements
+                for r in reversed(xrange(low, high+1))):
+            if clow <= t-len(elements) <= chigh:
+                yield elements
+
+        for targets in itertools.chain.from_iterable(itertools.combinations(referents, r) \
+            for r in reversed(xrange(low, high+1))):
+            if clow <= t-len(targets) <= chigh:
+                yield  targets
 
     def number_of_singleton_referents(self):
         """
-        Returns the number of singleton members of the contextset (cells in domain) that are
+        Returns the number of singleton members of the referring domain (cells) that are
         compatible with the current belief state.
 
         This is the size of the union of all referent sets.
@@ -622,12 +588,6 @@ class BeliefState(DictCell):
             return ct
         else:
             raise Exception("self.contextset must be defined")
-
-    def number_of_singleton_distractors(self):
-        """
-        Returns the number of ruled out members of the context set
-        """
-        return len(self.contextset.cells) - self.number_of_singleton_referents()
 
     def iter_singleton_referents(self):
         """
@@ -689,4 +649,5 @@ class BeliefState(DictCell):
         return hashval
 
     __eq__ = is_equal
+
 
