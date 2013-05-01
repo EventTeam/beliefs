@@ -12,7 +12,7 @@ class BeliefState(DictCell):
     Suppose the domain has entities/cells: 1,2,3.  A beliefstate represents the
     possible groupings of these entities; a single grouping is called a *referent*. 
     A beliefstate can be about "all referents of size two", for example, and computing
-    the beliefstate's contextset would yield the targets {1,2}, {2,3}, and {1,3}.
+    the beliefstate's extension would yield the targets {1,2}, {2,3}, and {1,3}.
     
     In addition to containing a description of the intended targets, a belief state contains information
     about the relational constraints (such as arity size), and linguistic decisions.
@@ -100,7 +100,7 @@ class BeliefState(DictCell):
         for entry in self.__dict__['deferred_effects']:
             effect_pos, effect = entry
             if pos.startswith(effect_pos):
-                logging.info("Executing deferred effect" + str(effect))
+                #logging.info("Executing deferred effect" + str(effect))
                 costs += effect(self)
                 to_delete.append(entry)
         # we delete afterwards, because Python cannot delete from a list that
@@ -216,7 +216,7 @@ class BeliefState(DictCell):
                     yield entry
 
 
-    def get_nth_unique_value(self, keypath, n, distance_from):
+    def get_nth_unique_value(self, keypath, n, distance_from, open_interval=True):
         """
         Returns the `n-1`th unique value, or raises
         a contradiction if that is out of bounds
@@ -230,16 +230,16 @@ class BeliefState(DictCell):
         :returns: The 'n-1'th unique value
         :raises: Contradiction
         """
-        unique_values = self.get_ordered_values(keypath, distance_from)
+        unique_values = self.get_ordered_values(keypath, distance_from, open_interval)
         if 0 <= n < len(unique_values):
-            logging.error("%i th unique value is %s" % (n, str(unique_values[n])))
+            #logging.error("%i th unique value is %s" % (n, str(unique_values[n])))
             return unique_values[n]
         else:
             raise Contradiction("n-th Unique value out of range: " + str(n))
 
-    def get_ordered_values(self, keypath, distance_from):
+    def get_ordered_values(self, keypath, distance_from, open_interval=True):
         """
-        Retrieves the contextset's values sorted by their distance from the
+        Retrieves the referents's values sorted by their distance from the
         min, max, or mid value.
 
         :param keypath: 
@@ -258,6 +258,8 @@ class BeliefState(DictCell):
                 return []
             values.append(float(value))
 
+        if len(values) == 0:
+            return []
         values = np.array(values)
         anchor = values.min()
         diffs = values - anchor
@@ -275,7 +277,9 @@ class BeliefState(DictCell):
         for el in sdiffs:
             mask = diffs == el
             vals = values[mask]
-            if distance_from == 'max':
+            if not open_interval:
+                results.append(IntervalCell(vals.min(), vals.max()))
+            elif distance_from == 'max':
                 results.append(IntervalCell(vals.min(), np.inf))
             elif distance_from == 'min':
                 results.append(IntervalCell(-np.inf, vals.max()))

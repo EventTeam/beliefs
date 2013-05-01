@@ -210,8 +210,8 @@ class IntervalCell(Cell):
         elif self.is_entailed_by(other):
             self.low, self.high = other.low, other.high
         elif self.is_contradictory(other):
-            import traceback
-            for line in traceback.format_stack(): print line.strip()
+            #import traceback
+            #for line in traceback.format_stack(): print line.strip()
 
             raise Contradiction("Cannot merge [%0.2f, %0.2f] with [%0.2f, %0.2f]" \
                     % (self.low, self.high, other.low, other.high))
