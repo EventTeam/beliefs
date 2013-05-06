@@ -247,6 +247,7 @@ class BeliefState(DictCell):
         :type reverse: bool
         :returns: OrderedDict -- Dictionary of sorted values
         """
+
         values = []
         if keypath[0] == 'target':
             # instances start with 'target' prefix, but 
@@ -273,17 +274,27 @@ class BeliefState(DictCell):
         sdiffs = np.unique(diffs)
         sdiffs.sort()
         results = []
+      
+        logging.error("OPEN INTERVAL "+str(open_interval))
         
-        for el in sdiffs:
-            mask = diffs == el
+        for ix, el in enumerate(sdiffs):
+            mask = diffs <= el
             vals = values[mask]
-            if not open_interval:
+            if False:
+                # when vagueness has been made precise through an ordinal
                 results.append(IntervalCell(vals.min(), vals.max()))
             elif distance_from == 'max':
-                results.append(IntervalCell(vals.min(), np.inf))
+                if open_interval:
+                    results.append(IntervalCell(vals.min(), np.inf))
+                else:
+                    results.append(IntervalCell(vals.min(), vals.min()))
             elif distance_from == 'min':
-                results.append(IntervalCell(-np.inf, vals.max()))
+                if open_interval:
+                    results.append(IntervalCell(-np.inf, vals.max()))
+                else:
+                    results.append(IntervalCell(vals.max(), vals.max()))
             elif distance_from == 'mean':
+                if ix+1 == len(sdiffs): continue  # skip last
                 results.append(IntervalCell(vals.min(), vals.max()))
         return results 
 
