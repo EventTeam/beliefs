@@ -206,8 +206,6 @@ class BeliefState(DictCell):
         sdiffs.sort()
         results = []
       
-        logging.error("OPEN INTERVAL "+str(open_interval))
-        
         for ix, el in enumerate(sdiffs):
             mask = diffs <= el
             vals = values[mask]
