@@ -581,11 +581,6 @@ class BeliefState(DictCell):
             if clow <= t-len(elements) <= chigh:
                 yield elements
 
-        for targets in itertools.chain.from_iterable(itertools.combinations(referents, r) \
-            for r in reversed(xrange(low, high+1))):
-            if clow <= t-len(targets) <= chigh:
-                yield  targets
-
     def number_of_singleton_referents(self):
         """
         Returns the number of singleton members of the referring domain (cells) that are
