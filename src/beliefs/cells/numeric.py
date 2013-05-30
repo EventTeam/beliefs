@@ -241,6 +241,29 @@ class IntervalCell(Cell):
         else:
             return None
 
+    def to_latex(self):
+        """ Returns an interval representation """
+        if self.low == self.high:
+            if self.low / 10 == 0:
+                return "{0:d}".format(self.low)
+            else:
+                return "{0:2f}".format(self.low)
+        else:
+            t = ""
+            if self.low == -np.inf:
+                t += r"\(-\infty, "
+            elif self.low / 10 == 0:
+                t += r"\[{0:d}, ".format(self.low)
+            else:
+                t += r"\[{0:2f}, ".format(self.low)
+            if self.high == np.inf:
+                t += r"\infty\)"
+            elif self.low / 10 == 0:
+                t += r"{0:d}\]".format(self.low)
+            else:
+                t += r"{0:2f}\]".format(self.low)
+            return t
+
     def __abs__(self):
         """ Absolute value """
         if self.low == self.high:
