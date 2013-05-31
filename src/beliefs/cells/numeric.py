@@ -1,4 +1,5 @@
-from .cell import *
+#from .cell import *
+from beliefs.cells import *
 import numpy as np
 
 class IntervalCell(Cell):
@@ -241,6 +242,29 @@ class IntervalCell(Cell):
         else:
             return None
 
+    def to_latex(self):
+        """ Returns an interval representation """
+        if self.low == self.high:
+            if self.low * 10 % 10 == 0:
+                return "{0:d}".format(int(self.low))
+            else:
+                return "{0:0.2f}".format(self.low)
+        else:
+            t = ""
+            if self.low == -np.inf:
+                t += r"(-\infty, "
+            elif self.low * 10 % 10 == 0:
+                t += r"[{0:d}, ".format(int(self.low))
+            else:
+                t += r"[{0:0.2f}, ".format(self.low)
+            if self.high == np.inf:
+                t += r"\infty)"
+            elif self.high * 10 % 10 == 0:
+                t += r"{0:d}]".format(int(self.high))
+            else:
+                t += r"{0:0.2f}]".format(self.high)
+            return t
+
     def __abs__(self):
         """ Absolute value """
         if self.low == self.high:
@@ -264,6 +288,10 @@ if __name__ == '__main__':
         y = IntervalCell(20,20)
         assert abs(x-y) == abs(y-x)
 
+    x = IntervalCell(3, 38.2)
+    print x.to_latex()
+    x = IntervalCell(0, 38)
+    print x.to_latex()
 
 
 def test_hashes():

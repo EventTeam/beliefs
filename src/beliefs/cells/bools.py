@@ -119,7 +119,7 @@ class BoolCell(Cell):
         return hash(self.value)
 
     __eq__ = is_equal
-
+    to_latex = to_dot
 
 def test_bool_cell_hash_functions():
     b1 = BoolCell()

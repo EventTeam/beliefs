@@ -164,6 +164,7 @@ class SetIntersectionCell(Cell):
         
     __contains__ = contains
     __eq__ = is_equal
+    to_latex = to_dot
 
 
 class SetUnionCell(SetIntersectionCell):

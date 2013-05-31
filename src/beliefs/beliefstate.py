@@ -17,6 +17,10 @@ class BeliefState(DictCell):
     In addition to containing a description of the intended targets, a belief state contains information
     about the relational constraints (such as arity size), and linguistic decisions.
     """
+    PRIMES = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41,
+          43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109,
+          113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179]
+
     def __init__(self, contextset=None):
         """ 
         Initializes an empty beliefsstate, and stores the contextset (if specified) 
@@ -35,10 +39,10 @@ class BeliefState(DictCell):
 
         default_structure = {'target': DictCell(),
                              'distractor': DictCell(),
-                             'targetset_arity': IntervalCell(),
-                             'contrast_arity': IntervalCell(),
+                             'targetset_arity': IntervalCell(0, np.inf),
+                             'contrast_arity': IntervalCell(0, np.inf),
                              'is_in_commonground': BoolCell(),
-                'speaker_model': {'is_syntax_stacked': BoolCell(T)}}
+                'speaker_model': {'is_syntax_stacked': BoolCell(F)}}
 
         DictCell.__init__(self, default_structure)
 
@@ -231,11 +235,11 @@ class BeliefState(DictCell):
         Given a list/set of keys (or one key), returns the parts that have
         all of the keys in the list.
 
-        DOES NOT WORK WITH TOP LEVEL OBJECTS (since these are not indexed by
-        the path)
+        Because on_targets=True, this DOES NOT WORK WITH TOP LEVEL PROPERTIES,
+        only those of targets.
 
         These paths are not pointers to the objects themselves, but tuples of
-        prefixes that allow us to (attempt) to look up that object in any
+        attribute names that allow us to (attempt) to look up that object in any
         belief state.
         """
         if not isinstance(keys, (list, set)):
@@ -473,6 +477,20 @@ class BeliefState(DictCell):
         except KeyError:
             raise Exception("No contextset defined")
 
+    def to_latex(self, number=0):
+        """ Returns a raw text string that contains a latex representation of
+        the belief state as an attribute-value matrix.  This requires:
+            \usepackage{avm}
+        """ 
+        latex = r"""\avmfont{\sc}
+\avmoptions{sorted,active}
+\avmvalfont{\rm}"""
+        latex += "\n\nb_%i = \\begin{avm} \n " % number
+        latex += DictCell.to_latex(self)
+        latex += "\n\\end{avm}\n"
+        return latex
+
+    
     def copy(self):
         """
         Copies the BeliefState by recursively deep-copying all of
@@ -503,9 +521,8 @@ class BeliefState(DictCell):
             hashval += hash(effect)
 
         # hash dictionary
-        for key, value in self.__dict__['p'].items():
-            hashval += hash(value) * hash(key)
-
+        for i, (key, value) in enumerate(self.__dict__['p'].items()):
+            hashval += hash(value) * hash(key)# * BeliefState.PRIMES[i % len(BeliefState.PRIMES)]
         # -2 is a reserved value 
         if hashval == -2:
             hashval = -1
@@ -515,3 +532,10 @@ class BeliefState(DictCell):
     __eq__ = is_equal
 
 
+if __name__ == '__main__':
+   
+    from models import *
+    from models.online import *
+    c = ContextSet.get_by_name("Amazon Kindles")
+    b = BeliefState(c)
+    print b.to_latex()
