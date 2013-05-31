@@ -76,7 +76,6 @@ class BeliefState(DictCell):
         for entry in self.__dict__['deferred_effects']:
             effect_pos, effect = entry
             if pos.startswith(effect_pos):
-                #logging.info("Executing deferred effect" + str(effect))
                 costs += effect(self)
                 to_delete.append(entry)
         # we delete afterwards, because Python cannot delete from a list that
@@ -402,9 +401,6 @@ class BeliefState(DictCell):
         n_targets = len(targets)
         if n == 0 or n_targets == 0:
             return  0
-
-        if len(self.__dict__['deferred_effects']) != 0:
-            return -1 
 
         tlow, thigh = self['targetset_arity'].get_tuple()
         clow, chigh = self['contrast_arity'].get_tuple()
