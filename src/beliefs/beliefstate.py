@@ -409,7 +409,7 @@ class BeliefState(DictCell):
 
         #if len(self.__dict__['deferred_effects']) != 0:
         #    return -1 
-
+        return len(list(self.iter_referents_tuples()))
         tlow, thigh = self['targetset_arity'].get_tuple()
         clow, chigh = self['contrast_arity'].get_tuple()
         
@@ -447,7 +447,6 @@ class BeliefState(DictCell):
         t = len(singletons)
         low = max(1, tlow)
         high = min([t,  thigh])
-        #if low == 2: min_size = max_size-1 # weird hack
         for elements in itertools.chain.from_iterable(itertools.combinations(singletons, r) \
                 for r in reversed(xrange(low, high+1))):
             if clow <= t-len(elements) <= chigh:

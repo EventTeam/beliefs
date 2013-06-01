@@ -1,5 +1,4 @@
-#from .cell import *
-from beliefs.cells import *
+from .cell import *
 import numpy as np
 
 class IntervalCell(Cell):
