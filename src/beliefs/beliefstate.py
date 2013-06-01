@@ -80,7 +80,6 @@ class BeliefState(DictCell):
         for entry in self.__dict__['deferred_effects']:
             effect_pos, effect = entry
             if pos.startswith(effect_pos):
-                #logging.info("Executing deferred effect" + str(effect))
                 costs += effect(self)
                 to_delete.append(entry)
         # we delete afterwards, because Python cannot delete from a list that

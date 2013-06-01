@@ -1,8 +1,8 @@
 """
 Defines the Set cells
 """
-from beliefs.cells import *
 import logging
+from .cell import *
 
 class SetIntersectionCell(Cell):
     """
