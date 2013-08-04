@@ -1,0 +1,261 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>colors &mdash; beliefs 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="beliefs 1.0 documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">beliefs 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for colors</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">beliefs.cells</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">colormath.color_objects</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">COLOR_NAMES</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;red&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                <span class="s">&#39;cyan&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">],</span>
+                <span class="s">&#39;blue&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>
+                <span class="s">&#39;medium_blue&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">205</span><span class="p">],</span>
+                <span class="s">&#39;black&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                <span class="s">&#39;white&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">],</span>
+                <span class="s">&#39;green&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">128</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                <span class="s">&#39;light_blue&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">144</span><span class="p">,</span><span class="mi">255</span><span class="p">],</span> <span class="c">#doger blue</span>
+                <span class="s">&#39;teal&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span>
+                <span class="s">&#39;yellow&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">]}</span>
+
+<div class="viewcode-block" id="RGBColorCell"><a class="viewcode-back" href="../colors.html#colors.RGBColorCell">[docs]</a><span class="k">class</span> <span class="nc">RGBColorCell</span><span class="p">(</span><span class="n">Cell</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Maybe i just need some comments here?</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Instantiates a color of RGB &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="n">r</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">b</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">g</span> <span class="o">=</span> <span class="n">g</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">r</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">b</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">g</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">RGBColor</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">rgb_type</span><span class="o">=</span><span class="s">&#39;sRGB&#39;</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="RGBColorCell.from_name"><a class="viewcode-back" href="../colors.html#colors.RGBColorCell.from_name">[docs]</a>    <span class="k">def</span> <span class="nf">from_name</span><span class="p">(</span><span class="n">clz</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Instantiates the object from a known name</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="s">&quot;green&quot;</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;teal&quot;</span>
+        <span class="k">assert</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">COLOR_NAMES</span><span class="p">,</span> <span class="s">&#39;Unknown color name&#39;</span>
+        <span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">g</span> <span class="o">=</span> <span class="n">COLOR_NAMES</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">clz</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="RGBColorCell.to_html"><a class="viewcode-back" href="../colors.html#colors.RGBColorCell.to_html">[docs]</a>    <span class="k">def</span> <span class="nf">to_html</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Converts to Hex &quot;&quot;&quot;</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="s">&quot;#&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">+=</span> <span class="s">&quot;00&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">+=</span> <span class="nb">hex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">+=</span> <span class="s">&quot;00&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">+=</span> <span class="nb">hex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">+=</span> <span class="s">&quot;00&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">+=</span> <span class="nb">hex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]</span>
+        <span class="k">return</span> <span class="n">out</span>
+        </div>
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Representation of set color</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rgb</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="p">]</span>
+        <span class="k">return</span> <span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="nb">hash</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">^</span> <span class="nb">hash</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">rgb</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="RGBColorCell.coerce"><a class="viewcode-back" href="../colors.html#colors.RGBColorCell.coerce">[docs]</a>    <span class="k">def</span> <span class="nf">coerce</span><span class="p">(</span><span class="n">clz</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">RGBColorCell</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Needs to be another color cell&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">other</span>
+</div>
+<div class="viewcode-block" id="RGBColorCell.membership_score"><a class="viewcode-back" href="../colors.html#colors.RGBColorCell.membership_score">[docs]</a>    <span class="k">def</span> <span class="nf">membership_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Fuzzy set gradable membership score</span>
+<span class="sd">        See http://code.google.com/p/python-colormath/wiki/ColorDifferences</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">delta_e</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">&#39;cmc&#39;</span><span class="p">,</span> <span class="n">pl</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">pc</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">200.0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.0</span>
+</div>
+<div class="viewcode-block" id="RGBColorCell.merge"><a class="viewcode-back" href="../colors.html#colors.RGBColorCell.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Merges the values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">print</span> <span class="s">&quot;MERGING&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">Contradiction</span><span class="p">(</span><span class="s">&quot;Cannot merge </span><span class="si">%s</span><span class="s"> and </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">g</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">b</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">RGBColor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="p">,</span> <span class="n">rgb_type</span><span class="o">=</span><span class="s">&#39;sRGB&#39;</span><span class="p">)</span>
+        <span class="c"># last cases: other is none, or both are none</span>
+        
+        <span class="k">return</span> <span class="bp">self</span>
+</div>
+<div class="viewcode-block" id="RGBColorCell.is_contradictory"><a class="viewcode-back" href="../colors.html#colors.RGBColorCell.is_contradictory">[docs]</a>    <span class="k">def</span> <span class="nf">is_contradictory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">membership_score</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">1.0</span>
+</div>
+    <span class="k">def</span> <span class="nf">is_entailed_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+            
+<div class="viewcode-block" id="RGBColorCell.is_equal"><a class="viewcode-back" href="../colors.html#colors.RGBColorCell.is_equal">[docs]</a>    <span class="k">def</span> <span class="nf">is_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns True if the distance is 0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">membership_score</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="o">==</span> <span class="mf">1.0</span>
+
+</div>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&#39;{}&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Representation of color</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="n">rgb</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s">&quot;[RGBColorCell:</span><span class="si">%i</span><span class="s">,</span><span class="si">%i</span><span class="s">,</span><span class="si">%i</span><span class="s">]&quot;</span> <span class="o">%</span> <span class="n">rgb</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&quot;[RGBColorCell:X]&quot;</span>
+
+    <span class="n">__eq__</span> <span class="o">=</span> <span class="n">is_equal</span>
+
+<span class="c"># delta_e(c2, mode=&#39;cie1976&#39;)</span>
+</div>
+<span class="k">def</span> <span class="nf">test_rgb_color_cell</span><span class="p">():</span>
+    <span class="n">r0</span> <span class="o">=</span> <span class="n">RGBColorCell</span><span class="p">()</span>
+    <span class="n">r1</span> <span class="o">=</span> <span class="n">RGBColorCell</span><span class="o">.</span><span class="n">from_name</span><span class="p">(</span><span class="s">&#39;red&#39;</span><span class="p">)</span>
+    <span class="n">r2</span> <span class="o">=</span> <span class="n">RGBColorCell</span><span class="o">.</span><span class="n">from_name</span><span class="p">(</span><span class="s">&#39;red&#39;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">r0</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">r1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">r1</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">r0</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">r1</span> <span class="o">!=</span> <span class="n">r0</span>
+    <span class="k">print</span> <span class="n">r0</span>
+    <span class="n">r0</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">r1</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">r0</span>
+    <span class="k">assert</span> <span class="n">r0</span> <span class="o">==</span> <span class="n">r1</span>
+    <span class="k">assert</span> <span class="n">r1</span> <span class="o">==</span> <span class="n">r2</span>
+    <span class="k">assert</span> <span class="n">r1</span><span class="o">.</span><span class="n">membership_score</span><span class="p">(</span><span class="n">r2</span><span class="p">)</span> <span class="o">==</span> <span class="mf">1.0</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">r1</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">r2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">hash</span><span class="p">(</span><span class="n">r1</span><span class="p">)</span> <span class="o">==</span> <span class="nb">hash</span><span class="p">(</span><span class="n">r2</span><span class="p">)</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">RGBColorCell</span><span class="o">.</span><span class="n">from_name</span><span class="p">(</span><span class="s">&#39;green&#39;</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">g</span><span class="o">.</span><span class="n">membership_score</span><span class="p">(</span><span class="n">r1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">r1</span> <span class="o">!=</span> <span class="n">g</span>
+    <span class="k">assert</span> <span class="n">r1</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">RGBColorCell</span><span class="o">.</span><span class="n">from_name</span><span class="p">(</span><span class="s">&#39;green&#39;</span><span class="p">)</span>
+    <span class="c"># black and white must be very different</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">RGBColorCell</span><span class="o">.</span><span class="n">from_name</span><span class="p">(</span><span class="s">&#39;black&#39;</span><span class="p">)</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">RGBColorCell</span><span class="o">.</span><span class="n">from_name</span><span class="p">(</span><span class="s">&#39;white&#39;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">b</span><span class="o">.</span><span class="n">membership_score</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.05</span>
+    <span class="n">b1</span> <span class="o">=</span> <span class="n">RGBColorCell</span><span class="o">.</span><span class="n">from_name</span><span class="p">(</span><span class="s">&#39;blue&#39;</span><span class="p">)</span>
+    <span class="n">b2</span> <span class="o">=</span> <span class="n">RGBColorCell</span><span class="o">.</span><span class="n">from_name</span><span class="p">(</span><span class="s">&#39;light_blue&#39;</span><span class="p">)</span>
+    <span class="n">b3</span> <span class="o">=</span> <span class="n">RGBColorCell</span><span class="o">.</span><span class="n">from_name</span><span class="p">(</span><span class="s">&#39;medium_blue&#39;</span><span class="p">)</span>
+    <span class="n">b4</span> <span class="o">=</span> <span class="n">RGBColorCell</span><span class="o">.</span><span class="n">from_name</span><span class="p">(</span><span class="s">&#39;cyan&#39;</span><span class="p">)</span>
+    <span class="n">b5</span> <span class="o">=</span> <span class="n">RGBColorCell</span><span class="o">.</span><span class="n">from_name</span><span class="p">(</span><span class="s">&#39;teal&#39;</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">test_rgb_color_cell</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">beliefs 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Dustin Smith, Nicolas Bravo.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
