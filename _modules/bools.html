@@ -1,0 +1,354 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>bools &mdash; beliefs 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="beliefs 1.0 documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">beliefs 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for bools</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">beliefs.cells</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">beliefs.cells.exceptions</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c"># constants for 3-valued logic</span>
+<span class="n">T</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="n">F</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="n">U</span> <span class="o">=</span> <span class="s">&#39;UNKNOWN&#39;</span>
+
+
+<div class="viewcode-block" id="BoolCell"><a class="viewcode-back" href="../bools.html#bools.BoolCell">[docs]</a><span class="k">class</span> <span class="nc">BoolCell</span><span class="p">(</span><span class="n">Cell</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    3-valued logic (T, F, U)</span>
+<span class="sd">    (U)ndefined means (T v F) ^ -(T ^ F)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initializes a new BoolCell, default to &#39;U&#39; &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">F</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">U</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">in</span> <span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">U</span><span class="p">],</span> \
+                <span class="s">&quot;Invalid Bool value </span><span class="si">%d</span><span class="s"> &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,)</span>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="BoolCell.coerce"><a class="viewcode-back" href="../bools.html#bools.BoolCell.coerce">[docs]</a>    <span class="k">def</span> <span class="nf">coerce</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Coerces a Bool, None, or int into Bit/Propositional form. If *value* is an int, must be -1, 0, or 1.</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            T, F, and U can be used in place of ``True``, ``False``, and ``&#39;UNKNOWN&#39;``, respectively.</span>
+<span class="sd">        </span>
+<span class="sd">        :param value: The value to coerce</span>
+<span class="sd">        :type value: bool, int</span>
+<span class="sd">        :returns:  BoolCell</span>
+<span class="sd">        :raises: CellConstructionFailure, CoercionFailure</span>
+
+<span class="sd">        &gt;&gt;&gt; f1 = BoolCell.coerce(0)</span>
+<span class="sd">        &gt;&gt;&gt; f1</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; f2 = BoolCell.coerce(F)</span>
+<span class="sd">        &gt;&gt;&gt; f2</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; t1 = BoolCell.coerce(1)</span>
+<span class="sd">        &gt;&gt;&gt; t1</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; t2 = BoolCell.coerce(T)</span>
+<span class="sd">        &gt;&gt;&gt; t2</span>
+<span class="sd">        True</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">BoolCell</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">value</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Cell</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">CellConstructionFailure</span><span class="p">(</span><span class="s">&quot;Cannot convert </span><span class="si">%s</span><span class="s"> to BoolCell&quot;</span> <span class="o">%</span> \
+                    <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">BoolCell</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">F</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">BoolCell</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="n">U</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">BoolCell</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CoercionFailure</span><span class="p">(</span><span class="s">&quot;Don&#39;t know how to coerce </span><span class="si">%d</span><span class="s"> to Bool&quot;</span> <span class="o">%</span> \
+                    <span class="p">(</span><span class="n">value</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="BoolCell.is_entailed_by"><a class="viewcode-back" href="../bools.html#bools.BoolCell.is_entailed_by">[docs]</a>    <span class="k">def</span> <span class="nf">is_entailed_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns True if the other is as or more specific than self</span>
+
+<span class="sd">        :param other: The BoolCell or coercible value that may entail self</span>
+<span class="sd">        :type other: BoolCell, bool, int</span>
+<span class="sd">        :returns:  bool</span>
+<span class="sd">        :raises: CellConstructionFailure, CoercionFailure</span>
+
+<span class="sd">        &gt;&gt;&gt; x = BoolCell(T)</span>
+<span class="sd">        &gt;&gt;&gt; y = BoolCell(F)</span>
+<span class="sd">        &gt;&gt;&gt; z = BoolCell(U)</span>
+<span class="sd">        &gt;&gt;&gt; x.is_entailed_by(U)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; y.is_entailed_by(F)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; y.is_entailed_by(U)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; z.is_entailed_by(x)</span>
+<span class="sd">        True</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">U</span> <span class="ow">or</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">return</span> <span class="bp">False</span>
+</div>
+<div class="viewcode-block" id="BoolCell.entails"><a class="viewcode-back" href="../bools.html#bools.BoolCell.entails">[docs]</a>    <span class="k">def</span> <span class="nf">entails</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Inverse of ``is_entailed_by``. Returns True if self is as or more specific than other.</span>
+
+<span class="sd">        :param other: The BoolCell or coercible value to check if it is entailed by self</span>
+<span class="sd">        :type other: BoolCell, bool, int</span>
+<span class="sd">        :returns:  bool</span>
+<span class="sd">        :raises: CellConstructionFailure, CoercionFailure</span>
+
+<span class="sd">        &gt;&gt;&gt; x = BoolCell(T)</span>
+<span class="sd">        &gt;&gt;&gt; y = BoolCell(F)</span>
+<span class="sd">        &gt;&gt;&gt; z = BoolCell(U)</span>
+<span class="sd">        &gt;&gt;&gt; x.entails(T)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; x.entails(U)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; y.entails(T)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; y.entails(F)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; z.entails(U)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; z.entails(F)</span>
+<span class="sd">        False</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">other</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        </div>
+<div class="viewcode-block" id="BoolCell.is_contradictory"><a class="viewcode-back" href="../bools.html#bools.BoolCell.is_contradictory">[docs]</a>    <span class="k">def</span> <span class="nf">is_contradictory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determines if two cells are contradictory. Returns a boolean.</span>
+
+<span class="sd">        :param other: The BoolCell or value that may contradict self.</span>
+<span class="sd">        :type other: BoolCell, bool, int</span>
+<span class="sd">        :returns:  bool</span>
+<span class="sd">        :raises: CellConstructionFailure, CoercionFailure</span>
+
+<span class="sd">        &gt;&gt;&gt; x = BoolCell(T)</span>
+<span class="sd">        &gt;&gt;&gt; y = BoolCell(F)</span>
+<span class="sd">        &gt;&gt;&gt; z = BoolCell(U)</span>
+<span class="sd">        &gt;&gt;&gt; x.is_contradictory(y)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; y.is_contradictory(x)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; z.is_contradictory(x)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; z.is_contradictory(y)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; z.is_contradictory(U)</span>
+<span class="sd">        False</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">U</span> <span class="ow">or</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">U</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="BoolCell.to_json"><a class="viewcode-back" href="../bools.html#bools.BoolCell.to_json">[docs]</a>    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns JSON representation of BoolCell&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+</div>
+<div class="viewcode-block" id="BoolCell.from_json"><a class="viewcode-back" href="../bools.html#bools.BoolCell.from_json">[docs]</a>    <span class="k">def</span> <span class="nf">from_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initializes from JSON representation &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">other</span>
+</div>
+<div class="viewcode-block" id="BoolCell.is_equal"><a class="viewcode-back" href="../bools.html#bools.BoolCell.is_equal">[docs]</a>    <span class="k">def</span> <span class="nf">is_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tests whether two Cells are equal. Returns a boolean.</span>
+
+<span class="sd">        :param other: BoolCell or coercible value to be tested</span>
+<span class="sd">        :type other: BoolCell, bool, int</span>
+<span class="sd">        :returns: bool</span>
+<span class="sd">        :raises: CoercionFailure</span>
+
+<span class="sd">        &gt;&gt;&gt; x = BoolCell(T)</span>
+<span class="sd">        &gt;&gt;&gt; y = BoolCell(F)</span>
+<span class="sd">        &gt;&gt;&gt; x.is_equal(x)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; x.is_equal(T)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; y.is_equal(x)</span>
+<span class="sd">        False</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">other</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">except</span> <span class="n">CellConstructionFailure</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+</div>
+<div class="viewcode-block" id="BoolCell.merge"><a class="viewcode-back" href="../bools.html#bools.BoolCell.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Merges two BoolCells. A Contradiction is raised if the two BoolCells are contradictory.</span>
+
+<span class="sd">        :param other: BoolCell or coerce-able value to be merged</span>
+<span class="sd">        :type other: BoolCell, bool, int</span>
+<span class="sd">        :returns: BoolCell</span>
+<span class="sd">        :raises: CellConstructionFailure, CoercionFailure, Contradiction</span>
+
+<span class="sd">        &gt;&gt;&gt; v = BoolCell(U)</span>
+<span class="sd">        &gt;&gt;&gt; w = BoolCell(U)</span>
+<span class="sd">        &gt;&gt;&gt; z = BoolCell(U)</span>
+<span class="sd">        &gt;&gt;&gt; v.merge(T)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; z.merge(F)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; w.merge(U)</span>
+<span class="sd">        &#39;UNKNOWN&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="c"># pick among dependencies</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">elif</span> <span class="n">other</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">Contradiction</span><span class="p">(</span><span class="s">&quot;Cannot merge T and F&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span>
+        <span class="k">return</span> <span class="bp">self</span>
+</div>
+    <span class="k">def</span> <span class="nf">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a difference structure</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="c"># other has more info</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">other</span><span class="o">.</span><span class="n">value</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NotDifferentiable</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&quot;</span><span class="si">%r</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,)</span>
+
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a hash that is different for T, F and U</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="n">__eq__</span> <span class="o">=</span> <span class="n">is_equal</span>
+</div>
+<span class="k">def</span> <span class="nf">test_bool_cell_hash_functions</span><span class="p">():</span>
+    <span class="n">b1</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="p">()</span>
+    <span class="n">b2</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
+    <span class="n">b3</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+    <span class="n">b4</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">hash</span><span class="p">(</span><span class="n">b1</span><span class="p">)</span> <span class="o">==</span> <span class="nb">hash</span><span class="p">(</span><span class="n">b2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">hash</span><span class="p">(</span><span class="n">b2</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">hash</span><span class="p">(</span><span class="n">b3</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">hash</span><span class="p">(</span><span class="n">b3</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">hash</span><span class="p">(</span><span class="n">b4</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">hash</span><span class="p">(</span><span class="n">b2</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">hash</span><span class="p">(</span><span class="n">b4</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">b1</span> <span class="o">==</span> <span class="n">b2</span>
+    <span class="k">assert</span> <span class="n">b2</span> <span class="o">!=</span> <span class="n">b4</span>
+    <span class="k">assert</span> <span class="n">b2</span> <span class="o">!=</span> <span class="n">b3</span>
+    <span class="k">assert</span> <span class="n">b3</span> <span class="o">!=</span> <span class="n">b4</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">test_bool_cell_hash_functions</span><span class="p">()</span>
+    <span class="n">bu</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="p">()</span>
+    <span class="k">print</span> <span class="n">bu</span>
+    <span class="n">bt</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">bf</span> <span class="o">=</span> <span class="n">BoolCell</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">beliefs 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Dustin Smith, Nicolas Bravo.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

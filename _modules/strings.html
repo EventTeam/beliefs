@@ -1,0 +1,293 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>strings &mdash; beliefs 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="beliefs 1.0 documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">beliefs 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for strings</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">cell</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<div class="viewcode-block" id="StringCell"><a class="viewcode-back" href="../strings.html#strings.StringCell">[docs]</a><span class="k">class</span> <span class="nc">StringCell</span><span class="p">(</span><span class="n">Cell</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A cell representation of a string. All strings will be represented in lowercase, with leading and trailing whitespace removed. Two strings can be merged when one is a subsequence of the other</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a new StringCell, optionally with an initial value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="StringCell.coerce"><a class="viewcode-back" href="../strings.html#strings.StringCell.coerce">[docs]</a>    <span class="k">def</span> <span class="nf">coerce</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Turns value into a string</span>
+
+<span class="sd">        :param value: The string to be turned into a StringCell</span>
+<span class="sd">        :type value: str</span>
+<span class="sd">        :returns: StringCell</span>
+<span class="sd">        :raises: CoercionFailure</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">StringCell</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">value</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="n">StringCell</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CoercionFailure</span><span class="p">(</span><span class="s">&quot;Cannot coerce </span><span class="si">%s</span><span class="s"> to StringCell&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">value</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="StringCell.is_contradictory"><a class="viewcode-back" href="../strings.html#strings.StringCell.is_contradictory">[docs]</a>    <span class="k">def</span> <span class="nf">is_contradictory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Can these two strings coexist? Two StringCells are contradictory if neither string is a substring of the other.</span>
+
+<span class="sd">        :param other: The string to test against</span>
+<span class="sd">        :type other: str,StringCell</span>
+<span class="sd">        :returns: bool</span>
+<span class="sd">        :raises: CoercionFailure</span>
+
+<span class="sd">        &gt;&gt;&gt; w = StringCell(&quot;words&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; x = StringCell(&quot;word&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; y = StringCell(&quot;saying&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; x.is_contradictory(y)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; x.is_contradictory(w)</span>
+<span class="sd">        False</span>
+
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="n">StringCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="c"># None = empty, and won&#39;t contradict anything</span>
+            <span class="k">return</span> <span class="bp">False</span>
+
+        <span class="k">def</span> <span class="nf">sequence_in</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Does `s1` appear in sequence in `s2`?&quot;&quot;&quot;</span>
+            <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">&quot;.*&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">s1</span><span class="p">),</span> <span class="n">s2</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="ow">not</span> <span class="n">sequence_in</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="ow">and</span> \
+            <span class="ow">not</span> <span class="n">sequence_in</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="StringCell.is_entailed_by"><a class="viewcode-back" href="../strings.html#strings.StringCell.is_entailed_by">[docs]</a>    <span class="k">def</span> <span class="nf">is_entailed_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns True iff self&#39;s string is None or is a substring of Other&#39;s string</span>
+
+<span class="sd">        :param other: The string or StringCell to test</span>
+<span class="sd">        :type other: str,StringCell</span>
+<span class="sd">        :returns: bool</span>
+<span class="sd">        :raises: CoercionFailure</span>
+
+<span class="sd">        &gt;&gt;&gt; w = StringCell(&quot;sentence&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; x = StringCell(&quot;sentences&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; y = StringCell(&quot;text&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; w.is_entailed_by(x)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; y.is_entailed_by(x)</span>
+<span class="sd">        False</span>
+
+<span class="sd">        </span>
+
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="n">StringCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="s">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+
+        <span class="k">def</span> <span class="nf">sequence_in</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Does `s1` appear in sequence in `s2`?&quot;&quot;&quot;</span>
+            <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">&quot;.*&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">s1</span><span class="p">),</span> <span class="n">s2</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">sequence_in</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="StringCell.is_equal"><a class="viewcode-back" href="../strings.html#strings.StringCell.is_equal">[docs]</a>    <span class="k">def</span> <span class="nf">is_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Whether two strings are equal</span>
+
+<span class="sd">        :param other: The string or StringCell to be tested</span>
+<span class="sd">        :type other: str, StringCell</span>
+<span class="sd">        :returns: bool</span>
+<span class="sd">        :raises: CoercionFailure</span>
+
+<span class="sd">        &gt;&gt;&gt; x = StringCell(&quot;phrase&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; x.is_equal(&quot;phrase&quot;)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; x.is_equal(StringCell(&quot;word&quot;))</span>
+<span class="sd">        False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="n">StringCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="n">empties</span> <span class="o">=</span> <span class="p">[</span><span class="bp">None</span><span class="p">,</span><span class="s">&#39;&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">in</span> <span class="n">empties</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span> <span class="ow">in</span> <span class="n">empties</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+</div>
+<div class="viewcode-block" id="StringCell.merge"><a class="viewcode-back" href="../strings.html#strings.StringCell.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Merges two strings. Two strings can only be merged if one is a substring of the other, in which case the more general string is returned. The method will modify the *self* argument.</span>
+
+<span class="sd">        :param other: The string or StringCell to merge with self</span>
+<span class="sd">        :type other: str,StringCell</span>
+<span class="sd">        :returns: StringCell</span>
+<span class="sd">        :raises: CoercionFailure,Contradiction</span>
+
+<span class="sd">        &gt;&gt;&gt; x = StringCell(&quot;word&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; y = StringCell(&quot;words&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; x.merge(y)</span>
+<span class="sd">        words</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            ``merge`` **will** modify *self*&#39;s string to match the return value.</span>
+
+<span class="sd">            &gt;&gt;&gt; x = StringCell(&quot;verb&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; y = StringCell(&quot;adverb&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; x.merge(y)</span>
+<span class="sd">            adverb</span>
+<span class="sd">            &gt;&gt;&gt; x</span>
+<span class="sd">            adverb</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="n">StringCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="c"># pick among dependencies</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">elif</span> <span class="n">other</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">Contradiction</span><span class="p">(</span><span class="s">&quot;Cannot merge string &#39;</span><span class="si">%s</span><span class="s">&#39; with &#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span> <span class="o">%</span> \
+                    <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_perform_merge</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+</div>
+    <span class="k">def</span> <span class="nf">_perform_merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Merges the longer string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span><span class="p">[:]</span>
+        <span class="k">return</span> <span class="bp">True</span>
+
+    <span class="sd">&#39;&#39;&#39;def to_dot(self):</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        Representation for Graphviz&#39;s dot</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        return self.value&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="StringCell.get_value"><a class="viewcode-back" href="../strings.html#strings.StringCell.get_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns value if it exists or an empty string</span>
+
+<span class="sd">        :returns: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&#39;&#39;</span>
+</div>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&quot;&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="n">__str__</span> <span class="o">=</span> <span class="n">__repr__</span>
+    <span class="n">__eq__</span> <span class="o">=</span> <span class="n">is_equal</span>
+
+</div>
+<span class="k">class</span> <span class="nc">NameCell</span><span class="p">(</span><span class="n">StringCell</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">StringCell</span><span class="p">(</span><span class="s">&quot;words&quot;</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">StringCell</span><span class="p">(</span><span class="s">&quot;word&quot;</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">StringCell</span><span class="p">(</span><span class="s">&quot;saying&quot;</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">StringCell</span><span class="p">(</span><span class="s">&quot;phrase&quot;</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">beliefs 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Dustin Smith, Nicolas Bravo.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

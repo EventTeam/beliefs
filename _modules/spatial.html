@@ -1,0 +1,165 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>spatial &mdash; beliefs 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="beliefs 1.0 documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">beliefs 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for spatial</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">dicts</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">numeric</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">strings</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">radians</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">sin</span><span class="p">,</span> <span class="n">asin</span><span class="p">,</span> <span class="n">sqrt</span>
+
+<div class="viewcode-block" id="LatLonCell"><a class="viewcode-back" href="../spatial.html#spatial.LatLonCell">[docs]</a><span class="k">class</span> <span class="nc">LatLonCell</span><span class="p">(</span><span class="n">DictCell</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Holds a Latitude and Longitude.</span>
+<span class="sd">    </span>
+<span class="sd">    TODO:  we should allow an address to be &#39;coerced&#39; into a LatLonCell via a special </span>
+<span class="sd">    Geocoding operation, and then stored in &#39;to_addresscell&#39;</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">structure</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">structure</span><span class="p">[</span><span class="s">&#39;lat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="o">-</span><span class="mf">90.0</span><span class="p">,</span> <span class="mf">90.0</span><span class="p">)</span>
+        <span class="n">structure</span><span class="p">[</span><span class="s">&#39;lon&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="o">-</span><span class="mf">180.0</span><span class="p">,</span> <span class="mf">180.0</span><span class="p">)</span>
+        <span class="n">DictCell</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_addresscell</span> <span class="o">=</span> <span class="bp">None</span>  <span class="c"># cached addresscell pointer</span>
+
+    <span class="k">def</span> <span class="nf">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Overloads the - operator to call the haversine distance</span>
+<span class="sd">        function.</span>
+<span class="sd">        </span>
+<span class="sd">        Requires that the lat/lon values are scalars, not intervals,</span>
+<span class="sd">        or it raises an exception.  (We could generalize haversine to </span>
+<span class="sd">        work with intervals, but I couldn&#39;t think of a usecase)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="p">[</span><span class="s">&#39;lat&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">low</span> <span class="o">==</span> <span class="bp">self</span><span class="p">[</span><span class="s">&#39;lat&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">high</span> <span class="ow">and</span> \
+                <span class="bp">self</span><span class="p">[</span><span class="s">&#39;lon&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">low</span> <span class="o">==</span> <span class="bp">self</span><span class="p">[</span><span class="s">&#39;lon&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">high</span> <span class="ow">and</span> \
+                <span class="n">other</span><span class="p">[</span><span class="s">&#39;lat&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">low</span> <span class="o">==</span> <span class="n">other</span><span class="p">[</span><span class="s">&#39;lat&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">high</span> <span class="ow">and</span> \
+                <span class="n">other</span><span class="p">[</span><span class="s">&#39;lon&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">low</span> <span class="o">==</span> <span class="n">other</span><span class="p">[</span><span class="s">&#39;lon&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">high</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">haversine</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Cannot compute distance of intervals&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LatLonCell.haversine"><a class="viewcode-back" href="../spatial.html#spatial.LatLonCell.haversine">[docs]</a>    <span class="k">def</span> <span class="nf">haversine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate the great circle distance between two points</span>
+<span class="sd">        on the earth (specified in decimal degrees)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># convert decimal degrees to radians</span>
+        <span class="n">lon1</span><span class="p">,</span> <span class="n">lat1</span><span class="p">,</span> <span class="n">lon2</span><span class="p">,</span> <span class="n">lat2</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">radians</span><span class="p">,</span>\
+                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">lon</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="p">[</span><span class="s">&#39;lat&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">lon</span><span class="o">.</span><span class="n">low</span><span class="p">,</span>
+                    <span class="n">other</span><span class="p">[</span><span class="s">&#39;lat&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">low</span><span class="p">])</span>
+        <span class="c"># haversine formula</span>
+        <span class="n">dlon</span> <span class="o">=</span> <span class="n">lon2</span> <span class="o">-</span> <span class="n">lon1</span>
+        <span class="n">dlat</span> <span class="o">=</span> <span class="n">lat2</span> <span class="o">-</span> <span class="n">lat1</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">sin</span><span class="p">(</span><span class="n">dlat</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">cos</span><span class="p">(</span><span class="n">lat1</span><span class="p">)</span> <span class="o">*</span> <span class="n">cos</span><span class="p">(</span><span class="n">lat2</span><span class="p">)</span> <span class="o">*</span> <span class="n">sin</span><span class="p">(</span><span class="n">dlon</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">asin</span><span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+        <span class="c"># multiply by radius of the earth</span>
+        <span class="c"># km = 6367 * c</span>
+        <span class="n">miles</span> <span class="o">=</span> <span class="mi">3961</span> <span class="o">*</span> <span class="n">c</span>
+        <span class="k">return</span> <span class="n">miles</span>
+</div></div>
+<div class="viewcode-block" id="AddressCell"><a class="viewcode-back" href="../spatial.html#spatial.AddressCell">[docs]</a><span class="k">class</span> <span class="nc">AddressCell</span><span class="p">(</span><span class="n">DictCell</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Holds an Address</span>
+<span class="sd">    </span>
+<span class="sd">    TODO: coerce to LatLonCell via inverse geocoding operation</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">structure</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">structure</span><span class="p">[</span><span class="s">&#39;street&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">StringCell</span><span class="p">()</span>
+        <span class="n">structure</span><span class="p">[</span><span class="s">&#39;city&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">StringCell</span><span class="p">()</span>
+        <span class="n">structure</span><span class="p">[</span><span class="s">&#39;state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">StringCell</span><span class="p">()</span>
+        <span class="n">structure</span><span class="p">[</span><span class="s">&#39;zip&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">StringCell</span><span class="p">()</span>
+        <span class="n">structure</span><span class="p">[</span><span class="s">&#39;gps&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LatLonCell</span><span class="p">()</span>
+        <span class="n">DictCell</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_latlongcell</span> <span class="o">=</span> <span class="bp">None</span>  <span class="c"># cached latlon cell pointer</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">beliefs 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Dustin Smith, Nicolas Bravo.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
