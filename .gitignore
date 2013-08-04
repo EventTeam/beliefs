@@ -33,5 +33,10 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+<<<<<<< HEAD
 
 *~
+=======
+.__gae_username
+.__gae_password
+>>>>>>> f1ab40d3e5aa3e8cfd74b2662bed9a6ddb4e7f87

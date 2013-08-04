@@ -238,7 +238,6 @@ class BoolCell(Cell):
 
     __eq__ = is_equal
 
-
 def test_bool_cell_hash_functions():
     b1 = BoolCell()
     b2 = BoolCell(U)

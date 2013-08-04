@@ -15,6 +15,9 @@ class DictCell(Cell):
     else.
     """
     HASATTR = 0
+    PRIMES = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41,
+          43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109,
+          113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179]
 
     def __init__(self, from_dict=None):
         """
@@ -161,8 +164,8 @@ class DictCell(Cell):
     def __hash__(self):
         """ Iterate through all members and hash 'em """
         hash_val = 0
-        for key, val in self:
-            hash_val +=  hash(key) + hash(val)
+        for i, (key, val) in enumerate(self):
+            hash_val +=  hash(key) * hash(val) * DictCell.PRIMES[i]
         if hash_val == -2:
             hash_val = -1
         return hash_val
@@ -229,6 +232,21 @@ class DictCell(Cell):
                 raise ValueError('cannot encode ' + repr(key))
 
         return output
+
+    def to_latex(self):
+        """ Returns a LaTeX representation of an attribute-value matrix """
+        latex = r"[{} " 
+        for attribute, value in self:
+            if attribute in ['speaker_model', 'is_in_commonground']: continue
+            value_l = value.to_latex()
+            if value_l == "": continue
+            latex += "{attribute:<15} &  {value:<20} \\\\ \n".format(attribute=attribute, value=value_l)
+        latex += "]\n"
+        return latex
+
+    def empty(self):
+        """ Returns True iff the dictionary doesn't have any keys """
+        return self.__dict__['p'].keys() == []
 
     def keys(self):
         """ Returns a list of the top-level keys in the DictCell"""

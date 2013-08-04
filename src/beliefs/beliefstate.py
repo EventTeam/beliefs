@@ -12,11 +12,15 @@ class BeliefState(DictCell):
     Suppose the domain has entities/cells: 1,2,3.  A beliefstate represents the
     possible groupings of these entities; a single grouping is called a *referent*. 
     A beliefstate can be about "all referents of size two", for example, and computing
-    the beliefstate's contextset would yield the targets {1,2}, {2,3}, and {1,3}.
+    the beliefstate's extension would yield the targets {1,2}, {2,3}, and {1,3}.
     
     In addition to containing a description of the intended targets, a belief state contains information
     about the relational constraints (such as arity size), and linguistic decisions.
     """
+    PRIMES = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41,
+          43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109,
+          113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179]
+
     def __init__(self, contextset=None):
         """ 
         Initializes an empty beliefsstate, and stores the contextset (if specified) 
@@ -32,24 +36,15 @@ class BeliefState(DictCell):
         self.__dict__['contextset'] = contextset
         self.__dict__['environment_variables'] = {}
         self.__dict__['deferred_effects'] = []
-        self.__dict__['multistate'] = True 
 
         default_structure = {'target': DictCell(),
-                'speaker_goals': {'targetset_arity': IntervalCell(),
-                                  'is_in_commonground': BoolCell()},
+                             'distractor': DictCell(),
+                             'targetset_arity': IntervalCell(0, np.inf),
+                             'contrast_arity': IntervalCell(0, np.inf),
+                             'is_in_commonground': BoolCell(),
                 'speaker_model': {'is_syntax_stacked': BoolCell(F)}}
 
         DictCell.__init__(self, default_structure)
-   
-    def set_multistate(self, boolean):
-        """ Sets the multistate parameter indicating whether or not the state
-        represents a single belief, or numerous beliefstates """
-        self.__dict__['multistate'] = boolean
-
-    def get_multistate(self):
-        """ Returns the multistate parameter indicating whether or not the state
-        represents a single belief, or numerous beliefstates """
-        return self.__dict__['multistate']
 
     def set_pos(self, pos):
         """ Sets the beliefstates's part of speech, `pos`, and then executes
@@ -81,12 +76,16 @@ class BeliefState(DictCell):
         pos on the current beliefstate. For instance, if the effect is triggered
         by the 'NN' pos, then the effect will be triggered by 'NN' or 'NNS'."""
         costs = 0
+        to_delete = []
         for entry in self.__dict__['deferred_effects']:
             effect_pos, effect = entry
             if pos.startswith(effect_pos):
-                logging.info("Executing deferred effect" + str(effect))
                 costs += effect(self)
-                self.__dict__['deferred_effects'].remove(entry)
+                to_delete.append(entry)
+        # we delete afterwards, because Python cannot delete from a list that
+        # is being iterated over without screwing up the iteration.
+        for entry in to_delete:
+            self.__dict__['deferred_effects'].remove(entry)
         return costs
 
     def set_environment_variable(self, key, val):
@@ -94,7 +93,7 @@ class BeliefState(DictCell):
         if self.get_environment_variable(key) in [None, val]:
             self.__dict__['environment_variables'][key] = val
         else:
-            raise Contradiction
+            raise Contradiction("Could not set environment variable %s" % (key))
 
     def get_environment_variable(self, key, default=None, pop=False):
         if key in self.__dict__['environment_variables']:
@@ -107,8 +106,8 @@ class BeliefState(DictCell):
 
     def has_contextset(self):
         """
-        Returns True if the BeliefState has a context set defined -- meaning a set
-        of external referents.
+        Returns True if the BeliefState has a context set defined -- meaning a 
+        list of external referents.
         """
         return self.__dict__['contextset'] is not None
 
@@ -165,44 +164,82 @@ class BeliefState(DictCell):
                     yield entry
 
 
-    def get_nth_unique_value(self, keypath, n, reverse=False):
+    def get_nth_unique_value(self, keypath, n, distance_from, open_interval=True):
         """
         Returns the `n-1`th unique value, or raises
         a contradiction if that is out of bounds
         """
-        unique_values = self.get_ordered_values(keypath, reverse).keys()
+        unique_values = self.get_ordered_values(keypath, distance_from, open_interval)
         if 0 <= n < len(unique_values):
+            #logging.error("%i th unique value is %s" % (n, str(unique_values[n])))
             return unique_values[n]
         else:
             raise Contradiction("n-th Unique value out of range: " + str(n))
 
-    def get_ordered_values(self, keypath, reverse=False):
+    def get_ordered_values(self, keypath, distance_from, open_interval=True):
         """
-        Retrieves the contextset's values for the specified keypath.
+        Retrieves the referents's values sorted by their distance from the
+        min, max, or mid value.
         """
-        values = defaultdict(int)  # value -> ct 
+
+        values = []
         if keypath[0] == 'target':
             # instances start with 'target' prefix, but 
             # don't contain it, so we remove it here.
             keypath = keypath[1:]
         for _, instance in self.iter_singleton_referents():
-            values[instance.get_value_from_path(keypath)] += 1
-        # sort the values
-        values_sorted = OrderedDict()
-        for key in sorted(values.keys(), reverse=reverse):
-            values_sorted[key] = values[key]
-        return values_sorted
+            value = instance.get_value_from_path(keypath)
+            if hasattr(value, 'low') and value.low != value.high:
+                return []
+            values.append(float(value))
+
+        if len(values) == 0:
+            return []
+        values = np.array(values)
+        anchor = values.min()
+        diffs = values - anchor
+        if distance_from == 'max':
+            anchor = values.max()
+            diffs = anchor - values
+        if distance_from == 'mean':
+            anchor = values.mean()
+            diffs = abs(anchor - values)
+
+        sdiffs = np.unique(diffs)
+        sdiffs.sort()
+        results = []
+      
+        for ix, el in enumerate(sdiffs):
+            mask = diffs <= el
+            vals = values[mask]
+            if False:
+                # when vagueness has been made precise through an ordinal
+                results.append(IntervalCell(vals.min(), vals.max()))
+            elif distance_from == 'max':
+                if open_interval:
+                    results.append(IntervalCell(vals.min(), np.inf))
+                else:
+                    results.append(IntervalCell(vals.min(), vals.min()))
+            elif distance_from == 'min':
+                if open_interval:
+                    results.append(IntervalCell(-np.inf, vals.max()))
+                else:
+                    results.append(IntervalCell(vals.max(), vals.max()))
+            elif distance_from == 'mean':
+                if ix+1 == len(sdiffs): continue  # skip last
+                results.append(IntervalCell(vals.min(), vals.max()))
+        return results 
 
     def get_paths_for_attribute_set(self, keys):
         """
         Given a list/set of keys (or one key), returns the parts that have
         all of the keys in the list.
 
-        DOES NOT WORK WITH TOP LEVEL OBJECTS (since these are not indexed by
-        the path)
+        Because on_targets=True, this DOES NOT WORK WITH TOP LEVEL PROPERTIES,
+        only those of targets.
 
         These paths are not pointers to the objects themselves, but tuples of
-        prefixes that allow us to (attempt) to look up that object in any
+        attribute names that allow us to (attempt) to look up that object in any
         belief state.
         """
         if not isinstance(keys, (list, set)):
@@ -232,9 +269,17 @@ class BeliefState(DictCell):
         member its copying from has a different Cell or domain for that keypath.)
         Second, this merges that cell with the value
         """
+        negated = False
+        keypath = keypath[:] # copy it 
+        if keypath[0] == 'target':
+            # only pull negated if it can potentially modify target
+            negated = self.get_environment_variable('negated', pop=True, default=False)
+            if negated:
+                keypath[0] = "distractor"
+
         if keypath not in self:
             first_referent = None
-            if keypath[0] == 'target':
+            if keypath[0] in ['target', 'distractor']:
                 has_targets = False 
                 for _, referent in self.iter_singleton_referents():
                     has_targets = True
@@ -245,7 +290,7 @@ class BeliefState(DictCell):
                     # this happens when none of the available targets have the
                     # path that is attempted to being merged to
                     if has_targets:
-                        raise CellConstructionFailure("Cannot merge; no targe: %s" \
+                        raise CellConstructionFailure("Cannot merge; no target: %s" \
                             % (str(keypath)))
                     else:
                         # this will always happen when size is 0
@@ -255,15 +300,20 @@ class BeliefState(DictCell):
                 self.add_cell(keypath, cell)
             else:
                 # should we allow merging undefined components outside of target?
-                raise NotImplemented
+                raise Exception("Could not find Keypath %s" % (str(keypath)))
 
+        # break down keypaths into 
         cell = self
         if not isinstance(keypath, list):
             keypath = [keypath]
         for key in keypath:
             cell = cell[key]
         # perform operation (set, <=, >= etc)
-        return getattr(cell, op)(value)
+        try:
+            return getattr(cell, op)(value)
+        except Contradiction as ctrd:
+            # add more information to the contradiction
+            raise Contradiction("Could not merge %s with %s: %s " % (str(keypath), str(value), ctrd))
    
     def add_cell(self, keypath, cell):
         """ Adds a new cell to the end of `keypath` of type `cell`"""
@@ -322,8 +372,9 @@ class BeliefState(DictCell):
         Note: this only compares the items in the DictCell, not `pos`,
         `environment_variables` or `deferred_effects`.
         """
+        return hash(self) == hash(other)
         for (this, that) in itertools.izip_longest(self, other):
-            if this[0] != that[0]:
+            if that[0] is None or this[0] != that[0]:
                 # compare key names
                 return False
             if not this[1].is_equal(that[1]):
@@ -344,95 +395,67 @@ class BeliefState(DictCell):
         return False 
 
     def size(self):
-        """ Returns the size of the context set.
+        """ Returns the size of the belief state.
 
-        There are two routines that can be used to do this.  The first is a fast
-        one that calculates the size of generating all combinations, but doesn't
-        take into account the relational constraints (such as those imposed by 
-        gradable adjectives).  The second is an exhaustive enumeration of the
-        members.
-        
-        If there are $n$ targets (the result of `self.number_of_singleton_referents()`) 
+        Initially if there are $n$ consistent members, (the result of `self.number_of_singleton_referents()`) 
         then there are generally $2^{n}-1$ valid belief states.
         """
         n = self.number_of_singleton_referents()
+        targets = list(self.iter_referents_tuples())
+        n_targets = len(targets)
+        if n == 0 or n_targets == 0:
+            return  0
 
-        if not self.__dict__['multistate']:
-            if self['speaker_goals']['targetset_arity'].is_contradictory(n):
-                raise Contradiction("Invalid targetset airity")
-            return n
-
-        low, high = self['speaker_goals']['targetset_arity'].get_tuple()
-        if low <= 0 and high >= n:
-            # no constraints on size
-            return (2**n)-1
-        elif low == high == 1:
-            # singular
-            return n
-        elif low == 2 and high > n:
-            # plural
-            if n == 1:
-                return 0
-            return (2**n)-n-1
-        elif low > n:
-            # inconsistent
-            return 0
-        elif low == high:
-            # single arity constraint, return nCk
-            k = low
-            return choose(n, k)
-        else:
-            message = "low=%i high=%i n=%i" % (low, high, n)
-            raise Exception(message)
+        #if len(self.__dict__['deferred_effects']) != 0:
+        #    return -1 
+        size1 = len(list(self.iter_referents_tuples()))
+        tlow, thigh = self['targetset_arity'].get_tuple()
+        clow, chigh = self['contrast_arity'].get_tuple()
+        
+        size2 = binomial_range(n, max(tlow,1), min([n-max(clow,0),thigh,n]))
+        #assert size1 == size2, "%i != %i" % (size1, size2)
+        return size2
 
     def referents(self):
-        """ Returns all members of the context set that are compatible with the current beliefstate.
+        """ Returns all target sets that are compatible with the current beliefstate.
         Warning: the number of referents can be quadradic in elements of singleton referents/cells.  
-        Call `size()` method instead to compute size only, without ennumerating them.
+        Call `size()` method instead to compute size only, without enumerating them.
         """
-        if not self.__dict__['multistate']:
-            # we get here when there was a branch
-            return [r for _, r in self.iter_singleton_referents()]
-        else:
-            # all groupings of singletons
-            return list(self.iter_referents())
+        # all groupings of singletons
+        return list(self.iter_referents())
     
     def iter_referents(self):
-        """ Generates members of the context set that are compatible with the current beliefstate. """
-        if not self.__dict__['multistate']:
-            # we get here when there was a branch
-            yield [r for _, r in self.iter_singleton_referents()]
-        else:
-            low, high = self['speaker_goals']['targetset_arity'].get_tuple()
-            min_size = max(1, low)
-            max_size = min(high + 1, self.number_of_singleton_referents()+1)
-            if low == 2:
-                min_size = max_size-1 # weird hack
-            iterable = list(self.iter_singleton_referents())
-            for elements in itertools.chain.from_iterable(itertools.combinations(iterable, r) \
-                    for r in range(min_size, max_size)):
-                yield  elements
+        """ Generates target sets that are compatible with the current beliefstate. """
+        tlow, thigh = self['targetset_arity'].get_tuple()
+        clow, chigh = self['contrast_arity'].get_tuple()
+
+        referents = list(self.iter_singleton_referents())
+        t = len(referents)
+        low = max(1, tlow)
+        high = min([t,  thigh])
+
+        for targets in itertools.chain.from_iterable(itertools.combinations(referents, r) \
+            for r in reversed(xrange(low, high+1))):
+            if clow <= t-len(targets) <= chigh:
+                yield  targets
 
     def iter_referents_tuples(self):
-        """ Generates tuples of indices representing members of the context 
-        set that are compatible with the current beliefstate. """
-        if not self.__dict__['multistate']:
-            # we get here when there was a branch
-            yield tuple([int(i) for i, _ in self.iter_singleton_referents()])
-        else:
-            low, high = self['speaker_goals']['targetset_arity'].get_tuple()
-            min_size = max(1, low)
-            max_size = min(high + 1, self.number_of_singleton_referents()+1)
-            if low == 2:
-                min_size = max_size-1 # weird hack
-            iterable = list([int(i) for i,_ in self.iter_singleton_referents()])
-            for elements in itertools.chain.from_iterable(itertools.combinations(iterable, r) \
-                    for r in range(min_size, max_size)):
+        """ Generates target sets (as tuples of indicies) that are compatible with
+        the current beliefstate."""
+        tlow, thigh = self['targetset_arity'].get_tuple()
+        clow, chigh = self['contrast_arity'].get_tuple()
+        singletons = list([int(i) for i,_ in self.iter_singleton_referents()])
+        t = len(singletons)
+        low = max(1, tlow)
+        high = min([t,  thigh])
+        for elements in itertools.chain.from_iterable(itertools.combinations(singletons, r) \
+                for r in reversed(xrange(low, high+1))):
+            if clow <= t-len(elements) <= chigh:
                 yield  elements
 
     def number_of_singleton_referents(self):
         """
-        Returns the number of singleton members of the contextset (cells in domain) that are
+        Returns the number of singleton members of the referring domain (cells) that are
         compatible with the current belief state.
 
         This is the size of the union of all referent sets.
@@ -453,11 +476,25 @@ class BeliefState(DictCell):
         """
         try:
             for member in self.__dict__['contextset'].cells:
-                if self['target'].is_entailed_by(member):
+                if self['target'].is_entailed_by(member) and (self['distractor'].empty() or not self['distractor'].is_entailed_by(member)):
                     yield member['num'], member
         except KeyError:
             raise Exception("No contextset defined")
 
+    def to_latex(self, number=0):
+        """ Returns a raw text string that contains a latex representation of
+        the belief state as an attribute-value matrix.  This requires:
+            \usepackage{avm}
+        """ 
+        latex = r"""\avmfont{\sc}
+\avmoptions{sorted,active}
+\avmvalfont{\rm}"""
+        latex += "\n\nb_%i = \\begin{avm} \n " % number
+        latex += DictCell.to_latex(self)
+        latex += "\n\\end{avm}\n"
+        return latex
+
+    
     def copy(self):
         """
         Copies the BeliefState by recursively deep-copying all of
@@ -465,7 +502,7 @@ class BeliefState(DictCell):
         during the interpretation or generation.
         """
         copied = BeliefState(self.__dict__['contextset']) 
-        for key in ['environment_variables', 'deferred_effects', 'multistate', 'pos', 'p']:
+        for key in ['environment_variables', 'deferred_effects', 'pos', 'p']:
             copied.__dict__[key] = copy.deepcopy(self.__dict__[key])
         return copied
 
@@ -480,9 +517,6 @@ class BeliefState(DictCell):
         # hash part of speech
         hashval += hash(self.__dict__['pos'])
 
-        # is multistate
-        hashval += hash(self.__dict__['multistate'])
-
         # hash environment variables
         for ekey, kval in self.__dict__['environment_variables'].items():
             hashval += hash(ekey) + hash(kval)
@@ -491,9 +525,8 @@ class BeliefState(DictCell):
             hashval += hash(effect)
 
         # hash dictionary
-        for value in self.__dict__['p']:
-            hashval += hash(self.__dict__['p'][value])
-
+        for i, (key, value) in enumerate(self.__dict__['p'].items()):
+            hashval += hash(value) * hash(key)# * BeliefState.PRIMES[i % len(BeliefState.PRIMES)]
         # -2 is a reserved value 
         if hashval == -2:
             hashval = -1
@@ -503,4 +536,10 @@ class BeliefState(DictCell):
     __eq__ = is_equal
 
 
-
+if __name__ == '__main__':
+   
+    from models import *
+    from models.online import *
+    c = ContextSet.get_by_name("Amazon Kindles")
+    b = BeliefState(c)
+    print b.to_latex()

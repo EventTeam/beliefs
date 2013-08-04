@@ -11,6 +11,7 @@ Here are :py:class:`Cell` data containers, :ref:`cell` subclasses that are desig
 - :py:class:`bools.BoolCell` three-valued logic of `True`, `False` and `Unknown`.
 - :py:class:`dicts.DictCell` a labeled set, like a Python `dict` that pairs attributes with cell values.
 - :py:class:`numeric.IntervalCell` a bounded interval or cardinal number
+- :py:class:`sets.SetIntersectionCell` a set, unordered collection of symbols, where merges are intersective and information is thereby monotonically decreasing
 - :py:class:`lists.LinearOrderedCell` a bounded sequence of ordered symbols
 - :py:class:`lists.PrefixCell` allows maintains sequences with shared elements
 - :py:class:`posets.PartialOrderedCell` maintains a taxonomy of information
@@ -28,8 +29,8 @@ All modules
    bools
    colors
    dicts
-   lazy
    lists
+   sets 
    numeric
    posets
    setCells

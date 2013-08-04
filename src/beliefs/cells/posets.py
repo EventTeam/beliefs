@@ -169,7 +169,13 @@ class PartialOrderedCell(Cell):
             and len(self.lower.symmetric_difference(other.lower)) == 0:
             return True
         return False
-    
+
+    def __hash__(self):
+        """ Returns the hash value """
+        if not self.__values_computed:
+            self.__compute_values()
+        return Cell.__hash__(self)
+
     def is_entailed_by(self, other):
         """
         Returns True iff Other 
@@ -359,6 +365,9 @@ class PartialOrderedCell(Cell):
         return {'lower': list(self.lower),
                 'upper': list(self.upper)}
 
+    def to_latex(self):
+        return ','.join(self.upper) + " / " + self.join(self.lower)
+
     def __repr__(self):
         output = ""
         output += "\t\tUPPER = " + ','.join(self.upper) + "\n"
@@ -425,6 +434,10 @@ if __name__ == '__main__':
 
     t = TestPOC()
     t.merge("person")
-    print list(t.get_refinement_options())
-    print list(t.get_relaxation_options())
     print t
+    t2 = TestPOC()
+    print hash(t)
+    print hash(t2)
+    t2.merge("thing")
+    print hash(t2)
+    print t == t2

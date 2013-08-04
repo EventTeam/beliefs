@@ -177,7 +177,6 @@ class Cell(object):
                - 'values' (iterable with hashable elements)
         """
         hval = 0
-
         if hasattr(self, 'domain'):
             # hash the domain 
             if not hasattr(self.__class__, 'domain_hash'):
@@ -200,8 +199,8 @@ class Cell(object):
                 return hval
             else:
                 # works with any iterable value
-                hval += reduce(lambda x, y: hash(x) ^ hash(y), self.values, 0)
-
+                for value in self.values:
+                    hval += hash(value) * len(self.values) * 3
         else:
             raise CellConstructionFailure("Missing value or values.  Something"\
                     + " wont be __hash__'d correctly in %s" % (self))

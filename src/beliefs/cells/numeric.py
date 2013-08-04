@@ -210,7 +210,11 @@ class IntervalCell(Cell):
         elif self.is_entailed_by(other):
             self.low, self.high = other.low, other.high
         elif self.is_contradictory(other):
-            raise Contradiction("Cannot merge intervals")
+            #import traceback
+            #for line in traceback.format_stack(): print line.strip()
+
+            raise Contradiction("Cannot merge [%0.2f, %0.2f] with [%0.2f, %0.2f]" \
+                    % (self.low, self.high, other.low, other.high))
         else:
             # information in both
             self.low = max(self.low, other.low)
@@ -347,9 +351,9 @@ class IntervalCell(Cell):
         return self.low <= other <= self.high
 
     def __hash__(self):
-        """ Unqiue hash for interval """
+        """ Unique hash for interval """
         hval = 0
-        hval = hash(self.low) + hash(self.high)
+        hval = hash(self.low) * 2  + hash(self.high) * 3 + hash(self.high-self.low) * 5 
         return hval
 
     def get_tuple(self):
@@ -373,11 +377,77 @@ class IntervalCell(Cell):
         else:
             return None'''
 
+    def to_latex(self):
+        """ Returns an interval representation """
+        if self.low == self.high:
+            if self.low * 10 % 10 == 0:
+                return "{0:d}".format(int(self.low))
+            else:
+                return "{0:0.2f}".format(self.low)
+        else:
+            t = ""
+            if self.low == -np.inf:
+                t += r"(-\infty, "
+            elif self.low * 10 % 10 == 0:
+                t += r"[{0:d}, ".format(int(self.low))
+            else:
+                t += r"[{0:0.2f}, ".format(self.low)
+            if self.high == np.inf:
+                t += r"\infty)"
+            elif self.high * 10 % 10 == 0:
+                t += r"{0:d}]".format(int(self.high))
+            else:
+                t += r"{0:0.2f}]".format(self.high)
+            return t
+
+    def __abs__(self):
+        """ Absolute value """
+        if self.low == self.high:
+            return abs(self.low)
+        else:
+            return IntervalCell(min(abs(self.low), abs(self.high)), max(abs(self.low), abs(self.high)))
+
     __eq__ = is_equal
     __len__ = size
 
-if __name__ == "__main__":
-    w = IntervalCell(1,2)
-    x = IntervalCell(1,1)
-    y = IntervalCell(2,2)
-    z = IntervalCell(0,3)
+
+def test_absolute_values():
+    # for intervals
+    x = IntervalCell(1,20)
+    y = IntervalCell(19,100)
+    assert abs(x-y) == abs(y-x)
+
+    # for single numbers
+    x = IntervalCell(19,19)
+    y = IntervalCell(20,20)
+    assert abs(x-y) == abs(y-x)
+
+
+def test_hashes():
+    """ Tests for cases where LOW and HIGH values of the interval
+    have the same sum, the same diff, etc. """
+
+    def alldiff(iterable, f=lambda x: x):
+        mapped = map(f, iterable)
+        return len(mapped) == len(set(mapped))
+
+
+    test_cases = []
+    test_cases += [IntervalCell(2,2)]
+    test_cases += [IntervalCell()]
+    test_cases += [IntervalCell(1,3)]
+    test_cases += [IntervalCell(0,4)]
+    test_cases += [IntervalCell(0,2)]
+    test_cases += [IntervalCell(2,5)]
+    test_cases += [IntervalCell(-3,-1)]
+    assert alldiff(test_cases, hash)
+
+    # float / int equivalence
+    assert hash(IntervalCell(0,2)) == hash(IntervalCell(0.0,2.0))
+
+if __name__ == '__main__':
+    x = IntervalCell(3, 38.2)
+    print x.to_latex()
+    x = IntervalCell(0, 38)
+    print x.to_latex()
+

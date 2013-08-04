@@ -1,7 +1,8 @@
 """
 Defines the Set cells
 """
-from beliefs.cells import *
+import logging
+from .cell import *
 
 class SetIntersectionCell(Cell):
     """
@@ -164,6 +165,7 @@ class SetIntersectionCell(Cell):
         
     __contains__ = contains
     __eq__ = is_equal
+    to_latex = to_dot
 
 
 class SetUnionCell(SetIntersectionCell):
