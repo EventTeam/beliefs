@@ -22,7 +22,7 @@ Belief states are *about* a referential domain, so you want to initialize them w
   r = ReferentialDomain()
   b = BeliefState(r)
 
-A **referential domain** is any class that has a list of referents, each an instance of :py:class:`dicts.DictCell`, accessible by calling `r.cells`. In the next section, I will talk about how to defined a referential domain.
+A **referential domain** is any class that has a list of referents, each an instance of :py:class:`dicts.DictCell`, accessible by calling `r.cells`. (In the next section, I will describe how to define  a referential domain.)
 
 One way to visualize the intensional content of a belief state is to call :meth:`.BeliefState.to_latex` to produce an attribute-value matrix, which when rendered looks like this:
 
@@ -54,7 +54,7 @@ We can also change the belief state's meta-data in a similar way::
 
 Because :math:`{6\choose 2}=15`;  there are 15 unique target sets of size two in this belief state.
 
-Another useful method is :meth:`.BeliefState.copy`, which is what you'll use to create a copy of the belief state.  It's highly optimized (but there's still room for improvement!) so that only the mutable components of its cells are copied by value, the rest are copied by reference.  You will want to call this whenever you generate a successor, which one does to search over belief states.
+Another useful method is :meth:`.BeliefState.copy`, which is what you'll use to create a copy of the belief state.  It's highly optimized (but there's still room for improvement!) so that only the mutable components of its cells are copied by value, the rest are copied by reference.  You will want to call this whenever you generate a successor during a search over belief states.
 
 Creating a referential domain
 ==================================
@@ -94,7 +94,7 @@ Another way to author the referential domain, is to use the :class:`.Referent` c
 	        self.bathrooms = IntervalCell(0, 1000)
 
 	class Human(PhysicalObject, LanguageProducer):
-	    """ A physical object that produces speech and has a home """
+	    """ A physical object that produces language and has a home """
 	    def __init__(self):
 	        super(Human, self).__init__()
 	        self.name = StringCell()
@@ -104,7 +104,7 @@ Another way to author the referential domain, is to use the :class:`.Referent` c
 	TaxonomyCell.initialize(sys.modules[__name__])
 
 
-That `TaxonomyCell.initialize` weirdness at the end will automatically generate a :class:`.posets.PartialOrderedCell` property called `kind` with the inheritance structure of your :class:`.Referent` subclasses  Each entity will get its class name as its `kind`::
+That `TaxonomyCell.initialize` weirdness at the end will automatically generate a :class:`.posets.PartialOrderedCell` property called `kind` with the inheritance structure of your :class:`.Referent` subclasses. Each entity will be given its class name, its most specific `kind`, as the initial value::
 
 	dustin = Human()
 	dustin['kind'] #=> Human
