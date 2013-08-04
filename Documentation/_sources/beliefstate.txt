@@ -1,4 +1,4 @@
-beliefstate
+Beliefstate
 *************
 
 .. automodule:: beliefstate 

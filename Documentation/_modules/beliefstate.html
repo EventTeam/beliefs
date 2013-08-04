@@ -147,7 +147,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">Contradiction</span>
 </div>
-    <span class="k">def</span> <span class="nf">get_environment_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">pop</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="BeliefState.get_environment_variable"><a class="viewcode-back" href="../beliefstate.html#beliefstate.BeliefState.get_environment_variable">[docs]</a>    <span class="k">def</span> <span class="nf">get_environment_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">pop</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">&#39;environment_variables&#39;</span><span class="p">]:</span>
             <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">&#39;environment_variables&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">pop</span><span class="p">:</span>
@@ -155,7 +155,7 @@
             <span class="k">return</span> <span class="n">val</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">default</span>
-
+</div>
 <div class="viewcode-block" id="BeliefState.has_contextset"><a class="viewcode-back" href="../beliefstate.html#beliefstate.BeliefState.has_contextset">[docs]</a>    <span class="k">def</span> <span class="nf">has_contextset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns True if the BeliefState has a context set defined -- meaning a set</span>

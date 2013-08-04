@@ -3,7 +3,7 @@ import re
 
 class StringCell(Cell):
     """
-    Strings can be merged when one is a subsequence of another
+    A cell representation of a string. All strings will be represented in lowercase, with leading and trailing whitespace removed. Two strings can be merged when one is a subsequence of the other
     """
     def __init__(self, value=None):
         """
@@ -17,6 +17,11 @@ class StringCell(Cell):
     def coerce(value):
         """
         Turns value into a string
+
+        :param value: The string to be turned into a StringCell
+        :type value: str
+        :returns: StringCell
+        :raises: CoercionFailure
         """
         if isinstance(value, StringCell):
             return value
@@ -27,7 +32,22 @@ class StringCell(Cell):
 
     def is_contradictory(self, other):
         """
-        Can these two strings coexist ?
+        Can these two strings coexist? Two StringCells are contradictory if neither string is a substring of the other.
+
+        :param other: The string to test against
+        :type other: str,StringCell
+        :returns: bool
+        :raises: CoercionFailure
+
+        >>> w = StringCell("words")
+        >>> x = StringCell("word")
+        >>> y = StringCell("saying")
+        >>> x.is_contradictory(y)
+        True
+        >>> x.is_contradictory(w)
+        False
+
+        
         """
         other = StringCell.coerce(other)
 
@@ -44,7 +64,24 @@ class StringCell(Cell):
 
     def is_entailed_by(self, other):
         """
-        Returns True iff self's sequence is None or contained within Other's
+        Returns True iff self's string is None or is a substring of Other's string
+
+        :param other: The string or StringCell to test
+        :type other: str,StringCell
+        :returns: bool
+        :raises: CoercionFailure
+
+        >>> w = StringCell("sentence")
+        >>> x = StringCell("sentences")
+        >>> y = StringCell("text")
+        >>> w.is_entailed_by(x)
+        True
+        >>> y.is_entailed_by(x)
+        False
+
+        
+
+        
         """
         other = StringCell.coerce(other)
         if self.value is None or self.value == "":
@@ -60,6 +97,17 @@ class StringCell(Cell):
     def is_equal(self, other):
         """
         Whether two strings are equal
+
+        :param other: The string or StringCell to be tested
+        :type other: str, StringCell
+        :returns: bool
+        :raises: CoercionFailure
+
+        >>> x = StringCell("phrase")
+        >>> x.is_equal("phrase")
+        True
+        >>> x.is_equal(StringCell("word"))
+        False
         """
         other = StringCell.coerce(other)
         empties = [None,'']
@@ -69,7 +117,27 @@ class StringCell(Cell):
 
     def merge(self, other):
         """
-        Merges two strings
+        Merges two strings. Two strings can only be merged if one is a substring of the other, in which case the more general string is returned. The method will modify the *self* argument.
+
+        :param other: The string or StringCell to merge with self
+        :type other: str,StringCell
+        :returns: StringCell
+        :raises: CoercionFailure,Contradiction
+
+        >>> x = StringCell("word")
+        >>> y = StringCell("words")
+        >>> x.merge(y)
+        words
+
+        .. note::
+            ``merge`` **will** modify *self*'s string to match the return value.
+
+            >>> x = StringCell("verb")
+            >>> y = StringCell("adverb")
+            >>> x.merge(y)
+            adverb
+            >>> x
+            adverb
         """
         other = StringCell.coerce(other)
         if self.is_equal(other):
@@ -94,15 +162,17 @@ class StringCell(Cell):
             self.value = other.value[:]
         return True
 
-    def to_dot(self):
+    '''def to_dot(self):
         """
         Representation for Graphviz's dot
         """
-        return self.value
+        return self.value'''
 
     def get_value(self):
         """
         Returns value if it exists or an empty string
+
+        :returns: str
         """
         if self.value:
             return self.value
@@ -121,3 +191,9 @@ class StringCell(Cell):
 
 class NameCell(StringCell):
     pass
+
+if __name__ == "__main__":
+    w = StringCell("words")
+    x = StringCell("word")
+    y = StringCell("saying")
+    z = StringCell("phrase")

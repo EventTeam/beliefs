@@ -224,7 +224,8 @@ class RGBColorCell(Cell):
 
 # delta_e(c2, mode='cie1976')
 
-def test_rgb_color_cell():
+if __name__ == '__main__':
+#def test_rgb_color_cell():
     r0 = RGBColorCell()
     r1 = RGBColorCell.from_name('red')
     r2 = RGBColorCell.from_name('red')
@@ -255,5 +256,5 @@ def test_rgb_color_cell():
     b5 = RGBColorCell.from_name('teal')
 
 
-if __name__ == '__main__':
-    test_rgb_color_cell()
+'''if __name__ == '__main__':
+    test_rgb_color_cell()'''

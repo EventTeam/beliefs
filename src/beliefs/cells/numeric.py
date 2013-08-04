@@ -410,6 +410,17 @@ class IntervalCell(Cell):
     __eq__ = is_equal
     __len__ = size
 
+<<<<<<< HEAD
+=======
+
+if __name__ == '__main__':
+
+    def test_absolute_values():
+        # for intervals
+        x = IntervalCell(1,20)
+        y = IntervalCell(19,100)
+        assert abs(x-y) == abs(y-x)
+>>>>>>> 68f8e1246b8e0b73a1c58ee71590b3fa87d3b5bb
 
 def test_absolute_values():
     # for intervals
