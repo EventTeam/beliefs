@@ -105,58 +105,53 @@
 <p>Because <span class="math">\({6\choose 2}=15\)</span>;  there are 15 unique target sets of size two in this belief state.</p>
 <p>Another useful method is <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.copy" title="beliefstate.BeliefState.copy"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.copy()</span></tt></a>, which is what you&#8217;ll use to create a copy of the belief state.  It&#8217;s highly optimized (but there&#8217;s still room for improvement!) so that only the mutable components of its cells are copied by value, the rest are copied by reference.  You will want to call this whenever you generate a successor, which one does to search over belief states.</p>
 </div>
-<div class="section" id="cells-contain-partial-information">
-<h1>Cells contain partial information<a class="headerlink" href="#cells-contain-partial-information" title="Permalink to this headline">¶</a></h1>
-<p>The elements in the  referential domain must be represented by objects that are instances of <a class="reference internal" href="dicts.html#dicts.DictCell" title="dicts.DictCell"><tt class="xref py py-class docutils literal"><span class="pre">dicts.DictCell</span></tt></a>&#8212;essentially they are a collection of (potentially nested) attribute-value pairs.  Beneath the hood, belief states are <tt class="xref py py-class docutils literal"><span class="pre">dicts.DictCell`s,</span> <span class="pre">however</span> <span class="pre">only</span> <span class="pre">its</span> <span class="pre">properties</span> <span class="pre">`target</span></tt> and <cite>distractor</cite> are explicitly compared with the referential domain.</p>
-<p>To author an entity type for the referential domain, you can use the <tt class="xref py py-class docutils literal"><span class="pre">Referent</span></tt> class, which allows you to use inheritance of cells:</p>
-<blockquote>
-<div><p>import sys
-from beliefs.referent import *</p>
-<dl class="docutils">
-<dt>class SpatialObject(Referent):</dt>
-<dd><p class="first">&#8220;&#8221;&#8221; Represents the properties of an object located in 3D space &#8220;&#8221;&#8221;
-def __init__(self):</p>
-<blockquote class="last">
-<div>super(SpatialObject, self).__init__()
-self.x_position = IntervalCell()
-self.y_position = IntervalCell()
-self.z_position = IntervalCell()</div></blockquote>
-</dd>
-<dt>class PhysicalObject(SpatialObject):</dt>
-<dd><p class="first">&#8220;&#8221;&#8221; Represents objects that occupy space&#8221;&#8220;&#8221;
-def __init__(self):</p>
-<blockquote class="last">
-<div>super(PhysicalObject, self).__init__()
-self.length = IntervalCell()
-self.width = IntervalCell()
-self.height = IntervalCell()</div></blockquote>
-</dd>
-<dt>class LanguageProducer(Referent):</dt>
-<dd><p class="first">&#8220;&#8221;&#8220;Something that produces a natural language&#8221;&#8220;&#8221;
-def __init__(self):</p>
-<blockquote class="last">
-<div>super(LanguageProducer, self).__init__()
-self.language = SetIntersectionCell([&#8216;en&#8217;, &#8216;fr&#8217;, &#8216;de&#8217;, &#8216;pt&#8217;, &#8216;sp&#8217;])</div></blockquote>
-</dd>
-<dt>class House(SpatialObject):</dt>
-<dd><p class="first">&#8220;&#8221;&#8220;A dwelling&#8221;&#8220;&#8221;
-def __init__(self):</p>
-<blockquote class="last">
-<div>super(House, self).__init__()
-self.bathrooms = IntervalCell(0, 1000)</div></blockquote>
-</dd>
-<dt>class Human(PhysicalObject, LanguageProducer):</dt>
-<dd><p class="first">&#8220;&#8221;&#8221; A physical object that produces speech and has a home &#8220;&#8221;&#8221;
-def __init__(self):</p>
-<blockquote class="last">
-<div>super(Human, self).__init__()
-self.name = StringCell()
-self.possessions = DictCell({&#8216;home&#8217;: House()})</div></blockquote>
-</dd>
-</dl>
-<p>TaxonomyCell.initialize(sys.modules[__name__])</p>
-</div></blockquote>
-<p>That <cite>TaxonomyCell.initialize</cite> weirdness at the end will automatically generate a <a class="reference internal" href="posets.html#posets.PartialOrderedCell" title="posets.PartialOrderedCell"><tt class="xref py py-class docutils literal"><span class="pre">posets.PartialOrderedCell</span></tt></a> property called <cite>kind</cite> with the inheritance structure that you defined.  Each entity will get its class name as its <cite>kind</cite>:</p>
+<div class="section" id="creating-a-referential-domain">
+<h1>Creating a referential domain<a class="headerlink" href="#creating-a-referential-domain" title="Permalink to this headline">¶</a></h1>
+<p>The elements in the  referential domain must be represented by objects that are instances of <a class="reference internal" href="dicts.html#dicts.DictCell" title="dicts.DictCell"><tt class="xref py py-class docutils literal"><span class="pre">dicts.DictCell</span></tt></a>&#8212;essentially they are a collection of (potentially nested) attribute-value pairs.  Beneath the hood, belief states are <a class="reference internal" href="dicts.html#dicts.DictCell" title="dicts.DictCell"><tt class="xref py py-class docutils literal"><span class="pre">dicts.DictCell</span></tt></a>; however only its properties <cite>target</cite> and <cite>distractor</cite> are explicitly compared with the referential domain.</p>
+<p>Another way to author the referential domain, is to use the <tt class="xref py py-class docutils literal"><span class="pre">Referent</span></tt> class. It&#8217;s a subclass of <a class="reference internal" href="dicts.html#dicts.DictCell" title="dicts.DictCell"><tt class="xref py py-class docutils literal"><span class="pre">dicts.DictCell</span></tt></a> with some additional object-oriented features, which allow you to use inheritance:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">beliefs.referent</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span> <span class="nc">SpatialObject</span><span class="p">(</span><span class="n">Referent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Represents the properties of an object located in 3D space &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SpatialObject</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_position</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_position</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z_position</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">PhysicalObject</span><span class="p">(</span><span class="n">SpatialObject</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Represents objects that occupy space&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PhysicalObject</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">LanguageProducer</span><span class="p">(</span><span class="n">Referent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Something that produces a natural language&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LanguageProducer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">language</span> <span class="o">=</span> <span class="n">SetIntersectionCell</span><span class="p">([</span><span class="s">&#39;en&#39;</span><span class="p">,</span> <span class="s">&#39;fr&#39;</span><span class="p">,</span> <span class="s">&#39;de&#39;</span><span class="p">,</span> <span class="s">&#39;pt&#39;</span><span class="p">,</span> <span class="s">&#39;sp&#39;</span><span class="p">])</span>
+
+<span class="k">class</span> <span class="nc">House</span><span class="p">(</span><span class="n">SpatialObject</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A dwelling&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">House</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bathrooms</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Human</span><span class="p">(</span><span class="n">PhysicalObject</span><span class="p">,</span> <span class="n">LanguageProducer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A physical object that produces speech and has a home &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Human</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">StringCell</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">possessions</span> <span class="o">=</span> <span class="n">DictCell</span><span class="p">({</span><span class="s">&#39;home&#39;</span><span class="p">:</span> <span class="n">House</span><span class="p">()})</span>
+
+
+<span class="n">TaxonomyCell</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">__name__</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>That <cite>TaxonomyCell.initialize</cite> weirdness at the end will automatically generate a <a class="reference internal" href="posets.html#posets.PartialOrderedCell" title="posets.PartialOrderedCell"><tt class="xref py py-class docutils literal"><span class="pre">posets.PartialOrderedCell</span></tt></a> property called <cite>kind</cite> with the inheritance structure of your <tt class="xref py py-class docutils literal"><span class="pre">Referent</span></tt> subclasses  Each entity will get its class name as its <cite>kind</cite>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">dustin</span> <span class="o">=</span> <span class="n">Human</span><span class="p">()</span>
 <span class="n">dustin</span><span class="p">[</span><span class="s">&#39;kind&#39;</span><span class="p">]</span> <span class="c">#=&gt; Human</span>
 <span class="n">dustin</span><span class="p">[</span><span class="s">&#39;kind&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_dotfile</span><span class="p">()</span>  <span class="c">#=&gt; writes TaxonomyCell.dot</span>
@@ -164,6 +159,8 @@ self.possessions = DictCell({&#8216;home&#8217;: House()})</div></blockquote>
 </div>
 <p>By calling <a class="reference internal" href="posets.html#posets.PartialOrderedCell.to_dotfile" title="posets.PartialOrderedCell.to_dotfile"><tt class="xref py py-meth docutils literal"><span class="pre">posets.PartialOrderedCell.to_dotfile()</span></tt></a>, a DOT file will appear that shows the inheritance structure:</p>
 <img alt="TaxonomyCell.png" src="TaxonomyCell.png" />
+<div class="section" id="cell-types">
+<h2>Cell types<a class="headerlink" href="#cell-types" title="Permalink to this headline">¶</a></h2>
 <p>These are type subclasses of <tt class="xref py py-class docutils literal"><span class="pre">Cell</span></tt> data containers, which accumulate and maintain the consistency of <em>partial information</em> updates (via <cite>merge()</cite> operations).</p>
 <ul class="simple">
 <li><a class="reference internal" href="bools.html#bools.BoolCell" title="bools.BoolCell"><tt class="xref py py-class docutils literal"><span class="pre">bools.BoolCell</span></tt></a> three-valued logic of <cite>True</cite>, <cite>False</cite>, and <cite>Unknown</cite>.</li>
@@ -176,6 +173,7 @@ self.possessions = DictCell({&#8216;home&#8217;: House()})</div></blockquote>
 </ul>
 <p>Specific types of classes are expected to only be merged with cells of their same type.  There are a few exceptions where the merged value is first converted into a cell of the corresponding type.</p>
 <p>This library is being developed at &lt;<a class="reference external" href="https://github.com/EventTeam/beliefs">https://github.com/EventTeam/beliefs</a>&gt;.</p>
+</div>
 </div>
 <div class="section" id="all-modules">
 <h1>All modules<a class="headerlink" href="#all-modules" title="Permalink to this headline">¶</a></h1>
@@ -213,7 +211,10 @@ self.possessions = DictCell({&#8216;home&#8217;: House()})</div></blockquote>
   <ul>
 <li><a class="reference internal" href="#">A Library for Representing Belief States</a></li>
 <li><a class="reference internal" href="#common-operations-on-belief-states">Common operations on Belief States</a></li>
-<li><a class="reference internal" href="#cells-contain-partial-information">Cells contain partial information</a></li>
+<li><a class="reference internal" href="#creating-a-referential-domain">Creating a referential domain</a><ul>
+<li><a class="reference internal" href="#cell-types">Cell types</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#all-modules">All modules</a><ul>
 </ul>
 </li>

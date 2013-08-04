@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 A Library for Representing Belief States 
-===================================
+==========================================
 **beliefs** is a Python v2 library that was developed by `Dustin Smith <http://web.media.mit.edu/~dustin/>`__ as part of his PhD research on natural language processing.  It is covered under the `GPLv3 license <http://www.gnu.org/licenses/gpl-3.0.html>`__, which (in short)  means it is open source and all derivations must remain so.
 
    :Release: |release|
@@ -54,11 +54,11 @@ Because :math:`{6\choose 2}=15`;  there are 15 unique target sets of size two in
 
 Another useful method is :meth:`.BeliefState.copy`, which is what you'll use to create a copy of the belief state.  It's highly optimized (but there's still room for improvement!) so that only the mutable components of its cells are copied by value, the rest are copied by reference.  You will want to call this whenever you generate a successor, which one does to search over belief states.
 
-Cells contain partial information
+Creating a referential domain
 ==================================
-The elements in the  referential domain must be represented by objects that are instances of :class:`dicts.DictCell`---essentially they are a collection of (potentially nested) attribute-value pairs.  Beneath the hood, belief states are :class:`.dicts.DictCell`s, however only its properties `target` and `distractor` are explicitly compared with the referential domain.
+The elements in the  referential domain must be represented by objects that are instances of :class:`dicts.DictCell`---essentially they are a collection of (potentially nested) attribute-value pairs.  Beneath the hood, belief states are :class:`.dicts.DictCell`; however only its properties `target` and `distractor` are explicitly compared with the referential domain.
 
-To author an entity type for the referential domain, you can use the :class:`.Referent` class, which allows you to use inheritance of cells:
+Another way to author the referential domain, is to use the :class:`.Referent` class. It's a subclass of :class:`.dicts.DictCell` with some additional object-oriented features, which allow you to use inheritance::
 
 	import sys
 	from beliefs.referent import *
@@ -102,7 +102,7 @@ To author an entity type for the referential domain, you can use the :class:`.Re
 	TaxonomyCell.initialize(sys.modules[__name__])
 
 
-That `TaxonomyCell.initialize` weirdness at the end will automatically generate a :class:`.posets.PartialOrderedCell` property called `kind` with the inheritance structure that you defined.  Each entity will get its class name as its `kind`::
+That `TaxonomyCell.initialize` weirdness at the end will automatically generate a :class:`.posets.PartialOrderedCell` property called `kind` with the inheritance structure of your :class:`.Referent` subclasses  Each entity will get its class name as its `kind`::
 
 	dustin = Human()
 	dustin['kind'] #=> Human
@@ -112,6 +112,8 @@ By calling :meth:`.posets.PartialOrderedCell.to_dotfile`, a DOT file will appear
 
 .. image:: TaxonomyCell.png
 
+Cell types
+-----------
 These are type subclasses of :py:class:`Cell` data containers, which accumulate and maintain the consistency of *partial information* updates (via `merge()` operations).
 
 - :py:class:`bools.BoolCell` three-valued logic of `True`, `False`, and `Unknown`.
@@ -133,6 +135,7 @@ All modules
    :maxdepth: 2
 
    beliefstate
+   referent
    bools
    colors
    dicts
