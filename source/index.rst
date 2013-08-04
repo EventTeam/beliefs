@@ -22,7 +22,9 @@ Belief states are *about* a referential domain, so you want to initialize them w
   r = ReferentialDomain()
   b = BeliefState(r)
 
-A **referential domain** is any class that has a list of referents, each an instance of :py:class:`dicts.DictCell`, and the list of referents is named `cells`.  We can also call :meth:`.BeliefState.to_latex` to produce an attribute-value matrix of the frame.
+A **referential domain** is any class that has a list of referents, each an instance of :py:class:`dicts.DictCell`, accessible by calling `r.cells`. In the next section, I will talk about how to defined a referential domain.
+
+One way to visualize the intensional content of a belief state is to call :meth:`.BeliefState.to_latex` to produce an attribute-value matrix, which when rendered looks like this:
 
 .. image:: empy_beliefstate_avm.png
 
