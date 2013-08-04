@@ -1,6 +1,0 @@
-Spatial
-*************
-
-.. automodule:: spatial
-   :members:
-   

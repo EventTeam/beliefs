@@ -1,6 +1,0 @@
-Posets
-*************
-
-.. automodule:: posets
-   :members:
-   

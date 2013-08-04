@@ -1,6 +1,0 @@
-Dicts
-*************
-
-.. automodule:: dicts
-   :members:
-   

@@ -1,6 +1,0 @@
-Numeric
-*************
-
-.. automodule:: numeric
-   :members:
-   

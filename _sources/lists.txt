@@ -1,6 +1,0 @@
-Lists
-*************
-
-.. automodule:: lists
-   :members:
-   

@@ -1,6 +1,0 @@
-Test Doc
-*************
-
-.. automodule:: bools
-   :members:
-

@@ -1,6 +1,0 @@
-Strings
-*************
-
-.. automodule:: strings
-   :members:
-   
