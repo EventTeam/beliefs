@@ -410,8 +410,6 @@ class IntervalCell(Cell):
     __eq__ = is_equal
     __len__ = size
 
-<<<<<<< HEAD
-=======
 
 if __name__ == '__main__':
 
