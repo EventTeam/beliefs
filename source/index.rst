@@ -28,7 +28,7 @@ One way to visualize the intensional content of a belief state is to call :meth:
 
 .. image:: empy_beliefstate_avm.png
 
-We can compute the size of the belief state, by calling `b1.size()` and it will return 63.  Because our referential domain, :math:`R`, has 6 members, and an empty belief state will have :math:`2^{|R|}-1` possible members.  These are only implicitly represented.  If we want to enumerate the denotation of the belief state, we can call :meth:`.BeliefState.iter_referents`::
+We can compute the size of the belief state, by calling :meth:`.BeliefState.size`.  This would return 63 for the currently empty belief state because our referential domain, :math:`R`, has 6 members, and an empty belief state will always have :math:`2^{|R|}-1` possible members.  These are only implicitly represented.  If we want to enumerate the denotation of the belief state, we can call :meth:`.BeliefState.iter_referents`::
 
 
   b.iter_referents()  # returns iter object
