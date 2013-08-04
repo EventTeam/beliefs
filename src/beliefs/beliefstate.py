@@ -408,11 +408,13 @@ class BeliefState(DictCell):
 
         #if len(self.__dict__['deferred_effects']) != 0:
         #    return -1 
-        return len(list(self.iter_referents_tuples()))
+        size1 = len(list(self.iter_referents_tuples()))
         tlow, thigh = self['targetset_arity'].get_tuple()
         clow, chigh = self['contrast_arity'].get_tuple()
         
-        return binomial_range(n, max(tlow,1), min([n-max(clow,0),thigh,n]))
+        size2 = binomial_range(n, max(tlow,1), min([n-max(clow,0),thigh,n]))
+        #assert size1 == size2, "%i != %i" % (size1, size2)
+        return size2
 
     def referents(self):
         """ Returns all target sets that are compatible with the current beliefstate.
