@@ -37,6 +37,9 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="setCells.html" title="Sets"
              accesskey="N">next</a> |</li>
         <li class="right" >
@@ -51,8 +54,407 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="posets">
-<h1>Posets<a class="headerlink" href="#posets" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-posets">
+<span id="posets"></span><h1>Posets<a class="headerlink" href="#module-posets" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="posets.PartialOrderedCell">
+<em class="property">class </em><tt class="descname">PartialOrderedCell</tt><big>(</big><em>dag</em>, <em>lower=None</em>, <em>upper=None</em><big>)</big><a class="reference internal" href="_modules/posets.html#PartialOrderedCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#posets.PartialOrderedCell" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This class should not be instantiated directly, but rather it should be subclassed.</p>
+</div>
+<p>Generalizes the LinearOrderedCell to include represent po-sets.  Instead of
+being initialized with a list, this requires an instance of nx.DiGraph: a
+directed graph.</p>
+<p>A linear order has these properties:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Reflexive a &lt;= a</li>
+<li>Antisymmetric:  a &lt;= b and b &lt;=a  implies a == b</li>
+<li>Transitivity:  a &lt;= b  and b &lt;=c implies a &lt;= c</li>
+<li>Linearity:  a &lt;= b or b &lt;= a</li>
+</ol>
+</div></blockquote>
+<p>A partial order does not require the linearity property (4).  Namely, some
+elements are incomparable, represented as a || b.  This corresponds to two
+nodes that are not linked by a directed path.</p>
+<p>Generalization domain is a rooted directed graph with one component.  The
+(set of) root node(s) is the Upper generalization boundary, the set of Leaf
+nodes is the lower generalization boundary.</p>
+<p>Contradictions mean that there is a directed path between one of the lower
+boundaries and the root.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>dag</strong> (<em>nx.DiGraph</em>) &#8211; Represents the generalization structure</li>
+<li><strong>lower</strong> (<em>set</em>) &#8211; Optional parameter. Defaults to the empty set</li>
+<li><strong>upper</strong> (<em>set</em>) &#8211; Optional parameter. Defaults to the empty set</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>All of the following code examples in this module will be based on the following code block:</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">POC_A</span><span class="p">(</span><span class="n">PartialOrderedCell</span><span class="p">):</span>
+    <span class="c"># partial ordered test</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">dag</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_domain</span><span class="p">():</span>
+            <span class="c"># only initialize once</span>
+            <span class="n">dag</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;thing&quot;</span><span class="p">,</span> <span class="s">&quot;vehicle&quot;</span><span class="p">)</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;vehicle&quot;</span><span class="p">,</span> <span class="s">&quot;car&quot;</span><span class="p">)</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;vehicle&quot;</span><span class="p">,</span> <span class="s">&quot;truck&quot;</span><span class="p">)</span>
+        <span class="n">PartialOrderedCell</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dag</span><span class="p">)</span>
+        
+<span class="k">class</span> <span class="nc">POC_B</span><span class="p">(</span><span class="n">PartialOrderedCell</span><span class="p">):</span>
+    <span class="c"># partial ordered test</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">dag</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_domain</span><span class="p">():</span>
+            <span class="c"># only initialize once</span>
+            <span class="n">dag</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;thing&quot;</span><span class="p">,</span> <span class="s">&quot;person&quot;</span><span class="p">)</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;person&quot;</span><span class="p">,</span> <span class="s">&quot;actress&quot;</span><span class="p">)</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;person&quot;</span><span class="p">,</span> <span class="s">&quot;writer&quot;</span><span class="p">)</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;person&quot;</span><span class="p">,</span> <span class="s">&quot;producer&quot;</span><span class="p">)</span>
+        <span class="n">PartialOrderedCell</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dag</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">POC_C</span><span class="p">(</span><span class="n">PartialOrderedCell</span><span class="p">):</span>
+    <span class="c"># partial ordered test</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">dag</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_domain</span><span class="p">():</span>
+            <span class="c"># only initialize once</span>
+            <span class="n">dag</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;thing&quot;</span><span class="p">,</span> <span class="s">&quot;person&quot;</span><span class="p">)</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;person&quot;</span><span class="p">,</span> <span class="s">&quot;actress&quot;</span><span class="p">)</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;person&quot;</span><span class="p">,</span> <span class="s">&quot;director&quot;</span><span class="p">)</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;director&quot;</span><span class="p">,</span> <span class="s">&quot;good-director&quot;</span><span class="p">)</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;director&quot;</span><span class="p">,</span> <span class="s">&quot;bad-director&quot;</span><span class="p">)</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;person&quot;</span><span class="p">,</span> <span class="s">&quot;writer&quot;</span><span class="p">)</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;person&quot;</span><span class="p">,</span> <span class="s">&quot;producer&quot;</span><span class="p">)</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;thing&quot;</span><span class="p">,</span> <span class="s">&quot;vehicle&quot;</span><span class="p">)</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;vehicle&quot;</span><span class="p">,</span> <span class="s">&quot;car&quot;</span><span class="p">)</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;vehicle&quot;</span><span class="p">,</span> <span class="s">&quot;truck&quot;</span><span class="p">)</span>
+    
+        <span class="n">PartialOrderedCell</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dag</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<dl class="classmethod">
+<dt id="posets.PartialOrderedCell.set_domain">
+<em class="property">classmethod </em><tt class="descname">set_domain</tt><big>(</big><em>clz</em>, <em>dag</em><big>)</big><a class="reference internal" href="_modules/posets.html#PartialOrderedCell.set_domain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#posets.PartialOrderedCell.set_domain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the domain.  Should only be called once per class instantiation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Paramater dag:</th><td class="field-body"></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body">CellConstructionFailure &#8211; Raised if <em>dag</em> is empty, not  directed, not acyclic, or not connected</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="posets.PartialOrderedCell.get_domain">
+<em class="property">classmethod </em><tt class="descname">get_domain</tt><big>(</big><em>clz</em><big>)</big><a class="reference internal" href="_modules/posets.html#PartialOrderedCell.get_domain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#posets.PartialOrderedCell.get_domain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the class domain.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="posets.PartialOrderedCell.has_domain">
+<em class="property">classmethod </em><tt class="descname">has_domain</tt><big>(</big><em>clz</em><big>)</big><a class="reference internal" href="_modules/posets.html#PartialOrderedCell.has_domain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#posets.PartialOrderedCell.has_domain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True iff the class&#8217; domain is specified</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="posets.PartialOrderedCell.get_values">
+<tt class="descname">get_values</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/posets.html#PartialOrderedCell.get_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#posets.PartialOrderedCell.get_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns positive members of the poset</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">set</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">examplePOC</span> <span class="o">=</span> <span class="n">TestPOC</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">examplePOC</span><span class="o">.</span><span class="n">get_values</span><span class="p">()</span>
+<span class="go">set([&#39;producer&#39;, &#39;thing&#39;, &#39;car&#39;, &#39;writer&#39;, &#39;actress&#39;, &#39;director&#39;, &#39;person&#39;, &#39;bad-director&#39;, &#39;truck&#39;, &#39;vehicle&#39;, &#39;good-director&#39;])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="posets.PartialOrderedCell.get_boundaries">
+<tt class="descname">get_boundaries</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/posets.html#PartialOrderedCell.get_boundaries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#posets.PartialOrderedCell.get_boundaries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns just the upper and lower boundaries
+[upper, lower] representing the most general positive
+boundaries and the most specific lower boundaries</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">tuple &#8211; The first item in the tuple is a set representing the upper boundary, and the second item is a set representing the lower boundary</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">examplePOC</span> <span class="o">=</span> <span class="n">TestPOC</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">examplePOC</span><span class="o">.</span><span class="n">get_boundaries</span><span class="p">()</span>
+<span class="go">(set([]), set([]))     </span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="posets.PartialOrderedCell.compute_upper_bound">
+<tt class="descname">compute_upper_bound</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/posets.html#PartialOrderedCell.compute_upper_bound"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#posets.PartialOrderedCell.compute_upper_bound" title="Permalink to this definition">¶</a></dt>
+<dd><p>We have to compute the new upper boundary (nub) starting from the
+root nodes.  If a path exists between a root node and another entry in
+<cite>self.upper</cite> we can ignore the root node because it has been
+specialized by one of its successors.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">set &#8211; represents the new upper boundary</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">examplePOC</span> <span class="o">=</span> <span class="n">TestPOC</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">examplePOC</span><span class="o">.</span><span class="n">compute_upper_bound</span><span class="p">()</span>
+<span class="go">set([&#39;thing&#39;])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="posets.PartialOrderedCell.is_domain_equal">
+<tt class="descname">is_domain_equal</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/posets.html#PartialOrderedCell.is_domain_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#posets.PartialOrderedCell.is_domain_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes whether two Partial Orderings have the same generalization
+structure.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>PartialOrderedCell</em>) &#8211; The other partial ordering to compare with</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="posets.PartialOrderedCell.is_equal">
+<tt class="descname">is_equal</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/posets.html#PartialOrderedCell.is_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#posets.PartialOrderedCell.is_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes whether two Partial Orderings contain the same information</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>PartialOrderedCell</em>) &#8211; The other partial ordering to compare with</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="posets.PartialOrderedCell.is_entailed_by">
+<tt class="descname">is_entailed_by</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/posets.html#PartialOrderedCell.is_entailed_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#posets.PartialOrderedCell.is_entailed_by" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True iff Other 
+(a) has the same domain,
+(b) the same or more specific &#8216;upper&#8217; bound; and 
+(c) the same or more general &#8216;lower&#8217; bound.</p>
+<p>Approach: Looks for ways to rule out entailment.  If none are found, 
+returns True</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>PartialOrderedCell</em>) &#8211; The other partial ordering to compare with</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="posets.PartialOrderedCell.is_contradictory">
+<tt class="descname">is_contradictory</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/posets.html#PartialOrderedCell.is_contradictory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#posets.PartialOrderedCell.is_contradictory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Does the merge yield the empty set?</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>PartialOrderedCell</em>) &#8211; The other partial ordering to compare with</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="posets.PartialOrderedCell.coerce">
+<tt class="descname">coerce</tt><big>(</big><em>other</em>, <em>is_positive=True</em><big>)</big><a class="reference internal" href="_modules/posets.html#PartialOrderedCell.coerce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#posets.PartialOrderedCell.coerce" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only copies a pointer to the new domain&#8217;s cell</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>other</strong> &#8211; A compatible cell, or value in <em>self</em>&#8216;s domain</li>
+<li><strong>is_positive</strong> (<em>bool</em>) &#8211; Optional parameter. Specifies whether <em>other</em> is positive, in which case it becomes an upper bound, or negative, in which case it becomes a lower bound</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">PartialOrderedCell</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last">CellConstructionFailure</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="posets.PartialOrderedCell.merge">
+<tt class="descname">merge</tt><big>(</big><em>other</em>, <em>is_positive=True</em><big>)</big><a class="reference internal" href="_modules/posets.html#PartialOrderedCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#posets.PartialOrderedCell.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combines the partial order with either (1) a value in the partial 
+order&#8217;s domain, or (2) another partial order with the same domain.</p>
+<p>When combining with a value, an optional <cite>is_positive</cite> parameter can
+be set to False, meaning that the merged value should be excluded.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>other</strong> &#8211; Another partial ordering or a value in <em>self</em>&#8216;s domain</li>
+<li><strong>is_positive</strong> (<em>bool</em>) &#8211; Optional parameter. Specifies whether <em>other</em> is positive, in which case it becomes an upper bound, or negative, in which case it becomes a lower bound</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">PartialOrderedCell</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body"><ul class="first last simple">
+<li>CellConstructionFailure &#8211; raised if <em>other</em> is not coercible</li>
+<li>Contradiction &#8211; raised if <em>self</em> and <em>other</em> cannot be merged</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="posets.PartialOrderedCell.size">
+<tt class="descname">size</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/posets.html#PartialOrderedCell.size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#posets.PartialOrderedCell.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of members in the partial ordering (between and
+including the boundaries)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">int &#8211; greater than or equal to zero</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="posets.PartialOrderedCell.to_dot">
+<tt class="descname">to_dot</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/posets.html#PartialOrderedCell.to_dot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#posets.PartialOrderedCell.to_dot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Outputs a version that can be displayed or seralized</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">dict &#8211; keys are &#8216;upper&#8217; and &#8216;lower&#8217;, values are the corresponding lists</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="posets.PartialOrderedCell.get_refinement_options">
+<tt class="descname">get_refinement_options</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/posets.html#PartialOrderedCell.get_refinement_options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#posets.PartialOrderedCell.get_refinement_options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns possible specializations for the upper values in the taxonomy</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">generator</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="posets.PartialOrderedCell.get_relaxation_options">
+<tt class="descname">get_relaxation_options</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/posets.html#PartialOrderedCell.get_relaxation_options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#posets.PartialOrderedCell.get_relaxation_options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns possible generalizations for the upper values in the taxonomy</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">generator</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="posets.PartialOrderedCell.most_specific_members">
+<tt class="descname">most_specific_members</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/posets.html#PartialOrderedCell.most_specific_members"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#posets.PartialOrderedCell.most_specific_members" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the upper nodes or, if they are empty, the root nodes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">set</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="posets.PartialOrderedCell.to_dotfile">
+<tt class="descname">to_dotfile</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/posets.html#PartialOrderedCell.to_dotfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#posets.PartialOrderedCell.to_dotfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes a DOT graphviz file of the domain structure, and returns the filename</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -95,6 +497,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="setCells.html" title="Sets"
              >next</a> |</li>

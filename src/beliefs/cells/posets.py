@@ -613,6 +613,5 @@ if __name__ == '__main__':
     print t == t2
     a = POC_A()
     b = POC_B()
-    '''t.merge("person")
     print list(t.get_refinement_options())
     print list(t.get_relaxation_options())

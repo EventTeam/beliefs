@@ -37,6 +37,9 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="numeric.html" title="Numeric"
              accesskey="N">next</a> |</li>
         <li class="right" >
@@ -51,8 +54,399 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="lists">
-<h1>Lists<a class="headerlink" href="#lists" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-lists">
+<span id="lists"></span><h1>Lists<a class="headerlink" href="#module-lists" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="lists.LinearOrderedCell">
+<em class="property">class </em><tt class="descname">LinearOrderedCell</tt><big>(</big><em>ordered_domain</em>, <em>low=None</em>, <em>high=None</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell" title="Permalink to this definition">¶</a></dt>
+<dd><p>A generalization of IntervalCell to non-numeric symbols</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ordered_domain</strong> (<em>list</em>) &#8211; An ordered sequence of symbols. Must not contain duplicate entries.</li>
+<li><strong>low,high</strong> &#8211; Symbols in the domain that mark the lower and upper bounds</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last">CellConstructionFailure</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="lists.LinearOrderedCell.stem">
+<tt class="descname">stem</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.stem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.stem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new instance without any values</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">LinearOrderedCell</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.LinearOrderedCell.coerce">
+<tt class="descname">coerce</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.coerce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.coerce" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes one or more values in the domain and returns a LinearOrderedCell with that domain. If the input is a single value, the low and high bounds will both be set to that value. If the input is a list or a tuple, the low and high bounds will be set to the min and max elements of the list or tuple.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Unlike the <tt class="docutils literal"><span class="pre">coerce</span></tt> methods in many of the other modules, this is <strong>not</strong> a static method.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> &#8211; A single value in the domain, or a list or tuple of values in the domain</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">LinearOrderedCell</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.LinearOrderedCell.to_i">
+<tt class="descname">to_i</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.to_i"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.to_i" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maps value to position in domain</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>val</strong> &#8211; value in the domain</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">int &#8211; index of value in the domain. Returns -1 if val is None</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">LinearOrderedCell</span><span class="p">([</span><span class="s">&#39;animal&#39;</span><span class="p">,</span><span class="s">&#39;dog&#39;</span><span class="p">,</span><span class="s">&#39;poodle&#39;</span><span class="p">,</span><span class="s">&#39;toy poodle&#39;</span><span class="p">],</span> <span class="s">&#39;animal&#39;</span><span class="p">,</span> <span class="s">&#39;toy poodle&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span><span class="o">.</span><span class="n">to_i</span><span class="p">(</span><span class="s">&#39;dog&#39;</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span><span class="o">.</span><span class="n">to_i</span><span class="p">(</span><span class="s">&#39;toy poodle&#39;</span><span class="p">)</span>
+<span class="go">3</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.LinearOrderedCell.is_contradictory">
+<tt class="descname">is_contradictory</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.is_contradictory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.is_contradictory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether other and self can coexist. Two LinearOrderedCells are contradictory if there is on overlap between their boundaries.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> &#8211; A LinearOrderedCell or coercible value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">LinearOrderedCell</span><span class="p">([</span><span class="s">&#39;animal&#39;</span><span class="p">,</span><span class="s">&#39;dog&#39;</span><span class="p">,</span><span class="s">&#39;poodle&#39;</span><span class="p">,</span><span class="s">&#39;toy poodle&#39;</span><span class="p">],</span> <span class="s">&#39;animal&#39;</span><span class="p">,</span> <span class="s">&#39;dog&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">LinearOrderedCell</span><span class="p">([</span><span class="s">&#39;animal&#39;</span><span class="p">,</span><span class="s">&#39;dog&#39;</span><span class="p">,</span><span class="s">&#39;poodle&#39;</span><span class="p">,</span><span class="s">&#39;toy poodle&#39;</span><span class="p">],</span> <span class="s">&#39;animal&#39;</span><span class="p">,</span> <span class="s">&#39;toy poodle&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">LinearOrderedCell</span><span class="p">([</span><span class="s">&#39;animal&#39;</span><span class="p">,</span><span class="s">&#39;dog&#39;</span><span class="p">,</span><span class="s">&#39;poodle&#39;</span><span class="p">,</span><span class="s">&#39;toy poodle&#39;</span><span class="p">],</span> <span class="s">&#39;poodle&#39;</span><span class="p">,</span> <span class="s">&#39;toy poodle&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="go">&gt;&gt; x.is_contradictory(y)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.LinearOrderedCell.is_entailed_by">
+<tt class="descname">is_entailed_by</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.is_entailed_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.is_entailed_by" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if Other is more specific than self or if Other is bounded within self.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> &#8211; A LinearOrderedCell or coercible value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">LinearOrderedCell</span><span class="p">([</span><span class="s">&#39;animal&#39;</span><span class="p">,</span><span class="s">&#39;dog&#39;</span><span class="p">,</span><span class="s">&#39;poodle&#39;</span><span class="p">,</span><span class="s">&#39;toy poodle&#39;</span><span class="p">],</span> <span class="s">&#39;animal&#39;</span><span class="p">,</span> <span class="s">&#39;poodle&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">LinearOrderedCell</span><span class="p">([</span><span class="s">&#39;animal&#39;</span><span class="p">,</span><span class="s">&#39;dog&#39;</span><span class="p">,</span><span class="s">&#39;poodle&#39;</span><span class="p">,</span><span class="s">&#39;toy poodle&#39;</span><span class="p">],</span> <span class="s">&#39;dog&#39;</span><span class="p">,</span> <span class="s">&#39;dog&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">LinearOrderedCell</span><span class="p">([</span><span class="s">&#39;animal&#39;</span><span class="p">,</span><span class="s">&#39;dog&#39;</span><span class="p">,</span><span class="s">&#39;poodle&#39;</span><span class="p">,</span><span class="s">&#39;toy poodle&#39;</span><span class="p">],</span> <span class="s">&#39;poodle&#39;</span><span class="p">,</span> <span class="s">&#39;toy poodle&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="o">.</span><span class="n">is_entailedy_by</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.LinearOrderedCell.is_equal">
+<tt class="descname">is_equal</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.is_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.is_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines whether two intervals are the same, i.e. every element of each domain is also an element of the other domain, and the low and high of each domain correspond to the low and high of the other</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> &#8211; A LinearOrderedCell or coercible value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">LinearOrderedCell</span><span class="p">([</span><span class="s">&#39;animal&#39;</span><span class="p">,</span><span class="s">&#39;dog&#39;</span><span class="p">,</span><span class="s">&#39;poodle&#39;</span><span class="p">,</span><span class="s">&#39;toy poodle&#39;</span><span class="p">],</span> <span class="s">&#39;animal&#39;</span><span class="p">,</span> <span class="s">&#39;poodle&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">LinearOrderedCell</span><span class="p">([</span><span class="s">&#39;animal&#39;</span><span class="p">,</span><span class="s">&#39;dog&#39;</span><span class="p">],</span> <span class="s">&#39;dog&#39;</span><span class="p">,</span> <span class="s">&#39;dog&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">LinearOrderedCell</span><span class="p">([</span><span class="s">&#39;dog&#39;</span><span class="p">,</span><span class="s">&#39;toy poodle&#39;</span><span class="p">,</span><span class="s">&#39;animal&#39;</span><span class="p">,</span><span class="s">&#39;poodle&#39;</span><span class="p">],</span> <span class="s">&#39;animal&#39;</span><span class="p">,</span> <span class="s">&#39;poodle&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.LinearOrderedCell.merge">
+<tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#LinearOrderedCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.LinearOrderedCell.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merges the two values</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This method <strong>will</strong> modify the <em>self</em> parameter</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> &#8211; A LinearOrderedCell or coercible value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">LinearOrderedCell</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception, Contradiction</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">LinearOrderedCell</span><span class="p">([</span><span class="s">&#39;animal&#39;</span><span class="p">,</span><span class="s">&#39;dog&#39;</span><span class="p">,</span><span class="s">&#39;poodle&#39;</span><span class="p">,</span><span class="s">&#39;toy poodle&#39;</span><span class="p">],</span> <span class="s">&#39;animal&#39;</span><span class="p">,</span> <span class="s">&#39;poodle&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">LinearOrderedCell</span><span class="p">([</span><span class="s">&#39;animal&#39;</span><span class="p">,</span><span class="s">&#39;dog&#39;</span><span class="p">,</span><span class="s">&#39;poodle&#39;</span><span class="p">,</span><span class="s">&#39;toy poodle&#39;</span><span class="p">],</span> <span class="s">&#39;dog&#39;</span><span class="p">,</span> <span class="s">&#39;poodle&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">LinearOrderedCell</span><span class="p">([</span><span class="s">&#39;animal&#39;</span><span class="p">,</span><span class="s">&#39;dog&#39;</span><span class="p">,</span><span class="s">&#39;poodle&#39;</span><span class="p">,</span><span class="s">&#39;toy poodle&#39;</span><span class="p">],</span> <span class="s">&#39;poodle&#39;</span><span class="p">,</span> <span class="s">&#39;toy poodle&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="go">[dog,poodle]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span>
+<span class="go">[dog, poodle]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">[poodle,poodle]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="lists.PrefixCell">
+<em class="property">class </em><tt class="descname">PrefixCell</tt><big>(</big><em>value=None</em><big>)</big><a class="reference internal" href="_modules/lists.html#PrefixCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.PrefixCell" title="Permalink to this definition">¶</a></dt>
+<dd><p>PrefixCells contain ordered elements</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>list</em>) &#8211; Optional parameter specifying initial list. Defaults to the empty list.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body">CellContstructionFailure</td>
+</tr>
+</tbody>
+</table>
+<dl class="staticmethod">
+<dt id="lists.PrefixCell.coerce">
+<em class="property">static </em><tt class="descname">coerce</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/lists.html#PrefixCell.coerce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.PrefixCell.coerce" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turns a value into a PrefixCell</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>list, PrefixCell</em>) &#8211; The value to be coerced</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">PrefixCell</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.PrefixCell.size">
+<tt class="descname">size</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/lists.html#PrefixCell.size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.PrefixCell.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of elements in the list</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">int &#8211; number of elements in the list</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">PrefixCell</span><span class="p">([</span><span class="s">&#39;red&#39;</span><span class="p">,</span><span class="s">&#39;blue&#39;</span><span class="p">,</span><span class="s">&#39;green&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+<span class="go">3</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.PrefixCell.is_contradictory">
+<tt class="descname">is_contradictory</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#PrefixCell.is_contradictory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.PrefixCell.is_contradictory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Two lists are contradictory if the shorter one is not a prefix of the
+other. (Very strict definition &#8211; could be generalized to subsequence) It does not matter whether <em>self</em> or <em>other</em> is the shorter one.</p>
+<p>Empty lists are never contradictory.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>list</em>) &#8211; The PrefixCell to test</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">PrefixCell</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">PrefixCell</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">PrefixCell</span><span class="p">([</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">,</span><span class="s">&#39;c&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">PrefixCell</span><span class="p">([]))</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.PrefixCell.is_entailed_by">
+<tt class="descname">is_entailed_by</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#PrefixCell.is_entailed_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.PrefixCell.is_entailed_by" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True iff the values in this list can be entailed by the other
+list (ie, this list is a prefix of the other)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> &#8211; PrefixCell or coercible value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">PrefixCell</span><span class="p">([</span><span class="s">&#39;red&#39;</span><span class="p">,</span><span class="s">&#39;orange&#39;</span><span class="p">,</span><span class="s">&#39;yellow&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">PrefixCell</span><span class="p">([</span><span class="s">&#39;red&#39;</span><span class="p">,</span><span class="s">&#39;orange&#39;</span><span class="p">,</span><span class="s">&#39;yellow&#39;</span><span class="p">,</span><span class="s">&#39;green&#39;</span><span class="p">,</span><span class="s">&#39;blue&#39;</span><span class="p">,</span><span class="s">&#39;indigo&#39;</span><span class="p">,</span><span class="s">&#39;violet&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.PrefixCell.is_equal">
+<tt class="descname">is_equal</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#PrefixCell.is_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.PrefixCell.is_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether the lists are equal</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> &#8211; The value or PrefixCell to test</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">PrefixCell</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">PrefixCell</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">is_equal</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.PrefixCell.merge">
+<tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/lists.html#PrefixCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.PrefixCell.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merges two Lists.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This method <strong>will</strong> modify the <em>self</em> parameter.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> &#8211; A PrefixCell or coercible value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">PrefixCell</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Contradiction</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">PrefixCell</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">PrefixCell</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span>
+<span class="go">[1,2,3]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span>
+<span class="go">[1,2,3]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.PrefixCell.append">
+<tt class="descname">append</tt><big>(</big><em>el</em><big>)</big><a class="reference internal" href="_modules/lists.html#PrefixCell.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.PrefixCell.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Idiosynractic method for adding an element to a list. Modifies the <em>self</em> parameter.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">PrefixCell</span><span class="p">([</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;c&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span>
+<span class="go">[a,b,c]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="lists.PrefixCell.get_values">
+<tt class="descname">get_values</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/lists.html#PrefixCell.get_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lists.PrefixCell.get_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list containing the elements.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">PrefixCell</span><span class="p">([</span><span class="s">&#39;big&#39;</span><span class="p">,</span><span class="s">&#39;blue&#39;</span><span class="p">,</span><span class="s">&#39;ball&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">get_values</span><span class="p">()</span>
+<span class="go">[&#39;big&#39;,&#39;blue&#39;,&#39;ball&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -95,6 +489,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="numeric.html" title="Numeric"
              >next</a> |</li>

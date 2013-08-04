@@ -37,6 +37,9 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="posets.html" title="Posets"
              accesskey="N">next</a> |</li>
         <li class="right" >
@@ -51,8 +54,280 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="numeric">
-<h1>Numeric<a class="headerlink" href="#numeric" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-numeric">
+<span id="numeric"></span><h1>Numeric<a class="headerlink" href="#module-numeric" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="numeric.IntervalCell">
+<em class="property">class </em><tt class="descname">IntervalCell</tt><big>(</big><em>low=None</em>, <em>high=None</em><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements an interval cell along with interval algebra</p>
+<dl class="staticmethod">
+<dt id="numeric.IntervalCell.coerce">
+<em class="property">static </em><tt class="descname">coerce</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell.coerce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell.coerce" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes in either a single number (float, int), a list, or a tuple and returns the
+[low, high] in the standard interval form. In the case of a single <em>value</em>, the low and high will both be the single value. In the case of a list or tuple, the low and high will be the min and max of the collection, respectively.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>int, float, complex, list, tuple</em>) &#8211; The the number or collection of numbers to be used for the low and high boundaries</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">IntervalCell</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
+<span class="go">5.00</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span>
+<span class="go">[3.00,7.00]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span>
+<span class="go">[1.00,9.00]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="numeric.IntervalCell.stem">
+<tt class="descname">stem</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell.stem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell.stem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new instance with bounds of 0 to infinity</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">IntervalCell</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">stem</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span>
+<span class="go">[0.00,inf]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="numeric.IntervalCell.size">
+<tt class="descname">size</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell.size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of possible values in the interval.  Boundaries are inclusive</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">int &#8211; Length of interval</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">19</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+<span class="go">8</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="numeric.IntervalCell.is_contradictory">
+<tt class="descname">is_contradictory</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell.is_contradictory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell.is_contradictory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines whether other and self can coexist. Two intervals are contradictory if they are disjoint, i.e. if their intersection is empty</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> &#8211; IntervalCell or coercible value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="numeric.IntervalCell.is_entailed_by">
+<tt class="descname">is_entailed_by</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell.is_entailed_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell.is_entailed_by" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if other is more specific than self, i.e. other is bounded within self.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> &#8211; IntervalCell or coercible value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="numeric.IntervalCell.is_equal">
+<tt class="descname">is_equal</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell.is_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell.is_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if two intervals are the same</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> &#8211; IntervalCell or coercible value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span><span class="o">.</span><span class="n">is_equal</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="numeric.IntervalCell.merge">
+<tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merges the two values. The <em>self</em> argument is modified, while <em>other</em> is not.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> &#8211; IntervalCell or coercible value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
+<span class="go">2.00</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p><tt class="docutils literal"><span class="pre">merge</span></tt> modifies the <em>self</em> argument as a side effect.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">9</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span>
+<span class="go">[3.00,7.00]</span>
+</pre></div>
+</div>
+<p>w has been modified.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">w</span>
+<span class="go">[3.00,7.00]</span>
+</pre></div>
+</div>
+<p>z has not.</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span>
+<span class="go">[3.00,9.00]</span>
+</pre></div>
+</div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="numeric.IntervalCell.map">
+<tt class="descname">map</tt><big>(</big><em>other</em>, <em>function</em><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell.map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell.map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies a mathematic function to the interval arithmetic template:
+generate all combinations of low/high values and then take the widest
+bounds (min/max) for the result.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>other</strong> (<em>IntervalCell</em>) &#8211; IntervalCell or coercible value</li>
+<li><strong>function</strong> (<em>function</em>) &#8211; Mathematical function to be applied to the bounds of the interval. Must take two arguments and return a number</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">IntervalCell</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last">Exception</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span>
+<span class="go">[4.00,9.00]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="n">x</span><span class="o">-</span><span class="n">y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span>
+<span class="go">[-4.00,1.00]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="numeric.IntervalCell.get_tuple">
+<tt class="descname">get_tuple</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell.get_tuple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell.get_tuple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns (low, high) tuple</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xTuple</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">get_tuple</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xTuple</span>
+<span class="go">(1,2)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="numeric.IntervalCell.to_latex">
+<tt class="descname">to_latex</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/numeric.html#IntervalCell.to_latex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.IntervalCell.to_latex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an interval representation</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="numeric.test_hashes">
+<tt class="descname">test_hashes</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/numeric.html#test_hashes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#numeric.test_hashes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests for cases where LOW and HIGH values of the interval
+have the same sum, the same diff, etc.</p>
+</dd></dl>
+
 </div>
 
 
@@ -95,6 +370,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="posets.html" title="Posets"
              >next</a> |</li>

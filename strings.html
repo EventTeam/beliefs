@@ -36,6 +36,9 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="spatial.html" title="Spatial"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">beliefs 1.0 documentation</a> &raquo;</li> 
@@ -47,8 +50,161 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="strings">
-<h1>Strings<a class="headerlink" href="#strings" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-strings">
+<span id="strings"></span><h1>Strings<a class="headerlink" href="#module-strings" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="strings.StringCell">
+<em class="property">class </em><tt class="descname">StringCell</tt><big>(</big><em>value=None</em><big>)</big><a class="reference internal" href="_modules/strings.html#StringCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strings.StringCell" title="Permalink to this definition">¶</a></dt>
+<dd><p>A cell representation of a string. All strings will be represented in lowercase, with leading and trailing whitespace removed. Two strings can be merged when one is a subsequence of the other</p>
+<dl class="staticmethod">
+<dt id="strings.StringCell.coerce">
+<em class="property">static </em><tt class="descname">coerce</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/strings.html#StringCell.coerce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strings.StringCell.coerce" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turns value into a string</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>str</em>) &#8211; The string to be turned into a StringCell</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">StringCell</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">CoercionFailure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="strings.StringCell.is_contradictory">
+<tt class="descname">is_contradictory</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/strings.html#StringCell.is_contradictory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strings.StringCell.is_contradictory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Can these two strings coexist? Two StringCells are contradictory if neither string is a substring of the other.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>str,StringCell</em>) &#8211; The string to test against</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">CoercionFailure</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">StringCell</span><span class="p">(</span><span class="s">&quot;words&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">StringCell</span><span class="p">(</span><span class="s">&quot;word&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">StringCell</span><span class="p">(</span><span class="s">&quot;saying&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="strings.StringCell.is_entailed_by">
+<tt class="descname">is_entailed_by</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/strings.html#StringCell.is_entailed_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strings.StringCell.is_entailed_by" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True iff self&#8217;s string is None or is a substring of Other&#8217;s string</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>str,StringCell</em>) &#8211; The string or StringCell to test</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">CoercionFailure</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">StringCell</span><span class="p">(</span><span class="s">&quot;sentence&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">StringCell</span><span class="p">(</span><span class="s">&quot;sentences&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">StringCell</span><span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="strings.StringCell.is_equal">
+<tt class="descname">is_equal</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/strings.html#StringCell.is_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strings.StringCell.is_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether two strings are equal</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>str, StringCell</em>) &#8211; The string or StringCell to be tested</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">CoercionFailure</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">StringCell</span><span class="p">(</span><span class="s">&quot;phrase&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="s">&quot;phrase&quot;</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="n">StringCell</span><span class="p">(</span><span class="s">&quot;word&quot;</span><span class="p">))</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="strings.StringCell.merge">
+<tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/strings.html#StringCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strings.StringCell.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merges two strings. Two strings can only be merged if one is a substring of the other, in which case the more general string is returned. The method will modify the <em>self</em> argument.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>str,StringCell</em>) &#8211; The string or StringCell to merge with self</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">StringCell</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">CoercionFailure,Contradiction</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">StringCell</span><span class="p">(</span><span class="s">&quot;word&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">StringCell</span><span class="p">(</span><span class="s">&quot;words&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="go">words</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p><tt class="docutils literal"><span class="pre">merge</span></tt> <strong>will</strong> modify <em>self</em>&#8216;s string to match the return value.</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">StringCell</span><span class="p">(</span><span class="s">&quot;verb&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">StringCell</span><span class="p">(</span><span class="s">&quot;adverb&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="go">adverb</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span>
+<span class="go">adverb</span>
+</pre></div>
+</div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="strings.StringCell.get_value">
+<tt class="descname">get_value</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/strings.html#StringCell.get_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strings.StringCell.get_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns value if it exists or an empty string</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -88,6 +244,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="spatial.html" title="Spatial"
              >previous</a> |</li>

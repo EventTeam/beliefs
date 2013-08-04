@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Beliefs &mdash; beliefs 1.0 documentation</title>
+    <title>A Library for Representing Belief States &mdash; beliefs 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -36,6 +36,9 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="beliefstate.html" title="Beliefstate"
              accesskey="N">next</a> |</li>
         <li><a href="#">beliefs 1.0 documentation</a> &raquo;</li> 
@@ -47,18 +50,131 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="beliefs">
-<h1>Beliefs<a class="headerlink" href="#beliefs" title="Permalink to this headline">¶</a></h1>
-<p>Here are <tt class="xref py py-class docutils literal"><span class="pre">Cell</span></tt> data containers, <em class="xref std std-ref">cell</em> subclasses that are designed to accumulate and maintain the consistency of <em>partial information</em>:</p>
+  <div class="section" id="a-library-for-representing-belief-states">
+<h1>A Library for Representing Belief States<a class="headerlink" href="#a-library-for-representing-belief-states" title="Permalink to this headline">¶</a></h1>
+<p><strong>beliefs</strong> is a Python v2 library that was developed by <a class="reference external" href="http://web.media.mit.edu/~dustin/">Dustin Smith</a> as part of his PhD research on natural language processing.  It is covered under the <a class="reference external" href="http://www.gnu.org/licenses/gpl-3.0.html">GPLv3 license</a>, which (in short)  means it is open source and all derivations must remain so.</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Release:</th><td class="field-body">1.0</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Date:</th><td class="field-body">August 04, 2013</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+<div class="section" id="common-operations-on-belief-states">
+<h1>Common operations on Belief States<a class="headerlink" href="#common-operations-on-belief-states" title="Permalink to this headline">¶</a></h1>
+<p>Before you can use this library you must <a class="reference external" href="https://github.com/EventTeam/beliefs">download it</a> and add it to your Python&#8217;s import path.  When you have done this, you will be able to import it and start using belief states:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">beliefs</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+<p>Belief states are <em>about</em> a referential domain, so you want to initialize them with respect to a referential domain:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">r</span> <span class="o">=</span> <span class="n">ReferentialDomain</span><span class="p">()</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">BeliefState</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A <strong>referential domain</strong> is any class that has a list of referents, each an instance of <a class="reference internal" href="dicts.html#dicts.DictCell" title="dicts.DictCell"><tt class="xref py py-class docutils literal"><span class="pre">dicts.DictCell</span></tt></a>, and the list of referents is named <cite>cells</cite>.  We can also call <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.to_latex" title="beliefstate.BeliefState.to_latex"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.to_latex()</span></tt></a> to produce an attribute-value matrix of the frame.</p>
+<img alt="empy_beliefstate_avm.png" src="empy_beliefstate_avm.png" />
+<p>We can compute the size of the belief state, by calling <cite>b1.size()</cite> and it will return 63.  Because our referential domain, <span class="math">\(R\)</span>, has 6 members, and an empty belief state will have <span class="math">\(2^{|R|}-1\)</span> possible members.  These are only implicitly represented.  If we want to enumerate the denotation of the belief state, we can call <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.iter_referents" title="beliefstate.BeliefState.iter_referents"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.iter_referents()</span></tt></a>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">b</span><span class="o">.</span><span class="n">iter_referents</span><span class="p">()</span>  <span class="c"># returns iter object</span>
+
+<span class="c"># loops over the iterator of just the referent&#39;s indices</span>
+<span class="k">for</span> <span class="n">targetset</span> <span class="ow">in</span> <span class="n">b</span><span class="o">.</span><span class="n">iter_referents_tuples</span><span class="p">():</span>
+  <span class="k">print</span> <span class="n">targetset</span>
+</pre></div>
+</div>
+<p>If we want to add a property to the belief state, we can do so by using the <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.merge" title="beliefstate.BeliefState.merge"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.merge()</span></tt></a> method.  This method requires two arguments, a <cite>path</cite> and a <cite>value</cite>.   <cite>path</cite> should be a list that specifies the component that should be updated, and <cite>value</cite> should be an instance of a <tt class="xref py py-class docutils literal"><span class="pre">cells.Cell</span></tt>.  For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">value</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">b</span><span class="o">.</span><span class="n">merge</span><span class="p">([</span><span class="s">&#39;target&#39;</span><span class="p">,</span> <span class="s">&#39;size&#39;</span><span class="p">],</span> <span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If the corresponding path doesn&#8217;t exist (as it doesn&#8217;t here), the belief state will add it and we can now access it:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">b</span><span class="p">[</span><span class="s">&#39;target&#39;</span><span class="p">][</span><span class="s">&#39;size&#39;</span><span class="p">]</span>  <span class="c"># =&gt; [5, 100]</span>
+<span class="n">b</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="c"># =&gt; 63</span>
+</pre></div>
+</div>
+<p>We can also change the belief state&#8217;s meta-data in a similar way:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">b</span><span class="o">.</span><span class="n">merge</span><span class="p">([</span><span class="s">&#39;targetset_arity&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>   <span class="c"># 2 gets typecast to IntervalCell(2, 2)</span>
+<span class="n">b</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="c"># =&gt; 15</span>
+</pre></div>
+</div>
+<p>Because <span class="math">\({6\choose 2}=15\)</span>;  there are 15 unique target sets of size two in this belief state.</p>
+<p>Another useful method is <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.copy" title="beliefstate.BeliefState.copy"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.copy()</span></tt></a>, which is what you&#8217;ll use to create a copy of the belief state.  It&#8217;s highly optimized (but there&#8217;s still room for improvement!) so that only the mutable components of its cells are copied by value, the rest are copied by reference.  You will want to call this whenever you generate a successor, which one does to search over belief states.</p>
+</div>
+<div class="section" id="cells-contain-partial-information">
+<h1>Cells contain partial information<a class="headerlink" href="#cells-contain-partial-information" title="Permalink to this headline">¶</a></h1>
+<p>The elements in the  referential domain must be represented by objects that are instances of <a class="reference internal" href="dicts.html#dicts.DictCell" title="dicts.DictCell"><tt class="xref py py-class docutils literal"><span class="pre">dicts.DictCell</span></tt></a>&#8212;essentially they are a collection of (potentially nested) attribute-value pairs.  Beneath the hood, belief states are <tt class="xref py py-class docutils literal"><span class="pre">dicts.DictCell`s,</span> <span class="pre">however</span> <span class="pre">only</span> <span class="pre">its</span> <span class="pre">properties</span> <span class="pre">`target</span></tt> and <cite>distractor</cite> are explicitly compared with the referential domain.</p>
+<p>To author an entity type for the referential domain, you can use the <tt class="xref py py-class docutils literal"><span class="pre">Referent</span></tt> class, which allows you to use inheritance of cells:</p>
+<blockquote>
+<div><p>import sys
+from beliefs.referent import *</p>
+<dl class="docutils">
+<dt>class SpatialObject(Referent):</dt>
+<dd><p class="first">&#8220;&#8221;&#8221; Represents the properties of an object located in 3D space &#8220;&#8221;&#8221;
+def __init__(self):</p>
+<blockquote class="last">
+<div>super(SpatialObject, self).__init__()
+self.x_position = IntervalCell()
+self.y_position = IntervalCell()
+self.z_position = IntervalCell()</div></blockquote>
+</dd>
+<dt>class PhysicalObject(SpatialObject):</dt>
+<dd><p class="first">&#8220;&#8221;&#8221; Represents objects that occupy space&#8221;&#8220;&#8221;
+def __init__(self):</p>
+<blockquote class="last">
+<div>super(PhysicalObject, self).__init__()
+self.length = IntervalCell()
+self.width = IntervalCell()
+self.height = IntervalCell()</div></blockquote>
+</dd>
+<dt>class LanguageProducer(Referent):</dt>
+<dd><p class="first">&#8220;&#8221;&#8220;Something that produces a natural language&#8221;&#8220;&#8221;
+def __init__(self):</p>
+<blockquote class="last">
+<div>super(LanguageProducer, self).__init__()
+self.language = SetIntersectionCell([&#8216;en&#8217;, &#8216;fr&#8217;, &#8216;de&#8217;, &#8216;pt&#8217;, &#8216;sp&#8217;])</div></blockquote>
+</dd>
+<dt>class House(SpatialObject):</dt>
+<dd><p class="first">&#8220;&#8221;&#8220;A dwelling&#8221;&#8220;&#8221;
+def __init__(self):</p>
+<blockquote class="last">
+<div>super(House, self).__init__()
+self.bathrooms = IntervalCell(0, 1000)</div></blockquote>
+</dd>
+<dt>class Human(PhysicalObject, LanguageProducer):</dt>
+<dd><p class="first">&#8220;&#8221;&#8221; A physical object that produces speech and has a home &#8220;&#8221;&#8221;
+def __init__(self):</p>
+<blockquote class="last">
+<div>super(Human, self).__init__()
+self.name = StringCell()
+self.possessions = DictCell({&#8216;home&#8217;: House()})</div></blockquote>
+</dd>
+</dl>
+<p>TaxonomyCell.initialize(sys.modules[__name__])</p>
+</div></blockquote>
+<p>That <cite>TaxonomyCell.initialize</cite> weirdness at the end will automatically generate a <a class="reference internal" href="posets.html#posets.PartialOrderedCell" title="posets.PartialOrderedCell"><tt class="xref py py-class docutils literal"><span class="pre">posets.PartialOrderedCell</span></tt></a> property called <cite>kind</cite> with the inheritance structure that you defined.  Each entity will get its class name as its <cite>kind</cite>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">dustin</span> <span class="o">=</span> <span class="n">Human</span><span class="p">()</span>
+<span class="n">dustin</span><span class="p">[</span><span class="s">&#39;kind&#39;</span><span class="p">]</span> <span class="c">#=&gt; Human</span>
+<span class="n">dustin</span><span class="p">[</span><span class="s">&#39;kind&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_dotfile</span><span class="p">()</span>  <span class="c">#=&gt; writes TaxonomyCell.dot</span>
+</pre></div>
+</div>
+<p>By calling <a class="reference internal" href="posets.html#posets.PartialOrderedCell.to_dotfile" title="posets.PartialOrderedCell.to_dotfile"><tt class="xref py py-meth docutils literal"><span class="pre">posets.PartialOrderedCell.to_dotfile()</span></tt></a>, a DOT file will appear that shows the inheritance structure:</p>
+<img alt="TaxonomyCell.png" src="TaxonomyCell.png" />
+<p>These are type subclasses of <tt class="xref py py-class docutils literal"><span class="pre">Cell</span></tt> data containers, which accumulate and maintain the consistency of <em>partial information</em> updates (via <cite>merge()</cite> operations).</p>
 <ul class="simple">
-<li><tt class="xref py py-class docutils literal"><span class="pre">bools.BoolCell</span></tt> three-valued logic of <cite>True</cite>, <cite>False</cite>, and <cite>Unknown</cite>.</li>
-<li><tt class="xref py py-class docutils literal"><span class="pre">dicts.DictCell</span></tt> a labeled set, like a Python <cite>dict</cite> that pairs attributes with cell values.</li>
-<li><tt class="xref py py-class docutils literal"><span class="pre">numeric.IntervalCell</span></tt> a bounded interval or cardinal number</li>
+<li><a class="reference internal" href="bools.html#bools.BoolCell" title="bools.BoolCell"><tt class="xref py py-class docutils literal"><span class="pre">bools.BoolCell</span></tt></a> three-valued logic of <cite>True</cite>, <cite>False</cite>, and <cite>Unknown</cite>.</li>
+<li><a class="reference internal" href="dicts.html#dicts.DictCell" title="dicts.DictCell"><tt class="xref py py-class docutils literal"><span class="pre">dicts.DictCell</span></tt></a> a labeled set, like a Python <cite>dict</cite> that pairs attributes with cell values.</li>
+<li><a class="reference internal" href="numeric.html#numeric.IntervalCell" title="numeric.IntervalCell"><tt class="xref py py-class docutils literal"><span class="pre">numeric.IntervalCell</span></tt></a> a bounded interval or cardinal number</li>
 <li><tt class="xref py py-class docutils literal"><span class="pre">sets.SetIntersectionCell</span></tt> a set, unordered collection of symbols, where merges are intersective and information is thereby monotonically decreasing</li>
-<li><tt class="xref py py-class docutils literal"><span class="pre">lists.LinearOrderedCell</span></tt> a bounded sequence of ordered symbols</li>
-<li><tt class="xref py py-class docutils literal"><span class="pre">lists.PrefixCell</span></tt> maintains sequences with shared elements</li>
-<li><tt class="xref py py-class docutils literal"><span class="pre">posets.PartialOrderedCell</span></tt> maintains a taxonomy of information</li>
+<li><a class="reference internal" href="lists.html#lists.LinearOrderedCell" title="lists.LinearOrderedCell"><tt class="xref py py-class docutils literal"><span class="pre">lists.LinearOrderedCell</span></tt></a> a bounded sequence of ordered symbols</li>
+<li><a class="reference internal" href="lists.html#lists.PrefixCell" title="lists.PrefixCell"><tt class="xref py py-class docutils literal"><span class="pre">lists.PrefixCell</span></tt></a> maintains sequences with shared elements</li>
+<li><a class="reference internal" href="posets.html#posets.PartialOrderedCell" title="posets.PartialOrderedCell"><tt class="xref py py-class docutils literal"><span class="pre">posets.PartialOrderedCell</span></tt></a> maintains a taxonomy of information</li>
 </ul>
+<p>Specific types of classes are expected to only be merged with cells of their same type.  There are a few exceptions where the merged value is first converted into a cell of the corresponding type.</p>
 <p>This library is being developed at &lt;<a class="reference external" href="https://github.com/EventTeam/beliefs">https://github.com/EventTeam/beliefs</a>&gt;.</p>
 </div>
 <div class="section" id="all-modules">
@@ -70,9 +186,9 @@
 <li class="toctree-l1"><a class="reference internal" href="colors.html">Colors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dicts.html">Dicts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lists.html">Lists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sets.html">Sets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="numeric.html">Numeric</a></li>
 <li class="toctree-l1"><a class="reference internal" href="posets.html">Posets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setCells.html">Sets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="spatial.html">Spatial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="strings.html">Strings</a></li>
 </ul>
@@ -95,7 +211,9 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Beliefs</a></li>
+<li><a class="reference internal" href="#">A Library for Representing Belief States</a></li>
+<li><a class="reference internal" href="#common-operations-on-belief-states">Common operations on Belief States</a></li>
+<li><a class="reference internal" href="#cells-contain-partial-information">Cells contain partial information</a></li>
 <li><a class="reference internal" href="#all-modules">All modules</a><ul>
 </ul>
 </li>
@@ -133,6 +251,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="beliefstate.html" title="Beliefstate"
              >next</a> |</li>
