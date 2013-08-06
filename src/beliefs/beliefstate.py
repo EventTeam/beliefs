@@ -260,11 +260,9 @@ class BeliefState(DictCell):
             if hasattr(value, 'low') and value.low != value.high:
                 return []
             values.append(float(value))
-        logging.error("Values " + str(values))
         if len(values) == 0:
             return []
         values = np.array(values)
-        logging.error("NP Values" + str(values))
         anchor = values.min()
         diffs = values - anchor
         if distance_from == 'max':
