@@ -512,10 +512,10 @@ class BeliefState(DictCell):
         return False 
 
     def size(self):
-        """ Returns the size of the belief state.
+        """ Returns the size of the belief state.  This is the number of referents it implicitly represents.
 
-        Initially if there are $n$ consistent members, (the result of `self.number_of_singleton_referents()`) 
-        then there are generally $2^{n}-1$ valid belief states.
+        Initially if there are :math:`n` consistent members, (the result of :meth:`number_of_singleton_referents`) 
+        then there are generally :math:`2^{n}-1` valid referents.
 
         :returns: int -- Size of the contextset
         :raises: Exception

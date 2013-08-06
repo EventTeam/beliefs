@@ -72,15 +72,23 @@
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">beliefs</span> <span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 </div>
-<p>Belief states are <em>about</em> a referential domain, so you want to initialize them with respect to a referential domain:</p>
+<p>Belief states are <em>about</em> a referential domain, so they are typically initialized by passing them a referential domain:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">r</span> <span class="o">=</span> <span class="n">ReferentialDomain</span><span class="p">()</span>
 <span class="n">b</span> <span class="o">=</span> <span class="n">BeliefState</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>A <strong>referential domain</strong> is any class that has a list of referents, each an instance of <a class="reference internal" href="dicts.html#dicts.DictCell" title="dicts.DictCell"><tt class="xref py py-class docutils literal"><span class="pre">dicts.DictCell</span></tt></a>, accessible by calling <cite>r.iter_entities()</cite>. (In the next section, I will describe how to define a referential domain.)</p>
-<p>One way to visualize the intensional content of a belief state is to call <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.to_latex" title="beliefstate.BeliefState.to_latex"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.to_latex()</span></tt></a> to produce an attribute-value matrix, which when rendered looks like this:</p>
+<p>A <strong>referential domain</strong> can be any container for the entities, each an instance of <a class="reference internal" href="dicts.html#dicts.DictCell" title="dicts.DictCell"><tt class="xref py py-class docutils literal"><span class="pre">dicts.DictCell</span></tt></a>, which has a method for accessing them called <tt class="xref py py-meth docutils literal"><span class="pre">r.iter_entities()</span></tt>.  In a later section, <a class="reference internal" href="#create-domain"><em>Creating a referential domain</em></a>, I will describe how to define the entities for a referential domain.</p>
+<div class="section" id="two-ways-to-view-a-belief-state">
+<h2>Two ways to view a belief state<a class="headerlink" href="#two-ways-to-view-a-belief-state" title="Permalink to this headline">¶</a></h2>
+<p>A belief state can be viewed <em>intensionally</em>, as an attribute-value matrix, or <em>extensionally</em>, as a set of its referents.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">I will use the word <strong>referents</strong> in a technical sense to mean &#8220;all valid groupings of <strong>entities</strong> in the referential domain&#8221;.  They should not be confused with entities. Entities are always individual items, whereas referents are sets, which in some cases may only contain singletons.</p>
+</div>
+<p>To see how many referents are in a belief state, call the method <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.size" title="beliefstate.BeliefState.size"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.size()</span></tt></a>.  This would return 63 for the currently empty belief state because our referential domain, <span class="math">\(R\)</span>, has 6 members, and an empty belief state will always have <span class="math">\(2^{|R|}-1\)</span> possible members.</p>
+<p>One way to visualize the intensional content of a belief state is to simply use <tt class="xref std std-keyword docutils literal"><span class="pre">print</span></tt>.  Another way is to call <tt class="xref py py-meth docutils literal"><span class="pre">to_latex()</span></tt>. This method produces an attribute-value matrix (depends on <a class="reference external" href="https://www.essex.ac.uk/linguistics/external/clmt/latex4ling/avms/">avm.sy</a>) and when rendered looks like this:</p>
 <img alt="empy_beliefstate_avm.png" src="empy_beliefstate_avm.png" />
-<p>We can compute the size of the belief state, by calling <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.size" title="beliefstate.BeliefState.size"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.size()</span></tt></a>.  This would return 63 for the currently empty belief state because our referential domain, <span class="math">\(R\)</span>, has 6 members, and an empty belief state will always have <span class="math">\(2^{|R|}-1\)</span> possible members.  These are only implicitly represented.  If we want to enumerate the denotation of the belief state, we can call <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.iter_referents" title="beliefstate.BeliefState.iter_referents"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.iter_referents()</span></tt></a>:</p>
+<p>The 63 referents are are only implicitly represented.  If we want to enumerate the extension of the belief state, we can call <tt class="xref py py-meth docutils literal"><span class="pre">iter_referents()</span></tt>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">b</span><span class="o">.</span><span class="n">iter_referents</span><span class="p">()</span>  <span class="c"># returns iter object</span>
 
 <span class="c"># loops over the iterator of just the referent&#39;s indices</span>
@@ -88,7 +96,10 @@
   <span class="k">print</span> <span class="n">targetset</span>
 </pre></div>
 </div>
-<p>If we want to add a property to the belief state, we can do so by using the <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.merge" title="beliefstate.BeliefState.merge"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.merge()</span></tt></a> method.  This method requires two arguments, a <cite>path</cite> and a <cite>value</cite>.   <cite>path</cite> should be a list that specifies the component that should be updated, and <cite>value</cite> should be an instance of a <tt class="xref py py-class docutils literal"><span class="pre">cells.Cell</span></tt>.  For example:</p>
+</div>
+<div class="section" id="changing-beliefs">
+<h2>Changing beliefs<a class="headerlink" href="#changing-beliefs" title="Permalink to this headline">¶</a></h2>
+<p>To add or update a belief state&#8217;s property, use the <tt class="xref py py-meth docutils literal"><span class="pre">merge()</span></tt> method.  This method requires two arguments, a <cite>path</cite> and a <cite>value</cite>.   <cite>path</cite> should be a list that specifies the component that should be updated, and <cite>value</cite> should be an instance of a <tt class="xref py py-class docutils literal"><span class="pre">cells.Cell</span></tt>.  For example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">value</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
 <span class="n">b</span><span class="o">.</span><span class="n">merge</span><span class="p">([</span><span class="s">&#39;target&#39;</span><span class="p">,</span> <span class="s">&#39;size&#39;</span><span class="p">],</span> <span class="n">value</span><span class="p">)</span>
 </pre></div>
@@ -103,9 +114,13 @@
 <span class="n">b</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="c"># =&gt; 15</span>
 </pre></div>
 </div>
-<p>Because <span class="math">\({6\choose 2}=15\)</span>;  there are 15 unique target sets of size two in this belief state.</p>
-<div class="section" id="components-of-the-belief-state">
-<h2>Components of the belief state<a class="headerlink" href="#components-of-the-belief-state" title="Permalink to this headline">¶</a></h2>
+<p>Because <span class="math">\({6\choose 2}=15\)</span>;  there are 15 unique target sets of size two in this belief state.  If we want to see them by their indices:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span> <span class="nb">list</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">iter_referents_tuples</span><span class="p">())</span>  <span class="c"># =&gt; [(0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (1, 2), (1, 3), (1, 4), (1, 5), (2, 3), (2, 4), (2, 5), (3, 4), (3, 5), (4, 5)]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="parts-of-a-belief-state">
+<h2>Parts of a belief state<a class="headerlink" href="#parts-of-a-belief-state" title="Permalink to this headline">¶</a></h2>
 <p>By default, a belief state contains the following attributes and values:</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -130,27 +145,36 @@
 </div>
 <div class="section" id="comparing-belief-states-to-entities-in-the-referential-domain">
 <h2>Comparing belief states to entities in the referential domain<a class="headerlink" href="#comparing-belief-states-to-entities-in-the-referential-domain" title="Permalink to this headline">¶</a></h2>
-<p>The core responsibly of the belief state is to maintain a develop a description about the intended group of entities in the referential domain.  Within all of the elements that produce or act on the referents, e.g. <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.size" title="beliefstate.BeliefState.size"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.size()</span></tt></a>, <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.iter_referents" title="beliefstate.BeliefState.iter_referents"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.iter_referents()</span></tt></a> and <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.iter_referents_tuples" title="beliefstate.BeliefState.iter_referents_tuples"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.iter_referents_tuples()</span></tt></a>, there is a check to see which entities <em>entail</em> the belief state&#8217;s <strong>target</strong> description and <em>do not entail</em> its <strong>distractor</strong> description.  This can be achieved by using the <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.entails" title="beliefstate.BeliefState.entails"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.entails()</span></tt></a> method or its inverse, <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.is_entailed_by" title="beliefstate.BeliefState.is_entailed_by"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.is_entailed_by()</span></tt></a>:</p>
+<p>The core responsibly of the belief state is to maintain a develop a description about the intended group of entities in the referential domain.  Within all of the elements that produce or act on the referents, e.g. <tt class="xref py py-meth docutils literal"><span class="pre">size()</span></tt>, <tt class="xref py py-meth docutils literal"><span class="pre">iter_referents()</span></tt> and <tt class="xref py py-meth docutils literal"><span class="pre">iter_referents_tuples()</span></tt>, there is a check to see which entities <em>entail</em> the belief state&#8217;s <strong>target</strong> description and <em>do not entail</em> its <strong>distractor</strong> description.  This can be achieved by using the <tt class="xref py py-meth docutils literal"><span class="pre">entails()</span></tt> method or its inverse, <tt class="xref py py-meth docutils literal"><span class="pre">is_entailed_by()</span></tt>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">entity</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">iter_entities</span><span class="p">():</span>
+
   <span class="c"># does the belief state&#39;s target contain a subset of the information in entity?</span>
   <span class="k">print</span> <span class="n">b</span><span class="p">[</span><span class="s">&#39;target&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>
+
   <span class="c"># does the belief state&#39;s target contain at least all of the information of entity?</span>
   <span class="k">print</span> <span class="n">b</span><span class="p">[</span><span class="s">&#39;target&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">entails</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>
+
   <span class="c"># do they both entail each other: are they equal?</span>
   <span class="k">print</span> <span class="n">b</span><span class="p">[</span><span class="s">&#39;target&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>You probably will not have to compute entailment to the entities in the referential domain yourself because the belief state does this for you in the higher level methods.  However, it is useful to know that each subclass of <tt class="xref py py-class docutils literal"><span class="pre">Cell</span></tt> can be tested for entailment or equality using these methods.</p>
 </div>
-<div class="section" id="searching-belief-states">
-<h2>Searching belief states<a class="headerlink" href="#searching-belief-states" title="Permalink to this headline">¶</a></h2>
-<p>Another useful method is <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.copy" title="beliefstate.BeliefState.copy"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.copy()</span></tt></a>, which is what you&#8217;ll use to create a copy of the belief state.  It&#8217;s highly optimized (but there&#8217;s still room for improvement!) so that only the mutable components of its cells are copied by value, the rest are copied by reference.  You will want to call this whenever you generate a successor during a search over belief states.</p>
+<div class="section" id="copying-belief-states">
+<h2>Copying belief states<a class="headerlink" href="#copying-belief-states" title="Permalink to this headline">¶</a></h2>
+<p>Another useful method is <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.copy" title="beliefstate.BeliefState.copy"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.copy()</span></tt></a>, which is what you&#8217;ll use to create a copy of the belief state.  It&#8217;s highly optimized (but there&#8217;s still room for improvement!) so that only the mutable components of its cells are copied by value, the rest are copied by reference.  You will want to call this whenever you generate a successor during a search over belief states:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">b2</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">b2</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>   <span class="c"># =&gt; True</span>
+<span class="n">b2</span> <span class="o">==</span> <span class="n">b</span>          <span class="c"># =&gt; True (__eq__ points to is_equal)</span>
+<span class="nb">id</span><span class="p">(</span><span class="n">b2</span><span class="p">)</span> <span class="o">==</span> <span class="nb">id</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>  <span class="c"># =&gt; False</span>
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="creating-a-referential-domain">
-<h1>Creating a referential domain<a class="headerlink" href="#creating-a-referential-domain" title="Permalink to this headline">¶</a></h1>
+<span id="create-domain"></span><h1>Creating a referential domain<a class="headerlink" href="#creating-a-referential-domain" title="Permalink to this headline">¶</a></h1>
 <p>The elements in the  referential domain must be represented by objects that are instances of <a class="reference internal" href="dicts.html#dicts.DictCell" title="dicts.DictCell"><tt class="xref py py-class docutils literal"><span class="pre">dicts.DictCell</span></tt></a>&#8212;essentially they are a collection of (potentially nested) attribute-value pairs.  Beneath the hood, belief states are <a class="reference internal" href="dicts.html#dicts.DictCell" title="dicts.DictCell"><tt class="xref py py-class docutils literal"><span class="pre">dicts.DictCell</span></tt></a>; however only its properties <cite>target</cite> and <cite>distractor</cite> are explicitly compared with the referential domain.</p>
-<p>Another way to author the referential domain, is to use the <tt class="xref py py-class docutils literal"><span class="pre">Referent</span></tt> class. It&#8217;s a subclass of <a class="reference internal" href="dicts.html#dicts.DictCell" title="dicts.DictCell"><tt class="xref py py-class docutils literal"><span class="pre">dicts.DictCell</span></tt></a> with some additional object-oriented features, which allow you to use inheritance:</p>
+<p>Another way to author the referential domain is to use the <tt class="xref py py-class docutils literal"><span class="pre">Referent</span></tt> class. It&#8217;s a subclass of <a class="reference internal" href="dicts.html#dicts.DictCell" title="dicts.DictCell"><tt class="xref py py-class docutils literal"><span class="pre">dicts.DictCell</span></tt></a> with some additional object-oriented features, which allow you to use inheritance:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">beliefs.referent</span> <span class="kn">import</span> <span class="o">*</span>
 
@@ -195,12 +219,17 @@
 </div>
 <p>That <cite>TaxonomyCell.initialize</cite> weirdness at the end will automatically generate a <a class="reference internal" href="posets.html#posets.PartialOrderedCell" title="posets.PartialOrderedCell"><tt class="xref py py-class docutils literal"><span class="pre">posets.PartialOrderedCell</span></tt></a> property called <cite>kind</cite> with the inheritance structure of your <tt class="xref py py-class docutils literal"><span class="pre">Referent</span></tt> subclasses. Each entity will be given its class name, its most specific <cite>kind</cite>, as the initial value:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">dustin</span> <span class="o">=</span> <span class="n">Human</span><span class="p">()</span>
+<span class="n">dustin</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="s">&quot;Dustin&quot;</span><span class="p">)</span>  <span class="c"># you can also use (see warning):   dustin[&#39;name&#39;] = &quot;Dustin&quot;</span>
 <span class="n">dustin</span><span class="p">[</span><span class="s">&#39;kind&#39;</span><span class="p">]</span> <span class="c">#=&gt; Human</span>
 <span class="n">dustin</span><span class="p">[</span><span class="s">&#39;kind&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_dotfile</span><span class="p">()</span>  <span class="c">#=&gt; writes TaxonomyCell.dot</span>
 </pre></div>
 </div>
 <p>By calling <a class="reference internal" href="posets.html#posets.PartialOrderedCell.to_dotfile" title="posets.PartialOrderedCell.to_dotfile"><tt class="xref py py-meth docutils literal"><span class="pre">posets.PartialOrderedCell.to_dotfile()</span></tt></a>, a DOT file will appear that shows the inheritance structure:</p>
 <img alt="TaxonomyCell.png" src="TaxonomyCell.png" />
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">You are encouraged to get in the habit of using <tt class="xref py py-meth docutils literal"><span class="pre">merge()</span></tt>: instead of Python&#8217;s built in assignment operator, <tt class="xref std std-keyword docutils literal"><span class="pre">=</span></tt>, to set a value for a cell.  Although <a class="reference internal" href="dicts.html#dicts.DictCell" title="dicts.DictCell"><tt class="xref py py-class docutils literal"><span class="pre">dicts.DictCell</span></tt></a> will try to try to treat the assignment as a merge, it will only work for preexisting attributes.  This means, for example, when you use <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.merge" title="beliefstate.BeliefState.merge"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.merge()</span></tt></a>, which has the additional feature of <strong>creating new cells</strong> when they do not exist, you <em>must</em> use <tt class="xref py py-meth docutils literal"><span class="pre">merge()</span></tt> and not <tt class="xref std std-keyword docutils literal"><span class="pre">=</span></tt>.</p>
+</div>
 <div class="section" id="cell-types">
 <h2>Cell types<a class="headerlink" href="#cell-types" title="Permalink to this headline">¶</a></h2>
 <p>These are type subclasses of <tt class="xref py py-class docutils literal"><span class="pre">Cell</span></tt> data containers, which accumulate and maintain the consistency of <em>partial information</em> updates (via <cite>merge()</cite> operations).</p>
@@ -253,9 +282,11 @@
   <ul>
 <li><a class="reference internal" href="#">A Library for Representing Belief States</a></li>
 <li><a class="reference internal" href="#common-operations-on-belief-states">Common operations on Belief States</a><ul>
-<li><a class="reference internal" href="#components-of-the-belief-state">Components of the belief state</a></li>
+<li><a class="reference internal" href="#two-ways-to-view-a-belief-state">Two ways to view a belief state</a></li>
+<li><a class="reference internal" href="#changing-beliefs">Changing beliefs</a></li>
+<li><a class="reference internal" href="#parts-of-a-belief-state">Parts of a belief state</a></li>
 <li><a class="reference internal" href="#comparing-belief-states-to-entities-in-the-referential-domain">Comparing belief states to entities in the referential domain</a></li>
-<li><a class="reference internal" href="#searching-belief-states">Searching belief states</a></li>
+<li><a class="reference internal" href="#copying-belief-states">Copying belief states</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#creating-a-referential-domain">Creating a referential domain</a><ul>
