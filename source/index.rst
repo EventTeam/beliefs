@@ -61,7 +61,7 @@ Alternatively, we could have merged using the single-argument :meth:`DictCell.me
 
    b['target']['size'].merge(value)
 
-However, by calling belief state's :meth:`~BeliefState.merge` instead, it has the additional functionality that whenever the property at the specified path doesn't exist (and, for 'size' it didn't), the belief state will *find an entity in the referential domain, and copy a cell of its type and then set its value to ``value``*::
+However, by calling belief state's :meth:`~BeliefState.merge` instead, it has the additional functionality that whenever the property at the specified path doesn't exist (and, for 'size' it didn't), the belief state will *find an entity in the referential domain, and copy a cell of its type and then set its value to* ``value``::
 
   b['target']['size']  # => [5, 100]
   b.size() # => 63 
