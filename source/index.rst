@@ -52,30 +52,30 @@ The 63 referents are are only implicitly represented.  If we want to enumerate t
 
 Changing beliefs
 -----------------
-To add or update a belief state's property, use the :meth:`BeliefState.merge` method.  Unlike the :meth:`merge` for :meth:`DictCell.merge`, which only requires one argument, a belief state's :meth:`merge` requires two arguments, a :keyword:`path` and :keyword:`value`.    :keyword:``path` should be a list that specifies the component that should be updated, and :keyword:`value` should be an instance of a :class:`.cells.Cell`.  For example::
+To add or update a belief state's property, use the :meth:`BeliefState.merge` method.  Unlike the :meth:`merge` for :meth:`DictCell.merge`, which only requires one argument, a belief state's :meth:`merge` requires two arguments, a ``path`` and ``value``.   The  ``path`` argument must be list of keys that specifies the location of the (potentially nested)  component to be added or modified, and ``value`` must be an instance of a :class:`.cells.Cell`.  For example::
 
    value = IntervalCell(5, 100)
    b.merge(['target', 'size'], value)
 
-Alternatively, we could have merged using the single-argument :meth:`DictCell.merge` by calling the nested cell directly:
+Alternatively, we could have merged using the single-argument :meth:`DictCell.merge` by calling the nested cell directly::
 
    b['target']['size'].merge(value)
 
-However, by calling belief state's :meth:`~BeliefState.merge` instead, it will give us an addition function whenever the property at the specified path doesn't exist: If the corresponding path doesn't exist (and, for 'size' it doesn't), the belief state will *find an entity in the referential domain, and copy a cell of its type and then set its value to :keyword:`value`*::
+However, by calling belief state's :meth:`~BeliefState.merge` instead, it has the additional functionality that whenever the property at the specified path doesn't exist (and, for 'size' it doesn't), the belief state will *find an entity in the referential domain, and copy a cell of its type and then set its value to ``value``*::
 
   b['target']['size']  # => [5, 100]
   b.size() # => 63 
 
-Another reason for having a separate argument for :keyword:`path` is that it allows us to use *late-binding* of the path value. 
+Another reason for having a separate argument for ``path`` is that it allows us to use *late-binding* of the path value.  As we will see later, when defining action operators, we will want effect functions to generate a path to a belief state's component that is used to update a *different* belief state at a later time.
 
-The belief state's meta data can be changed using the same :meth:`~BeliefState.merge` method::
+The belief state's meta-data can be changed using the same :meth:`~BeliefState.merge` method::
 
   b.merge(['targetset_arity'], 2)   # 2 gets typecast to IntervalCell(2, 2)
   b.size() # => 15
 
 Because :math:`{6\choose 2}=15`;  there are 15 unique target sets of size two in this belief state.  If we want to see them by their indices::
 
-  print list(b.iter_referents_tuples())  # => [(0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (1, 2), (1, 3), (1, 4), (1, 5), (2, 3), (2, 4), (2, 5), (3, 4), (3, 5), (4, 5)]
+  list(b.iter_referents_tuples())  # => [(0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (1, 2), (1, 3), (1, 4), (1, 5), (2, 3), (2, 4), (2, 5), (3, 4), (3, 5), (4, 5)]
 
 Parts of a belief state
 -----------------------
