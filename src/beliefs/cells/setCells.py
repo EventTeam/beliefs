@@ -1,8 +1,5 @@
-"""
-Defines the Set cells
-"""
+from cell import *
 import logging
-from .cell import *
 
 class SetIntersectionCell(Cell):
     """

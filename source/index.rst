@@ -24,7 +24,7 @@ Belief states are *about* a referential domain, so they are typically initialize
 
 A **referential domain** can be any container for the entities, each an instance of :py:class:`dicts.DictCell`, which has a method for accessing them called :meth:`r.iter_entities`::
 
-  list(r.iter_entities)  # => [<DictCell:1...>, <DictCell:2...>, ..., <DictCell:6...>]
+  list(r.iter_entities())  # => [<DictCell:1...>, <DictCell:2...>, ..., <DictCell:6...>]
 
 In a later section, :ref:`create-domain`, I will describe how to define the entities for a referential domain.
 
@@ -212,7 +212,7 @@ All modules
    colors
    dicts
    lists
-   sets 
+   sets
    numeric
    posets
    spatial

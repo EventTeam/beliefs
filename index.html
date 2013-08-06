@@ -60,7 +60,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Release:</th><td class="field-body">1.0</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Date:</th><td class="field-body">August 05, 2013</td>
+<tr class="field-even field"><th class="field-name">Date:</th><td class="field-body">August 06, 2013</td>
 </tr>
 </tbody>
 </table>
@@ -78,7 +78,7 @@
 </pre></div>
 </div>
 <p>A <strong>referential domain</strong> can be any container for the entities, each an instance of <a class="reference internal" href="dicts.html#dicts.DictCell" title="dicts.DictCell"><tt class="xref py py-class docutils literal"><span class="pre">dicts.DictCell</span></tt></a>, which has a method for accessing them called <tt class="xref py py-meth docutils literal"><span class="pre">r.iter_entities()</span></tt>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nb">list</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">iter_entities</span><span class="p">)</span>  <span class="c"># =&gt; [&lt;DictCell:1...&gt;, &lt;DictCell:2...&gt;, ..., &lt;DictCell:6...&gt;]</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="nb">list</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">iter_entities</span><span class="p">())</span>  <span class="c"># =&gt; [&lt;DictCell:1...&gt;, &lt;DictCell:2...&gt;, ..., &lt;DictCell:6...&gt;]</span>
 </pre></div>
 </div>
 <p>In a later section, <a class="reference internal" href="#create-domain"><em>Creating a referential domain</em></a>, I will describe how to define the entities for a referential domain.</p>
