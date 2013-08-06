@@ -22,7 +22,7 @@ Belief states are *about* a referential domain, so you want to initialize them w
   r = ReferentialDomain()
   b = BeliefState(r)
 
-A **referential domain** is any class that has a list of referents, each an instance of :py:class:`dicts.DictCell`, accessible by calling `r.cells`. (In the next section, I will describe how to define  a referential domain.)
+A **referential domain** is any class that has a list of referents, each an instance of :py:class:`dicts.DictCell`, accessible by calling `r.iter_entities()`. (In the next section, I will describe how to define a referential domain.)
 
 One way to visualize the intensional content of a belief state is to call :meth:`.BeliefState.to_latex` to produce an attribute-value matrix, which when rendered looks like this:
 
@@ -54,7 +54,36 @@ We can also change the belief state's meta-data in a similar way::
 
 Because :math:`{6\choose 2}=15`;  there are 15 unique target sets of size two in this belief state.
 
+Components of the belief state
+--------------------------------
+
+By default, a belief state contains the following attributes and values:
+
+:target: an attribute-value matrix describing properties that a referent in the domain must entail to be considered consistent with the belief state.
+:distractor: an attribute-value matrix describing properties that a referent in the domain *must not* entail to be considered consistent with the belief state. This allows it to represent negative assertions.
+:target_arity: an interval (initially :math:`[0,\infty))` representing the valid sizes of a target set.
+:constrast_arity: an interval (initially :math:`[0,\infty))` representing the valid sizes of the difference in the sizes of a target set and the set containing all consistent referents.
+:part_of_speech: a symbol (initially `S` representing the previous action’s part of speech.
+:deferred_effects: a list (initially empty) that holds effect functions and the trigger **part\_of\_speech** symbol that indicates when the function will be executed on the belief state. 
+
+Comparing belief states to entities in the referential domain
+--------------------------------------------------------------
+The core responsibly of the belief state is to maintain a develop a description about the intended group of entities in the referential domain.  Within all of the elements that produce or act on the referents, e.g. :meth:`.BeliefState.size`, :meth:`.BeliefState.iter_referents` and :meth:`.BeliefState.iter_referents_tuples`, there is a check to see which entities *entail* the belief state's **target** description and *do not entail* its **distractor** description.  This can be achieved by using the :meth:`.BeliefState.entails` method or its inverse, :meth:`.BeliefState.is_entailed_by`::
+
+  for entity in r.iter_entities():
+    # does the belief state's target contain a subset of the information in entity?
+    print b['target'].is_entailed_by(entity)  
+    # does the belief state's target contain at least all of the information of entity?
+    print b['target'].entails(entity)
+    # do they both entail each other: are they equal?
+    print b['target'].is_equal(entity)
+
+You probably will not have to compute entailment to the entities in the referential domain yourself because the belief state does this for you in the higher level methods.  However, it is useful to know that each subclass of :class:`Cell` can be tested for entailment or equality using these methods.
+
+Searching belief states
+-------------------------
 Another useful method is :meth:`.BeliefState.copy`, which is what you'll use to create a copy of the belief state.  It's highly optimized (but there's still room for improvement!) so that only the mutable components of its cells are copied by value, the rest are copied by reference.  You will want to call this whenever you generate a successor during a search over belief states.
+
 
 Creating a referential domain
 ==================================

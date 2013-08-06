@@ -27,7 +27,7 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="beliefs 1.0 documentation" href="index.html" />
     <link rel="next" title="Bools" href="bools.html" />
-    <link rel="prev" title="Beliefs" href="index.html" /> 
+    <link rel="prev" title="A Library for Representing Belief States" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -43,7 +43,7 @@
           <a href="bools.html" title="Bools"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Beliefs"
+          <a href="index.html" title="A Library for Representing Belief States"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">beliefs 1.0 documentation</a> &raquo;</li> 
       </ul>
@@ -58,16 +58,16 @@
 <span id="beliefstate"></span><h1>Beliefstate<a class="headerlink" href="#module-beliefstate" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="beliefstate.BeliefState">
-<em class="property">class </em><tt class="descname">BeliefState</tt><big>(</big><em>contextset=None</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descname">BeliefState</tt><big>(</big><em>referential_domain=None</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">beliefs.cells.dicts.DictCell</span></tt></p>
 <p>Represents a beliefstate, a partial information object <em>about</em> specific targets.
-A beliefstate is a continuum between individual cells and entire classes of cells.</p>
-<p>Suppose the domain has entities/cells: 1,2,3.  A beliefstate represents the
-possible groupings of these entities; a single grouping is called a <em>referent</em>. 
-A beliefstate can be about &#8220;all referents of size two&#8221;, for example, and computing
+A beliefstate is a continuum between individual entities and types of entities.</p>
+<p>Suppose the referential domain has entities: 1,2,3.  A beliefstate represents the
+possible groupings of these entities; a single grouping is called a <em>target</em>. 
+A beliefstate can be about &#8220;all targets of size two&#8221;, for example, and computing
 the beliefstate&#8217;s extension would yield the targets {1,2}, {2,3}, and {1,3}.</p>
-<p>In addition to containing a description of the intended targets, a belief state contains information
-about the relational constraints (such as arity size), and linguistic decisions.</p>
+<p>In addition to containing a description of the intended targets, a belief state 
+contains meta-data about combinatoric constraints (such as arity size).</p>
 <dl class="method">
 <dt id="beliefstate.BeliefState.set_pos">
 <tt class="descname">set_pos</tt><big>(</big><em>pos</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.set_pos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.set_pos" title="Permalink to this definition">¶</a></dt>
@@ -183,8 +183,8 @@ by the &#8216;NN&#8217; pos, then the effect will be triggered by &#8216;NN&#821
 </dd></dl>
 
 <dl class="method">
-<dt id="beliefstate.BeliefState.has_contextset">
-<tt class="descname">has_contextset</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.has_contextset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.has_contextset" title="Permalink to this definition">¶</a></dt>
+<dt id="beliefstate.BeliefState.has_referential_domain">
+<tt class="descname">has_referential_domain</tt><big>(</big><big>)</big><a class="headerlink" href="#beliefstate.BeliefState.has_referential_domain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns <tt class="docutils literal"><span class="pre">True</span></tt> if the BeliefState has a context set defined &#8211; meaning a set
 of external referents.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -216,8 +216,9 @@ of external referents.</p>
 <dl class="method">
 <dt id="beliefstate.BeliefState.find_path">
 <tt class="descname">find_path</tt><big>(</big><em>test_function=None</em>, <em>on_targets=False</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.find_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.find_path" title="Permalink to this definition">¶</a></dt>
-<dd><p>General helper method that iterates breadth-first over the contextset&#8217;s
-cells and returns a path where the <em>test_function</em> is <tt class="docutils literal"><span class="pre">True</span></tt></p>
+<dd><p>This general helper method iterates breadth-first over the elements in the
+referential domain and yields all paths to the elements  where the <em>test_function</em> 
+evaluates to <tt class="docutils literal"><span class="pre">True</span></tt></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -338,10 +339,15 @@ belief state.</p>
 <dl class="method">
 <dt id="beliefstate.BeliefState.merge">
 <tt class="descname">merge</tt><big>(</big><em>keypath</em>, <em>value</em>, <em>op='set'</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.merge" title="Permalink to this definition">¶</a></dt>
-<dd><p>First gets the cell at BeliefState&#8217;s keypath, or creates a new cell 
-from the first target that has that keypath (This could mess up if the
-member its copying from has a different Cell or domain for that keypath.)
-Second, this merges that cell with the value</p>
+<dd><p>First gets the cell at BeliefState&#8217;s keypath, or creates a new cell
+from the first element in the referential domain that has that keypath.
+Second, this merges that cell with the value.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">If two elements in the referential domain have the same named attributes (i.e. attribute paths)
+but different Cells for the value, then the belief state will arbitrarily acquire the first
+element in the referential domain and not entail the other because its cell will be incomparable.</p>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -387,7 +393,7 @@ Second, this merges that cell with the value</p>
 <dl class="method">
 <dt id="beliefstate.BeliefState.entails">
 <tt class="descname">entails</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.entails"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.entails" title="Permalink to this definition">¶</a></dt>
-<dd><p>One beliefstate entails another beliefstate iff the other state&#8217;s cells are
+<dd><p>One beliefstate entails another beliefstate iff the other state&#8217;s entities are
 all equal or more general than the caller&#8217;s parts.  That means the other 
 state must at least have all of the same keys/components.</p>
 <div class="admonition note">
@@ -457,7 +463,7 @@ of their cell&#8217;s values return True for is_equal().</p>
 <dl class="method">
 <dt id="beliefstate.BeliefState.is_contradictory">
 <tt class="descname">is_contradictory</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.is_contradictory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.is_contradictory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Two beliefstates are incompatible if the other beliefstates&#8217;s cells
+<dd><p>Two beliefstates are incompatible if the other beliefstates&#8217;s entities 
 are not consistent with or accessible from the caller.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -499,8 +505,8 @@ then there are generally $2^{n}-1$ valid belief states.</p>
 <dd><p>Returns all target sets that are compatible with the current beliefstate.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">the number of referents can be quadratic in elements of singleton referents/cells.
-Call <cite>size()</cite> method instead to compute size only, without ennumerating them.</p>
+<p class="last">the number of referents can be quadratic in the number of elements in the referential domain.
+Call <cite>size()</cite> method instead to compute size only, without enumerating them.</p>
 </div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -544,7 +550,7 @@ the current beliefstate.</p>
 <dl class="method">
 <dt id="beliefstate.BeliefState.number_of_singleton_referents">
 <tt class="descname">number_of_singleton_referents</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.number_of_singleton_referents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.number_of_singleton_referents" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the number of singleton members of the referring domain (cells) that are
+<dd><p>Returns the number of singleton elements of the referential domain that are
 compatible with the current belief state.</p>
 <p>This is the size of the union of all referent sets.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -563,10 +569,6 @@ compatible with the current belief state.</p>
 <dt id="beliefstate.BeliefState.iter_singleton_referents">
 <tt class="descname">iter_singleton_referents</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.iter_singleton_referents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.iter_singleton_referents" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterator of all of the singleton members of the context set.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">This evaluates cells one at a time, and does not handle relational constraints.</p>
-</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -615,7 +617,7 @@ during the interpretation or generation.</p>
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
   <p class="topless"><a href="index.html"
-                        title="previous chapter">Beliefs</a></p>
+                        title="previous chapter">A Library for Representing Belief States</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="bools.html"
                         title="next chapter">Bools</a></p>
@@ -654,7 +656,7 @@ during the interpretation or generation.</p>
           <a href="bools.html" title="Bools"
              >next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Beliefs"
+          <a href="index.html" title="A Library for Representing Belief States"
              >previous</a> |</li>
         <li><a href="index.html">beliefs 1.0 documentation</a> &raquo;</li> 
       </ul>

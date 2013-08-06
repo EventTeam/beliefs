@@ -60,7 +60,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Release:</th><td class="field-body">1.0</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Date:</th><td class="field-body">August 04, 2013</td>
+<tr class="field-even field"><th class="field-name">Date:</th><td class="field-body">August 05, 2013</td>
 </tr>
 </tbody>
 </table>
@@ -77,7 +77,7 @@
 <span class="n">b</span> <span class="o">=</span> <span class="n">BeliefState</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>A <strong>referential domain</strong> is any class that has a list of referents, each an instance of <a class="reference internal" href="dicts.html#dicts.DictCell" title="dicts.DictCell"><tt class="xref py py-class docutils literal"><span class="pre">dicts.DictCell</span></tt></a>, accessible by calling <cite>r.cells</cite>. (In the next section, I will describe how to define  a referential domain.)</p>
+<p>A <strong>referential domain</strong> is any class that has a list of referents, each an instance of <a class="reference internal" href="dicts.html#dicts.DictCell" title="dicts.DictCell"><tt class="xref py py-class docutils literal"><span class="pre">dicts.DictCell</span></tt></a>, accessible by calling <cite>r.iter_entities()</cite>. (In the next section, I will describe how to define a referential domain.)</p>
 <p>One way to visualize the intensional content of a belief state is to call <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.to_latex" title="beliefstate.BeliefState.to_latex"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.to_latex()</span></tt></a> to produce an attribute-value matrix, which when rendered looks like this:</p>
 <img alt="empy_beliefstate_avm.png" src="empy_beliefstate_avm.png" />
 <p>We can compute the size of the belief state, by calling <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.size" title="beliefstate.BeliefState.size"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.size()</span></tt></a>.  This would return 63 for the currently empty belief state because our referential domain, <span class="math">\(R\)</span>, has 6 members, and an empty belief state will always have <span class="math">\(2^{|R|}-1\)</span> possible members.  These are only implicitly represented.  If we want to enumerate the denotation of the belief state, we can call <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.iter_referents" title="beliefstate.BeliefState.iter_referents"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.iter_referents()</span></tt></a>:</p>
@@ -104,7 +104,48 @@
 </pre></div>
 </div>
 <p>Because <span class="math">\({6\choose 2}=15\)</span>;  there are 15 unique target sets of size two in this belief state.</p>
+<div class="section" id="components-of-the-belief-state">
+<h2>Components of the belief state<a class="headerlink" href="#components-of-the-belief-state" title="Permalink to this headline">¶</a></h2>
+<p>By default, a belief state contains the following attributes and values:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">target:</th><td class="field-body">an attribute-value matrix describing properties that a referent in the domain must entail to be considered consistent with the belief state.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">distractor:</th><td class="field-body">an attribute-value matrix describing properties that a referent in the domain <em>must not</em> entail to be considered consistent with the belief state. This allows it to represent negative assertions.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">target_arity:</th><td class="field-body">an interval (initially <span class="math">\([0,\infty))\)</span> representing the valid sizes of a target set.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">constrast_arity:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">an interval (initially <span class="math">\([0,\infty))\)</span> representing the valid sizes of the difference in the sizes of a target set and the set containing all consistent referents.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">part_of_speech:</th><td class="field-body">a symbol (initially <cite>S</cite> representing the previous action’s part of speech.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">deferred_effects:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">a list (initially empty) that holds effect functions and the trigger <strong>part_of_speech</strong> symbol that indicates when the function will be executed on the belief state.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="comparing-belief-states-to-entities-in-the-referential-domain">
+<h2>Comparing belief states to entities in the referential domain<a class="headerlink" href="#comparing-belief-states-to-entities-in-the-referential-domain" title="Permalink to this headline">¶</a></h2>
+<p>The core responsibly of the belief state is to maintain a develop a description about the intended group of entities in the referential domain.  Within all of the elements that produce or act on the referents, e.g. <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.size" title="beliefstate.BeliefState.size"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.size()</span></tt></a>, <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.iter_referents" title="beliefstate.BeliefState.iter_referents"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.iter_referents()</span></tt></a> and <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.iter_referents_tuples" title="beliefstate.BeliefState.iter_referents_tuples"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.iter_referents_tuples()</span></tt></a>, there is a check to see which entities <em>entail</em> the belief state&#8217;s <strong>target</strong> description and <em>do not entail</em> its <strong>distractor</strong> description.  This can be achieved by using the <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.entails" title="beliefstate.BeliefState.entails"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.entails()</span></tt></a> method or its inverse, <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.is_entailed_by" title="beliefstate.BeliefState.is_entailed_by"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.is_entailed_by()</span></tt></a>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">entity</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">iter_entities</span><span class="p">():</span>
+  <span class="c"># does the belief state&#39;s target contain a subset of the information in entity?</span>
+  <span class="k">print</span> <span class="n">b</span><span class="p">[</span><span class="s">&#39;target&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>
+  <span class="c"># does the belief state&#39;s target contain at least all of the information of entity?</span>
+  <span class="k">print</span> <span class="n">b</span><span class="p">[</span><span class="s">&#39;target&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">entails</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>
+  <span class="c"># do they both entail each other: are they equal?</span>
+  <span class="k">print</span> <span class="n">b</span><span class="p">[</span><span class="s">&#39;target&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You probably will not have to compute entailment to the entities in the referential domain yourself because the belief state does this for you in the higher level methods.  However, it is useful to know that each subclass of <tt class="xref py py-class docutils literal"><span class="pre">Cell</span></tt> can be tested for entailment or equality using these methods.</p>
+</div>
+<div class="section" id="searching-belief-states">
+<h2>Searching belief states<a class="headerlink" href="#searching-belief-states" title="Permalink to this headline">¶</a></h2>
 <p>Another useful method is <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.copy" title="beliefstate.BeliefState.copy"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.copy()</span></tt></a>, which is what you&#8217;ll use to create a copy of the belief state.  It&#8217;s highly optimized (but there&#8217;s still room for improvement!) so that only the mutable components of its cells are copied by value, the rest are copied by reference.  You will want to call this whenever you generate a successor during a search over belief states.</p>
+</div>
 </div>
 <div class="section" id="creating-a-referential-domain">
 <h1>Creating a referential domain<a class="headerlink" href="#creating-a-referential-domain" title="Permalink to this headline">¶</a></h1>
@@ -211,7 +252,12 @@
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">A Library for Representing Belief States</a></li>
-<li><a class="reference internal" href="#common-operations-on-belief-states">Common operations on Belief States</a></li>
+<li><a class="reference internal" href="#common-operations-on-belief-states">Common operations on Belief States</a><ul>
+<li><a class="reference internal" href="#components-of-the-belief-state">Components of the belief state</a></li>
+<li><a class="reference internal" href="#comparing-belief-states-to-entities-in-the-referential-domain">Comparing belief states to entities in the referential domain</a></li>
+<li><a class="reference internal" href="#searching-belief-states">Searching belief states</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#creating-a-referential-domain">Creating a referential domain</a><ul>
 <li><a class="reference internal" href="#cell-types">Cell types</a></li>
 </ul>

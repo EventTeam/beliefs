@@ -1,5 +1,5 @@
 from copy import copy
-from collections import OrderedDict, defaultdict
+from collections import defaultdict
 from beliefs.cells import *
 from belief_utils import choose
 import itertools
@@ -7,24 +7,21 @@ import itertools
 class BeliefState(DictCell):
     """
     Represents a beliefstate, a partial information object *about* specific targets.
-    A beliefstate is a continuum between individual cells and entire classes of cells.
+    A beliefstate is a continuum between individual entities and types of entities.
         
-    Suppose the domain has entities/cells: 1,2,3.  A beliefstate represents the
-    possible groupings of these entities; a single grouping is called a *referent*. 
-    A beliefstate can be about "all referents of size two", for example, and computing
+    Suppose the referential domain has entities: 1,2,3.  A beliefstate represents the
+    possible groupings of these entities; a single grouping is called a *target*. 
+    A beliefstate can be about "all targets of size two", for example, and computing
     the beliefstate's extension would yield the targets {1,2}, {2,3}, and {1,3}.
     
-    In addition to containing a description of the intended targets, a belief state contains information
-    about the relational constraints (such as arity size), and linguistic decisions.
+    In addition to containing a description of the intended targets, a belief state 
+    contains meta-data about combinatoric constraints (such as arity size).
     """
-    PRIMES = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41,
-          43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109,
-          113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179]
 
-    def __init__(self, contextset=None):
+    def __init__(self, referential_domain=None):
         """ 
-        Initializes an empty beliefstate, and stores the contextset (if specified) 
-        into self.contextset. 
+        Initializes an empty beliefsstate, and stores the referential domain (if specified) 
+        into self.referential_domain. 
          
         By default, beliefstates are given the 'S' part of speech and an empty
         environment variable stack.
@@ -33,7 +30,7 @@ class BeliefState(DictCell):
         from a previous beliefstate.
         """
         self.__dict__['pos'] = 'S'  # syntactic state
-        self.__dict__['contextset'] = contextset
+        self.__dict__['referential_domain'] = referential_domain
         self.__dict__['environment_variables'] = {}
         self.__dict__['deferred_effects'] = []
 
@@ -145,14 +142,14 @@ class BeliefState(DictCell):
         else:
             return default
 
-    def has_contextset(self):
+    def has_referential_domain(self):
         """
         Returns ``True`` if the BeliefState has a context set defined -- meaning a set
         of external referents.
 
         :returns: bool -- Whether a contextset is defined
         """
-        return self.__dict__['contextset'] is not None
+        return self.__dict__['referential_domain'] is not None
 
     def iter_breadth_first(self, root=None):
         """
@@ -177,8 +174,9 @@ class BeliefState(DictCell):
 
     def find_path(self, test_function=None, on_targets=False):
         """
-        General helper method that iterates breadth-first over the contextset's
-        cells and returns a path where the *test_function* is ``True``
+        This general helper method iterates breadth-first over the elements in the
+        referential domain and yields all paths to the elements  where the *test_function* 
+        evaluates to ``True``
 
         :param test_function: A function that takes two arguments and returns a boolean
         :type test_function: function
@@ -186,7 +184,7 @@ class BeliefState(DictCell):
         :type on_targets: bool
         :returns: Generator -- represents the path
         """
-        assert self.has_contextset(), "need context set"
+        assert self.has_referential_domain(), "need context set"
 
         if not test_function:
             test_function = lambda x, y: True
@@ -343,10 +341,14 @@ class BeliefState(DictCell):
 
     def merge(self, keypath, value, op='set'):
         """
-        First gets the cell at BeliefState's keypath, or creates a new cell 
-        from the first target that has that keypath (This could mess up if the
-        member its copying from has a different Cell or domain for that keypath.)
-        Second, this merges that cell with the value
+        First gets the cell at BeliefState's keypath, or creates a new cell
+        from the first element in the referential domain that has that keypath.
+        Second, this merges that cell with the value.
+
+        .. warning::
+            If two elements in the referential domain have the same named attributes (i.e. attribute paths)
+            but different Cells for the value, then the belief state will arbitrarily acquire the first
+            element in the referential domain and not entail the other because its cell will be incomparable.
 
         :param keypath:
         :type keypath: list
@@ -431,7 +433,7 @@ class BeliefState(DictCell):
 
     def entails(self, other):
         """
-        One beliefstate entails another beliefstate iff the other state's cells are
+        One beliefstate entails another beliefstate iff the other state's entities are
         all equal or more general than the caller's parts.  That means the other 
         state must at least have all of the same keys/components.  
 
@@ -486,15 +488,15 @@ class BeliefState(DictCell):
         return hash(self) == hash(other)
         for (this, that) in itertools.izip_longest(self, other):
             if that[0] is None or this[0] != that[0]:
-                # compare key names
+                # compare attribute names
                 return False
             if not this[1].is_equal(that[1]):
-                # compare cells
+                # compare values
                 return False
         return True
         
     def is_contradictory(self, other):
-        """ Two beliefstates are incompatible if the other beliefstates's cells
+        """ Two beliefstates are incompatible if the other beliefstates's entities 
          are not consistent with or accessible from the caller.
          
         .. note::
@@ -539,11 +541,10 @@ class BeliefState(DictCell):
         Returns all target sets that are compatible with the current beliefstate.
 
         .. warning::
-            the number of referents can be quadratic in elements of singleton referents/cells.
-            Call `size()` method instead to compute size only, without ennumerating them.
+            the number of referents can be quadratic in the number of elements in the referential domain.
+            Call `size()` method instead to compute size only, without enumerating them.
 
         :returns: list -- Members of contextset that are compatible with beliefstate
-        
         """
         # all groupings of singletons
         return list(self.iter_referents())
@@ -585,7 +586,7 @@ class BeliefState(DictCell):
 
     def number_of_singleton_referents(self):
         """
-        Returns the number of singleton members of the referring domain (cells) that are
+        Returns the number of singleton elements of the referential domain that are
         compatible with the current belief state.
 
         This is the size of the union of all referent sets.
@@ -593,31 +594,27 @@ class BeliefState(DictCell):
         :returns: int -- The number of singleton members of the contextset
         :raises: Exception -- Raised when no contextset is defined for the BeliefState
         """
-        if self.__dict__['contextset']:
+        if self.__dict__['referential_domain']:
             ct = 0
             for i in self.iter_singleton_referents():
                 ct += 1
             return ct
         else:
-            raise Exception("self.contextset must be defined")
+            raise Exception("self.referential_domain must be defined")
 
     def iter_singleton_referents(self):
         """
         Iterator of all of the singleton members of the context set.
 
-        .. note::
-            This evaluates cells one at a time, and does not handle relational constraints.
-
-        
         :returns: Generator
         :raises: Exception
         """
         try:
-            for member in self.__dict__['contextset'].cells:
+            for member in self.__dict__['referential_domain'].iter_entities():
                 if self['target'].is_entailed_by(member) and (self['distractor'].empty() or not self['distractor'].is_entailed_by(member)):
                     yield member['num'], member
         except KeyError:
-            raise Exception("No contextset defined")
+            raise Exception("No referential_domain defined")
 
     def to_latex(self, number=0):
         """ Returns a raw text string that contains a latex representation of
@@ -641,7 +638,7 @@ class BeliefState(DictCell):
 
         :returns: BeliefState
         """
-        copied = BeliefState(self.__dict__['contextset']) 
+        copied = BeliefState(self.__dict__['referential_domain']) 
         for key in ['environment_variables', 'deferred_effects', 'pos', 'p']:
             copied.__dict__[key] = copy.deepcopy(self.__dict__[key])
         return copied
@@ -666,7 +663,7 @@ class BeliefState(DictCell):
 
         # hash dictionary
         for i, (key, value) in enumerate(self.__dict__['p'].items()):
-            hashval += hash(value) * hash(key)# * BeliefState.PRIMES[i % len(BeliefState.PRIMES)]
+            hashval += hash(value) * hash(key)
         # -2 is a reserved value 
         if hashval == -2:
             hashval = -1
