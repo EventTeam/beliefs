@@ -38,9 +38,9 @@ A belief state can be viewed *intensionally*, as an attribute-value matrix, or *
 
 To see how many referents are in a belief state, call the method :meth:`.BeliefState.size`.  This would return 63 for the currently empty belief state because our referential domain, :math:`R`, has 6 members, and an empty belief state will always have :math:`2^{|R|}-1` possible members::
 
-b.size() # => 63 
+  b.size() # => 63 
 
-One way to visualize the intensional content of a belief state is to simply use Python's built-in :keyword:`print`.  If you have more time for style, you can also call :meth:`~.BeliefState.to_latex`. This method produces an attribute-value matrix (depends on `avm.sy <https://www.essex.ac.uk/linguistics/external/clmt/latex4ling/avms/>`__) and when rendered looks like this:
+One way to visualize the intensional content of a belief state is to simply use Python's built-in :keyword:`print`.  If you have time for style (and you should), you can also call :meth:`~.BeliefState.to_latex`. This method produces an attribute-value matrix (depends on `avm.sy <https://www.essex.ac.uk/linguistics/external/clmt/latex4ling/avms/>`__) and when rendered looks like this:
 
 .. image:: empy_beliefstate_avm.png
 
@@ -67,11 +67,12 @@ However, by calling belief state's :meth:`~BeliefState.merge` instead, it has th
 
   b['target']['size']  # => [5, 100]
 
-Another reason for having a separate argument for ``path`` is that it allows us to use *late-binding* of the path value.  As we will see later, when defining action operators, we will want effect functions to generate a path to a belief state's component that is used to update a *different* belief state at a later time.
+Another reason for having a separate argument for ``path`` is that it allows us to use **late-binding** of the path value.  As we will see later, when defining action operators, we will want to generate effect functions that will include a :meth:`merge` call that affects a *different* belief state at a later time.
 
-The belief state's meta-data can be changed using the same :meth:`~BeliefState.merge` method::
 
-  b.merge(['targetset_arity'], 2)   # 2 gets typecast to IntervalCell(2, 2)
+In a similar manner, we can change a belief state's meta-data using the same :meth:`~BeliefState.merge` method::
+
+  b.merge(['targetset_arity'], 2) 
   b.size() # => 15
 
 Because :math:`{6\choose 2}=15`;  there are 15 unique target sets of size two in this belief state.  If we want to see them by their indices::
