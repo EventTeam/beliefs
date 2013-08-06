@@ -38,11 +38,11 @@ A belief state can be viewed *intensionally*, as an attribute-value matrix, or *
 
 To see how many referents are in a belief state, call the method :meth:`.BeliefState.size`.  This would return 63 for the currently empty belief state because our referential domain, :math:`R`, has 6 members, and an empty belief state will always have :math:`2^{|R|}-1` possible members.  
 
-One way to visualize the intensional content of a belief state is to simply use :keyword:`print`.  Another way is to call :meth:`~BeliefState.to_latex`. This method produces an attribute-value matrix (depends on `avm.sy <https://www.essex.ac.uk/linguistics/external/clmt/latex4ling/avms/>`__) and when rendered looks like this:
+One way to visualize the intensional content of a belief state is to simply use Python's built-in :keyword:`print`.  If you have more time for style, you can also call :meth:`~.BeliefState.to_latex`. This method produces an attribute-value matrix (depends on `avm.sy <https://www.essex.ac.uk/linguistics/external/clmt/latex4ling/avms/>`__) and when rendered looks like this:
 
 .. image:: empy_beliefstate_avm.png
 
-The 63 referents are are only implicitly represented.  If we want to enumerate the extension of the belief state, we can call :meth:`~BeliefState.iter_referents` or :meth:`~BeliefState.iter_referents_tuples`::
+The 63 referents are are only implicitly represented.  If we want to enumerate the extension of the belief state, we can call :meth:`~.BeliefState.iter_referents` or :meth:`~.BeliefState.iter_referents_tuples`::
 
   b.iter_referents()  # returns iter object
 
@@ -52,7 +52,7 @@ The 63 referents are are only implicitly represented.  If we want to enumerate t
 
 Changing beliefs
 -----------------
-To add or update a belief state's property, use the :meth:`BeliefState.merge` method.  Unlike the :meth:`merge` for :meth:`DictCell.merge`, which only requires one argument, a belief state's :meth:`merge` requires two arguments, a ``path`` and ``value``.   The  ``path`` argument must be list of keys that specifies the location of the (potentially nested)  component to be added or modified, and ``value`` must be an instance of a :class:`.cells.Cell`.  For example::
+To add or update a belief state's property, use the :meth:`.BeliefState.merge` method.  Unlike the :meth:`merge` for :meth:`.DictCell.merge`, which only requires one argument, a belief state's :meth:`merge` requires two arguments, a ``path`` and ``value``.   The  ``path`` argument must be list of keys that specifies the location of the (potentially nested)  component to be added or modified, and ``value`` must be an instance of a :class:`.cells.Cell`.  For example::
 
    value = IntervalCell(5, 100)
    b.merge(['target', 'size'], value)
