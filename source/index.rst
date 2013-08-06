@@ -40,7 +40,7 @@ To see how many referents are in a belief state, call the method :meth:`.BeliefS
 
   b.size() # => 63 
 
-One way to visualize the intensional content of a belief state is to simply use Python's built-in :keyword:`print`.  If you have time for style (and you should), you can also call :meth:`~.BeliefState.to_latex`. This method produces an attribute-value matrix (depends on `avm.sy <https://www.essex.ac.uk/linguistics/external/clmt/latex4ling/avms/>`__) and when rendered looks like this:
+One way to visualize the intensional content of a belief state is to simply use Python's built-in :keyword:`print`.  If you have time for style (and you do), you can also call :meth:`~.BeliefState.to_latex`. This method produces an attribute-value matrix (depends on `avm.sy <https://www.essex.ac.uk/linguistics/external/clmt/latex4ling/avms/>`__) and when rendered looks like this:
 
 .. image:: empy_beliefstate_avm.png
 
