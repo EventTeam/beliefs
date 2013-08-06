@@ -22,7 +22,11 @@ Belief states are *about* a referential domain, so they are typically initialize
   r = ReferentialDomain()
   b = BeliefState(r)
 
-A **referential domain** can be any container for the entities, each an instance of :py:class:`dicts.DictCell`, which has a method for accessing them called :meth:`r.iter_entities`.  In a later section, :ref:`create-domain`, I will describe how to define the entities for a referential domain.
+A **referential domain** can be any container for the entities, each an instance of :py:class:`dicts.DictCell`, which has a method for accessing them called :meth:`r.iter_entities`::
+
+  list(r.iter_entities)  # => [<DictCell:1...>, <DictCell:2...>, ..., <DictCell:6...>]
+
+In a later section, :ref:`create-domain`, I will describe how to define the entities for a referential domain.
 
 Two ways to view a belief state
 --------------------------------
@@ -38,7 +42,7 @@ One way to visualize the intensional content of a belief state is to simply use 
 
 .. image:: empy_beliefstate_avm.png
 
-The 63 referents are are only implicitly represented.  If we want to enumerate the extension of the belief state, we can call :meth:`~BeliefState.iter_referents`::
+The 63 referents are are only implicitly represented.  If we want to enumerate the extension of the belief state, we can call :meth:`~BeliefState.iter_referents` or `~BeliefState.iter_referents_tuples`::
 
   b.iter_referents()  # returns iter object
 
