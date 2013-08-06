@@ -52,7 +52,7 @@ The 63 referents are are only implicitly represented.  If we want to enumerate t
 
 Changing beliefs
 -----------------
-To add or update a belief state's property, use the :meth:`.BeliefState.merge` method.  Unlike the :meth:`merge` for :meth:`.DictCell.merge`, which only requires one argument, a belief state's :meth:`merge` requires two arguments, a ``path`` and ``value``.   The  ``path`` argument must be list of keys that specifies the location of the (potentially nested)  component to be added or modified, and ``value`` must be an instance of a :class:`.cells.Cell`.  For example::
+To add or update a belief state's property, use the :meth:`.BeliefState.merge` method.  Unlike the :meth:`.DictCell.merge`, which only requires one argument, a belief state's :meth:`merge` requires two arguments, a ``path`` and ``value``.   The  ``path`` argument must be list of keys that specifies the location of the (potentially nested)  component to be added or modified, and ``value`` must be an instance of a :class:`.cells.Cell`.  For example::
 
    value = IntervalCell(5, 100)
    b.merge(['target', 'size'], value)
@@ -61,7 +61,7 @@ Alternatively, we could have merged using the single-argument :meth:`DictCell.me
 
    b['target']['size'].merge(value)
 
-However, by calling belief state's :meth:`~BeliefState.merge` instead, it has the additional functionality that whenever the property at the specified path doesn't exist (and, for 'size' it doesn't), the belief state will *find an entity in the referential domain, and copy a cell of its type and then set its value to ``value``*::
+However, by calling belief state's :meth:`~BeliefState.merge` instead, it has the additional functionality that whenever the property at the specified path doesn't exist (and, for 'size' it didn't), the belief state will *find an entity in the referential domain, and copy a cell of its type and then set its value to ``value``*::
 
   b['target']['size']  # => [5, 100]
   b.size() # => 63 
