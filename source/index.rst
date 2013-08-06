@@ -42,7 +42,7 @@ One way to visualize the intensional content of a belief state is to simply use 
 
 .. image:: empy_beliefstate_avm.png
 
-The 63 referents are are only implicitly represented.  If we want to enumerate the extension of the belief state, we can call :meth:`~BeliefState.iter_referents` or `~BeliefState.iter_referents_tuples`::
+The 63 referents are are only implicitly represented.  If we want to enumerate the extension of the belief state, we can call :meth:`~BeliefState.iter_referents` or :meth:`~BeliefState.iter_referents_tuples`::
 
   b.iter_referents()  # returns iter object
 
