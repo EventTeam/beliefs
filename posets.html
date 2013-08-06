@@ -56,13 +56,6 @@
             
   <div class="section" id="module-posets">
 <span id="posets"></span><h1>Posets<a class="headerlink" href="#module-posets" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="posets.PartialOrderedCell">
-<em class="property">class </em><tt class="descname">PartialOrderedCell</tt><big>(</big><em>dag</em>, <em>lower=None</em>, <em>upper=None</em><big>)</big><a class="reference internal" href="_modules/posets.html#PartialOrderedCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#posets.PartialOrderedCell" title="Permalink to this definition">¶</a></dt>
-<dd><div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">This class should not be instantiated directly, but rather it should be subclassed.</p>
-</div>
 <p>Generalizes the LinearOrderedCell to include represent po-sets.  Instead of
 being initialized with a list, this requires an instance of nx.DiGraph: a
 directed graph.</p>
@@ -81,21 +74,8 @@ nodes that are not linked by a directed path.</p>
 <p>Generalization domain is a rooted directed graph with one component.  The
 (set of) root node(s) is the Upper generalization boundary, the set of Leaf
 nodes is the lower generalization boundary.</p>
-<p>Contradictions mean that there is a directed path between one of the lower
-boundaries and the root.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>dag</strong> (<em>nx.DiGraph</em>) &#8211; Represents the generalization structure</li>
-<li><strong>lower</strong> (<em>set</em>) &#8211; Optional parameter. Defaults to the empty set</li>
-<li><strong>upper</strong> (<em>set</em>) &#8211; Optional parameter. Defaults to the empty set</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
+<p>A <tt class="docutils literal"><span class="pre">Contradiction</span></tt> for a partial ordered set means that there is a directed 
+path between one of the lower boundaries and the root.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p>All of the following code examples in this module will be based on the following code block:</p>
@@ -146,6 +126,26 @@ boundaries and the root.</p>
 </pre></div>
 </div>
 </div>
+<dl class="class">
+<dt id="posets.PartialOrderedCell">
+<em class="property">class </em><tt class="descname">PartialOrderedCell</tt><big>(</big><em>dag</em>, <em>lower=None</em>, <em>upper=None</em><big>)</big><a class="reference internal" href="_modules/posets.html#PartialOrderedCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#posets.PartialOrderedCell" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This class should not be instantiated directly, but rather it should be subclassed.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>dag</strong> (<em>nx.DiGraph</em>) &#8211; Represents the generalization structure</li>
+<li><strong>lower</strong> (<em>set</em>) &#8211; Optional parameter. Defaults to the empty set</li>
+<li><strong>upper</strong> (<em>set</em>) &#8211; Optional parameter. Defaults to the empty set</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="classmethod">
 <dt id="posets.PartialOrderedCell.set_domain">
 <em class="property">classmethod </em><tt class="descname">set_domain</tt><big>(</big><em>clz</em>, <em>dag</em><big>)</big><a class="reference internal" href="_modules/posets.html#PartialOrderedCell.set_domain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#posets.PartialOrderedCell.set_domain" title="Permalink to this definition">¶</a></dt>

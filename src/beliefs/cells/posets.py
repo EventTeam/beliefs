@@ -1,5 +1,77 @@
-#from .cell import *
-from beliefs.cells import *
+"""
+Generalizes the LinearOrderedCell to include represent po-sets.  Instead of
+being initialized with a list, this requires an instance of nx.DiGraph: a
+directed graph.
+
+A linear order has these properties:
+
+ 1. Reflexive a <= a
+ 2. Antisymmetric:  a <= b and b <=a  implies a == b
+ 3. Transitivity:  a <= b  and b <=c implies a <= c
+ 4. Linearity:  a <= b or b <= a
+
+A partial order does not require the linearity property (4).  Namely, some
+elements are incomparable, represented as a || b.  This corresponds to two
+nodes that are not linked by a directed path.
+
+Generalization domain is a rooted directed graph with one component.  The
+(set of) root node(s) is the Upper generalization boundary, the set of Leaf
+nodes is the lower generalization boundary. 
+
+A ``Contradiction`` for a partial ordered set means that there is a directed 
+path between one of the lower boundaries and the root.
+
+.. Note::
+    All of the following code examples in this module will be based on the following code block:
+
+    .. code-block:: python
+
+        class POC_A(PartialOrderedCell):
+            # partial ordered test
+            def __init__(self):
+                dag = None
+                if not self.has_domain():
+                    # only initialize once
+                    dag = nx.DiGraph()
+                    dag.add_edge("thing", "vehicle")
+                    dag.add_edge("vehicle", "car")
+                    dag.add_edge("vehicle", "truck")
+                PartialOrderedCell.__init__(self, dag)
+                
+        class POC_B(PartialOrderedCell):
+            # partial ordered test
+            def __init__(self):
+                dag = None
+                if not self.has_domain():
+                    # only initialize once
+                    dag = nx.DiGraph()
+                    dag.add_edge("thing", "person")
+                    dag.add_edge("person", "actress")
+                    dag.add_edge("person", "writer")
+                    dag.add_edge("person", "producer")
+                PartialOrderedCell.__init__(self, dag)
+
+        class POC_C(PartialOrderedCell):
+            # partial ordered test
+            def __init__(self):
+                dag = None
+                if not self.has_domain():
+                    # only initialize once
+                    dag = nx.DiGraph()
+                    dag.add_edge("thing", "person")
+                    dag.add_edge("person", "actress")
+                    dag.add_edge("person", "director")
+                    dag.add_edge("director", "good-director")
+                    dag.add_edge("director", "bad-director")
+                    dag.add_edge("person", "writer")
+                    dag.add_edge("person", "producer")
+                    dag.add_edge("thing", "vehicle")
+                    dag.add_edge("vehicle", "car")
+                    dag.add_edge("vehicle", "truck")
+            
+                PartialOrderedCell.__init__(self, dag)
+"""  
+from cell import *
 import networkx as nx
 import logging
 from networkx.algorithms.shortest_paths.generic import has_path
@@ -10,28 +82,6 @@ class PartialOrderedCell(Cell):
     .. Note::
         This class should not be instantiated directly, but rather it should be subclassed.
         
-    Generalizes the LinearOrderedCell to include represent po-sets.  Instead of
-    being initialized with a list, this requires an instance of nx.DiGraph: a
-    directed graph.
-
-    A linear order has these properties:
-
-     (1) Reflexive a <= a
-     (2) Antisymmetric:  a <= b and b <=a  implies a == b
-     (3) Transitivity:  a <= b  and b <=c implies a <= c
-     (4) Linearity:  a <= b or b <= a
-
-    A partial order does not require the linearity property (4).  Namely, some
-    elements are incomparable, represented as a || b.  This corresponds to two
-    nodes that are not linked by a directed path.
-
-    Generalization domain is a rooted directed graph with one component.  The
-    (set of) root node(s) is the Upper generalization boundary, the set of Leaf
-    nodes is the lower generalization boundary. 
-
-    Contradictions mean that there is a directed path between one of the lower
-    boundaries and the root.
-    
     :parameter dag: Represents the generalization structure
     :type dag: nx.DiGraph
     :parameter lower: Optional parameter. Defaults to the empty set
@@ -39,55 +89,6 @@ class PartialOrderedCell(Cell):
     :parameter upper: Optional parameter. Defaults to the empty set
     :type upper: set
 
-    .. Note::
-        All of the following code examples in this module will be based on the following code block:
-
-        .. code-block:: python
-    
-            class POC_A(PartialOrderedCell):
-                # partial ordered test
-                def __init__(self):
-                    dag = None
-                    if not self.has_domain():
-                        # only initialize once
-                        dag = nx.DiGraph()
-                        dag.add_edge("thing", "vehicle")
-                        dag.add_edge("vehicle", "car")
-                        dag.add_edge("vehicle", "truck")
-                    PartialOrderedCell.__init__(self, dag)
-                    
-            class POC_B(PartialOrderedCell):
-                # partial ordered test
-                def __init__(self):
-                    dag = None
-                    if not self.has_domain():
-                        # only initialize once
-                        dag = nx.DiGraph()
-                        dag.add_edge("thing", "person")
-                        dag.add_edge("person", "actress")
-                        dag.add_edge("person", "writer")
-                        dag.add_edge("person", "producer")
-                    PartialOrderedCell.__init__(self, dag)
-
-            class POC_C(PartialOrderedCell):
-                # partial ordered test
-                def __init__(self):
-                    dag = None
-                    if not self.has_domain():
-                        # only initialize once
-                        dag = nx.DiGraph()
-                        dag.add_edge("thing", "person")
-                        dag.add_edge("person", "actress")
-                        dag.add_edge("person", "director")
-                        dag.add_edge("director", "good-director")
-                        dag.add_edge("director", "bad-director")
-                        dag.add_edge("person", "writer")
-                        dag.add_edge("person", "producer")
-                        dag.add_edge("thing", "vehicle")
-                        dag.add_edge("vehicle", "car")
-                        dag.add_edge("vehicle", "truck")
-                
-                    PartialOrderedCell.__init__(self, dag)
     """
     domain_map = {}
     def __init__(self, dag, lower=None, upper=None):
