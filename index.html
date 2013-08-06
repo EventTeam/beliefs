@@ -77,7 +77,11 @@
 <span class="n">b</span> <span class="o">=</span> <span class="n">BeliefState</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>A <strong>referential domain</strong> can be any container for the entities, each an instance of <a class="reference internal" href="dicts.html#dicts.DictCell" title="dicts.DictCell"><tt class="xref py py-class docutils literal"><span class="pre">dicts.DictCell</span></tt></a>, which has a method for accessing them called <tt class="xref py py-meth docutils literal"><span class="pre">r.iter_entities()</span></tt>.  In a later section, <a class="reference internal" href="#create-domain"><em>Creating a referential domain</em></a>, I will describe how to define the entities for a referential domain.</p>
+<p>A <strong>referential domain</strong> can be any container for the entities, each an instance of <a class="reference internal" href="dicts.html#dicts.DictCell" title="dicts.DictCell"><tt class="xref py py-class docutils literal"><span class="pre">dicts.DictCell</span></tt></a>, which has a method for accessing them called <tt class="xref py py-meth docutils literal"><span class="pre">r.iter_entities()</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nb">list</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">iter_entities</span><span class="p">)</span>  <span class="c"># =&gt; [&lt;DictCell:1...&gt;, &lt;DictCell:2...&gt;, ..., &lt;DictCell:6...&gt;]</span>
+</pre></div>
+</div>
+<p>In a later section, <a class="reference internal" href="#create-domain"><em>Creating a referential domain</em></a>, I will describe how to define the entities for a referential domain.</p>
 <div class="section" id="two-ways-to-view-a-belief-state">
 <h2>Two ways to view a belief state<a class="headerlink" href="#two-ways-to-view-a-belief-state" title="Permalink to this headline">¶</a></h2>
 <p>A belief state can be viewed <em>intensionally</em>, as an attribute-value matrix, or <em>extensionally</em>, as a set of its referents.</p>
@@ -88,7 +92,7 @@
 <p>To see how many referents are in a belief state, call the method <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.size" title="beliefstate.BeliefState.size"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.size()</span></tt></a>.  This would return 63 for the currently empty belief state because our referential domain, <span class="math">\(R\)</span>, has 6 members, and an empty belief state will always have <span class="math">\(2^{|R|}-1\)</span> possible members.</p>
 <p>One way to visualize the intensional content of a belief state is to simply use <tt class="xref std std-keyword docutils literal"><span class="pre">print</span></tt>.  Another way is to call <tt class="xref py py-meth docutils literal"><span class="pre">to_latex()</span></tt>. This method produces an attribute-value matrix (depends on <a class="reference external" href="https://www.essex.ac.uk/linguistics/external/clmt/latex4ling/avms/">avm.sy</a>) and when rendered looks like this:</p>
 <img alt="empy_beliefstate_avm.png" src="empy_beliefstate_avm.png" />
-<p>The 63 referents are are only implicitly represented.  If we want to enumerate the extension of the belief state, we can call <tt class="xref py py-meth docutils literal"><span class="pre">iter_referents()</span></tt>:</p>
+<p>The 63 referents are are only implicitly represented.  If we want to enumerate the extension of the belief state, we can call <tt class="xref py py-meth docutils literal"><span class="pre">iter_referents()</span></tt> or <cite>~BeliefState.iter_referents_tuples</cite>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">b</span><span class="o">.</span><span class="n">iter_referents</span><span class="p">()</span>  <span class="c"># returns iter object</span>
 
 <span class="c"># loops over the iterator of just the referent&#39;s indices</span>
