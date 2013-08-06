@@ -72,6 +72,7 @@ path between one of the lower boundaries and the root.
                 PartialOrderedCell.__init__(self, dag)
 """  
 from cell import *
+from .lists import *
 import networkx as nx
 import logging
 from networkx.algorithms.shortest_paths.generic import has_path

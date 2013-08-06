@@ -1,7 +1,7 @@
 from copy import copy
-from collections import defaultdict
 from beliefs.cells import *
 from belief_utils import choose
+import numpy as np
 import itertools
 
 class BeliefState(DictCell):
@@ -232,8 +232,7 @@ class BeliefState(DictCell):
         :raises: Contradiction
         """
         unique_values = self.get_ordered_values(keypath, distance_from, open_interval)
-        if 0 <= n < len(unique_values):
-            #logging.error("%i th unique value is %s" % (n, str(unique_values[n])))
+        if 0 <= n+1 < len(unique_values):
             return unique_values[n]
         else:
             raise Contradiction("n-th Unique value out of range: " + str(n))
@@ -248,6 +247,8 @@ class BeliefState(DictCell):
         :type reverse: bool
         :returns: OrderedDict -- Dictionary of sorted values
         """
+        
+        logging.error("Looking for values from path"+str(keypath))
 
         values = []
         if keypath[0] == 'target':
@@ -259,10 +260,11 @@ class BeliefState(DictCell):
             if hasattr(value, 'low') and value.low != value.high:
                 return []
             values.append(float(value))
-
+        logging.error("Values " + str(values))
         if len(values) == 0:
             return []
         values = np.array(values)
+        logging.error("NP Values" + str(values))
         anchor = values.min()
         diffs = values - anchor
         if distance_from == 'max':
