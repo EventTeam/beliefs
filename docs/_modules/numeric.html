@@ -1,4 +1,3 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -59,7 +58,12 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Creates a new IntervalCell with values restricted to between `low` and `high`.</span>
+<span class="sd">        Creates a new IntervalCell with values restricted to between *low* and *high*.</span>
+
+<span class="sd">        :param low,high: The boundaries of the interval</span>
+<span class="sd">        :type low,high: float,int</span>
+<span class="sd">        :raises: CellConstructionFailure</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
@@ -75,8 +79,24 @@
     <span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="IntervalCell.coerce"><a class="viewcode-back" href="../numeric.html#numeric.IntervalCell.coerce">[docs]</a>    <span class="k">def</span> <span class="nf">coerce</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Takes a number (float, int) or a two-valued integer and returns the</span>
-<span class="sd">        [low, high] in the standard interval form</span>
+<span class="sd">        Takes in either a single number (float, int), a list, or a tuple and returns the</span>
+<span class="sd">        [low, high] in the standard interval form. In the case of a single *value*, the low and high will both be the single value. In the case of a list or tuple, the low and high will be the min and max of the collection, respectively.</span>
+
+<span class="sd">        :param value: The the number or collection of numbers to be used for the low and high boundaries</span>
+<span class="sd">        :type value: int, float, complex, list, tuple</span>
+<span class="sd">        :returns: IntervalCell</span>
+<span class="sd">        :raises: Exception</span>
+
+<span class="sd">        &gt;&gt;&gt; a = IntervalCell.coerce(5)</span>
+<span class="sd">        &gt;&gt;&gt; a</span>
+<span class="sd">        5.00</span>
+<span class="sd">        &gt;&gt;&gt; b = IntervalCell.coerce([3,7])</span>
+<span class="sd">        &gt;&gt;&gt; b</span>
+<span class="sd">        [3.00,7.00]</span>
+<span class="sd">        &gt;&gt;&gt; c = IntervalCell.coerce((1,6,5,9,2))</span>
+<span class="sd">        &gt;&gt;&gt; c</span>
+<span class="sd">        [1.00,9.00]</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">is_number</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">complex</span><span class="p">))</span> <span class="c">#is x an instance of those things</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">IntervalCell</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span><span class="n">IntervalCell</span><span class="p">):</span> 
@@ -102,18 +122,51 @@
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Don&#39;t know how to coerce </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)))</span>
 </div>
 <div class="viewcode-block" id="IntervalCell.stem"><a class="viewcode-back" href="../numeric.html#numeric.IntervalCell.stem">[docs]</a>    <span class="k">def</span> <span class="nf">stem</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Creates a new instance &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a new instance with bounds of 0 to infinity</span>
+
+<span class="sd">        :returns: IntervalCell</span>
+
+<span class="sd">        &gt;&gt;&gt; x = IntervalCell(1,1)</span>
+<span class="sd">        &gt;&gt;&gt; y = x.stem()</span>
+<span class="sd">        &gt;&gt;&gt; y</span>
+<span class="sd">        [0.00,inf]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="IntervalCell.size"><a class="viewcode-back" href="../numeric.html#numeric.IntervalCell.size">[docs]</a>    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Number of possible values in the interval.  Boundaries are inclusive</span>
+
+<span class="sd">        :returns: int -- Length of interval</span>
+
+<span class="sd">        &gt;&gt;&gt; a = IntervalCell(1,2)</span>
+<span class="sd">        &gt;&gt;&gt; b = IntervalCell(12,19)</span>
+<span class="sd">        &gt;&gt;&gt; a.size()</span>
+<span class="sd">        2</span>
+<span class="sd">        &gt;&gt;&gt; b.size()</span>
+<span class="sd">        8</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> 
 </div>
 <div class="viewcode-block" id="IntervalCell.is_contradictory"><a class="viewcode-back" href="../numeric.html#numeric.IntervalCell.is_contradictory">[docs]</a>    <span class="k">def</span> <span class="nf">is_contradictory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Whether other and self can coexist</span>
+<span class="sd">        Determines whether other and self can coexist. Two intervals are contradictory if they are disjoint, i.e. if their intersection is empty</span>
+
+<span class="sd">        :param other: IntervalCell or coercible value</span>
+<span class="sd">        :returns: bool</span>
+<span class="sd">        :raises: Exception</span>
+
+<span class="sd">        &gt;&gt;&gt; w = IntervalCell(1,2)</span>
+<span class="sd">        &gt;&gt;&gt; x = IntervalCell(1,1)</span>
+<span class="sd">        &gt;&gt;&gt; y = IntervalCell(2,2)</span>
+<span class="sd">        &gt;&gt;&gt; z = IntervalCell(0,3)</span>
+<span class="sd">        &gt;&gt;&gt; x.is_contradictory(y)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; w.is_contradictory(z)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; x.is_contradictory(w)</span>
+<span class="sd">        False</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">other</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">other</span><span class="o">.</span><span class="n">low</span> <span class="o">&lt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">high</span><span class="p">,</span> <span class="s">&quot;Low must be &lt;= high&quot;</span>
@@ -124,21 +177,79 @@
 </div>
 <div class="viewcode-block" id="IntervalCell.is_entailed_by"><a class="viewcode-back" href="../numeric.html#numeric.IntervalCell.is_entailed_by">[docs]</a>    <span class="k">def</span> <span class="nf">is_entailed_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Other is more specific than self.   Other is bounded within self.</span>
+<span class="sd">        Returns true if other is more specific than self, i.e. other is bounded within self.</span>
+
+<span class="sd">        :param other: IntervalCell or coercible value</span>
+<span class="sd">        :returns: bool</span>
+<span class="sd">        :raises: Exception</span>
+
+<span class="sd">        &gt;&gt;&gt; x = IntervalCell(1,1)</span>
+<span class="sd">        &gt;&gt;&gt; y = IntervalCell(2,2)</span>
+<span class="sd">        &gt;&gt;&gt; z = IntervalCell(0,3)</span>
+<span class="sd">        &gt;&gt;&gt; z.is_entailed_by(x)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; z.is_entailed_by(y)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; x.is_entailed_by(y)</span>
+<span class="sd">        False</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">other</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">other</span><span class="o">.</span><span class="n">low</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">high</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span>
 </div>
 <div class="viewcode-block" id="IntervalCell.is_equal"><a class="viewcode-back" href="../numeric.html#numeric.IntervalCell.is_equal">[docs]</a>    <span class="k">def</span> <span class="nf">is_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        If two intervals are the same</span>
+<span class="sd">        Returns true if two intervals are the same</span>
+
+<span class="sd">        :param other: IntervalCell or coercible value</span>
+<span class="sd">        :returns: bool</span>
+<span class="sd">        :raises: Exception</span>
+
+<span class="sd">        &gt;&gt;&gt; x = IntervalCell(1,1)</span>
+<span class="sd">        &gt;&gt;&gt; z = IntervalCell(0,3)</span>
+<span class="sd">        &gt;&gt;&gt; x.is_equal(1)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; z.is_equal([0,3])</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; x.is_equal(z)</span>
+<span class="sd">        False</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">other</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">other</span><span class="o">.</span><span class="n">low</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">high</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span>
 </div>
 <div class="viewcode-block" id="IntervalCell.merge"><a class="viewcode-back" href="../numeric.html#numeric.IntervalCell.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Merges the two values</span>
+<span class="sd">        Merges the two values. The *self* argument is modified, while *other* is not.</span>
+
+<span class="sd">        :param other: IntervalCell or coercible value</span>
+<span class="sd">        :returns: bool</span>
+<span class="sd">        :raises: Exception</span>
+
+<span class="sd">        &gt;&gt;&gt; x = IntervalCell(0,3)</span>
+<span class="sd">        &gt;&gt;&gt; y = IntervalCell(2,2)</span>
+<span class="sd">        &gt;&gt;&gt; a = x.merge(y)</span>
+<span class="sd">        &gt;&gt;&gt; a</span>
+<span class="sd">        2.00</span>
+<span class="sd">        </span>
+<span class="sd">        .. note::</span>
+<span class="sd">            ``merge`` modifies the *self* argument as a side effect. </span>
+
+<span class="sd">            &gt;&gt;&gt; w = IntervalCell(1,7)</span>
+<span class="sd">            &gt;&gt;&gt; z = IntervalCell(3,9)</span>
+<span class="sd">            &gt;&gt;&gt; b = w.merge(z)</span>
+<span class="sd">            &gt;&gt;&gt; b</span>
+<span class="sd">            [3.00,7.00]</span>
+<span class="sd">        </span>
+<span class="sd">            w has been modified.</span>
+<span class="sd">        </span>
+<span class="sd">            &gt;&gt;&gt; w</span>
+<span class="sd">            [3.00,7.00]</span>
+<span class="sd">        </span>
+<span class="sd">            z has not.</span>
+<span class="sd">        </span>
+<span class="sd">            &gt;&gt;&gt; z</span>
+<span class="sd">            [3.00,9.00]</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">other</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
@@ -149,7 +260,11 @@
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">high</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">Contradiction</span><span class="p">(</span><span class="s">&quot;Cannot merge intervals&quot;</span><span class="p">)</span>
+            <span class="c">#import traceback</span>
+            <span class="c">#for line in traceback.format_stack(): print line.strip()</span>
+
+            <span class="k">raise</span> <span class="n">Contradiction</span><span class="p">(</span><span class="s">&quot;Cannot merge [</span><span class="si">%0.2f</span><span class="s">, </span><span class="si">%0.2f</span><span class="s">] with [</span><span class="si">%0.2f</span><span class="s">, </span><span class="si">%0.2f</span><span class="s">]&quot;</span> \
+                    <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">high</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c"># information in both</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">low</span><span class="p">)</span>
@@ -250,6 +365,22 @@
 <span class="sd">        Applies a mathematic function to the interval arithmetic template:</span>
 <span class="sd">        generate all combinations of low/high values and then take the widest</span>
 <span class="sd">        bounds (min/max) for the result.</span>
+
+<span class="sd">        :param other: IntervalCell or coercible value</span>
+<span class="sd">        :type other: IntervalCell</span>
+<span class="sd">        :param function: Mathematical function to be applied to the bounds of the interval. Must take two arguments and return a number</span>
+<span class="sd">        :type function: function</span>
+<span class="sd">        :returns: IntervalCell</span>
+<span class="sd">        :raises: Exception</span>
+
+<span class="sd">        &gt;&gt;&gt; a = IntervalCell(1,4)</span>
+<span class="sd">        &gt;&gt;&gt; b = IntervalCell(3,5)</span>
+<span class="sd">        &gt;&gt;&gt; result = a.map(b,lambda x,y: x+y)</span>
+<span class="sd">        &gt;&gt;&gt; result</span>
+<span class="sd">        [4.00,9.00]</span>
+<span class="sd">        &gt;&gt;&gt; result = a.map(b,lambda x,y: x-y)</span>
+<span class="sd">        &gt;&gt;&gt; result</span>
+<span class="sd">        [-4.00,1.00]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">other</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="c"># check the arity of the function</span>
@@ -270,27 +401,114 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">&lt;=</span> <span class="n">other</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span>
 
     <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Unqiue hash for interval &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Unique hash for interval &quot;&quot;&quot;</span>
         <span class="n">hval</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">hval</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span> <span class="o">+</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>
+        <span class="n">hval</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>  <span class="o">+</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span> <span class="o">*</span> <span class="mi">5</span> 
         <span class="k">return</span> <span class="n">hval</span>
 
 <div class="viewcode-block" id="IntervalCell.get_tuple"><a class="viewcode-back" href="../numeric.html#numeric.IntervalCell.get_tuple">[docs]</a>    <span class="k">def</span> <span class="nf">get_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Returns (low, high) tuple &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns (low, high) tuple</span>
+
+<span class="sd">        &gt;&gt;&gt; x = IntervalCell(1,2)</span>
+<span class="sd">        &gt;&gt;&gt; xTuple = x.get_tuple()</span>
+<span class="sd">        &gt;&gt;&gt; xTuple</span>
+<span class="sd">        (1,2)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="IntervalCell.to_dot"><a class="viewcode-back" href="../numeric.html#numeric.IntervalCell.to_dot">[docs]</a>    <span class="k">def</span> <span class="nf">to_dot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&#39;&#39;&#39;def to_dot(self):</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 <span class="sd">        Returns a scalar or None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        if self.low == self.high:</span>
+<span class="sd">            return self.low</span>
+<span class="sd">        else:</span>
+<span class="sd">            return None&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="IntervalCell.to_latex"><a class="viewcode-back" href="../numeric.html#numeric.IntervalCell.to_latex">[docs]</a>    <span class="k">def</span> <span class="nf">to_latex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns an interval representation &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s">&quot;{0:d}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s">&quot;{0:0.2f}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">None</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">==</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">:</span>
+                <span class="n">t</span> <span class="o">+=</span> <span class="s">r&quot;(-\infty, &quot;</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">t</span> <span class="o">+=</span> <span class="s">r&quot;[{0:d}, &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">t</span> <span class="o">+=</span> <span class="s">r&quot;[{0:0.2f}, &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">:</span>
+                <span class="n">t</span> <span class="o">+=</span> <span class="s">r&quot;\infty)&quot;</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">t</span> <span class="o">+=</span> <span class="s">r&quot;{0:d}]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">t</span> <span class="o">+=</span> <span class="s">r&quot;{0:0.2f}]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">t</span>
 </div>
+    <span class="k">def</span> <span class="nf">__abs__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Absolute value &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">),</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)),</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">),</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)))</span>
+
     <span class="n">__eq__</span> <span class="o">=</span> <span class="n">is_equal</span>
     <span class="n">__len__</span> <span class="o">=</span> <span class="n">size</span>
-</pre></div></div>
+
+</div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="nf">test_absolute_values</span><span class="p">():</span>
+        <span class="c"># for intervals</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">19</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="nb">abs</span><span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="n">x</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">test_absolute_values</span><span class="p">():</span>
+    <span class="c"># for intervals</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">19</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="nb">abs</span><span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="c"># for single numbers</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">19</span><span class="p">,</span><span class="mi">19</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="nb">abs</span><span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="n">x</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="test_hashes"><a class="viewcode-back" href="../numeric.html#numeric.test_hashes">[docs]</a><span class="k">def</span> <span class="nf">test_hashes</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Tests for cases where LOW and HIGH values of the interval</span>
+<span class="sd">    have the same sum, the same diff, etc. &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">alldiff</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">mapped</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">iterable</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">mapped</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">mapped</span><span class="p">))</span>
+
+
+    <span class="n">test_cases</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">test_cases</span> <span class="o">+=</span> <span class="p">[</span><span class="n">IntervalCell</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)]</span>
+    <span class="n">test_cases</span> <span class="o">+=</span> <span class="p">[</span><span class="n">IntervalCell</span><span class="p">()]</span>
+    <span class="n">test_cases</span> <span class="o">+=</span> <span class="p">[</span><span class="n">IntervalCell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)]</span>
+    <span class="n">test_cases</span> <span class="o">+=</span> <span class="p">[</span><span class="n">IntervalCell</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">)]</span>
+    <span class="n">test_cases</span> <span class="o">+=</span> <span class="p">[</span><span class="n">IntervalCell</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">)]</span>
+    <span class="n">test_cases</span> <span class="o">+=</span> <span class="p">[</span><span class="n">IntervalCell</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">)]</span>
+    <span class="n">test_cases</span> <span class="o">+=</span> <span class="p">[</span><span class="n">IntervalCell</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+    <span class="k">assert</span> <span class="n">alldiff</span><span class="p">(</span><span class="n">test_cases</span><span class="p">,</span> <span class="nb">hash</span><span class="p">)</span>
+
+    <span class="c"># float / int equivalence</span>
+    <span class="k">assert</span> <span class="nb">hash</span><span class="p">(</span><span class="n">IntervalCell</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span> <span class="o">==</span> <span class="nb">hash</span><span class="p">(</span><span class="n">IntervalCell</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">2.0</span><span class="p">))</span>
+</div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mf">38.2</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">to_latex</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">38</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">to_latex</span><span class="p">()</span>
+</pre></div>
 
           </div>
         </div>
@@ -329,7 +547,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2013, Dustin Smith, Nicolas Bravo.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

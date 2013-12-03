@@ -1,4 +1,3 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -14,7 +13,7 @@
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -63,6 +62,14 @@
 DictCell.</p>
 <p>Unlike the other primitive structures, a DictCell cannot be coerced into something
 else.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>from_dict</strong> (<em>dict</em>) &#8211; Optional parameter specifying initial dictionary, where the value of each (key,value) pair must be a Cell. Defaults to an empty dictionary.</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="dicts.DictCell.contains">
 <tt class="descname">contains</tt><big>(</big><em>key_or_keypath</em><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell.contains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell.contains" title="Permalink to this definition">¶</a></dt>
@@ -72,7 +79,9 @@ is inside the dictionary.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key_or_keypath</strong> &#8211; A single key or a path of keys in the form of a list</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
 </tr>
 </tbody>
 </table>
@@ -83,12 +92,32 @@ is inside the dictionary.</p>
 <tt class="descname">get_value_from_path</tt><big>(</big><em>keypath</em><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell.get_value_from_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell.get_value_from_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the value at the end of keypath (or None)
 keypath is a list of keys, e.g., [&#8220;key&#8221;, &#8220;subkey&#8221;, &#8220;subsubkey&#8221;]</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>keypath</strong> (<em>list</em>) &#8211; A list of keys representing a path through nested dictionaries</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">value associated with final key in <em>keypath</em></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="dicts.DictCell.is_entailed_by">
 <tt class="descname">is_entailed_by</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell.is_entailed_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell.is_entailed_by" title="Permalink to this definition">¶</a></dt>
 <dd><p>Whether all of self&#8217;s keys (and values) are in (and within) other&#8217;s</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>DictCell</em>) &#8211; A DictCell to check</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -96,19 +125,51 @@ keypath is a list of keys, e.g., [&#8220;key&#8221;, &#8220;subkey&#8221;, &#822
 <tt class="descname">entails</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell.entails"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell.entails" title="Permalink to this definition">¶</a></dt>
 <dd><p>Whether the target of the other belief state is strictly more
 general than the caller belief state</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>DictCell</em>) &#8211; A DictCell to check</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="dicts.DictCell.is_contradictory">
 <tt class="descname">is_contradictory</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell.is_contradictory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell.is_contradictory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns True if the two DictCells are unmergeable.</p>
+<dd><p>Returns True if the two DictCells are unmergeable, i.e. if the two DictCells share a key, but the Cells associated with those keys are unMergeable.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>DictCell</em>) &#8211; DictCell to check</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body">Exception</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="dicts.DictCell.is_equal">
 <tt class="descname">is_equal</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell.is_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell.is_equal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Two DictCells are equal when they share ALL Keys,  and all of their 
-is_equal() methods return True.  This ensures substructure equality.</p>
+<tt class="docutils literal"><span class="pre">is_equal()</span></tt> methods return True.  This ensures substructure equality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>DictCell</em>) &#8211; DictCell to compare</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -116,6 +177,18 @@ is_equal() methods return True.  This ensures substructure equality.</p>
 <tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell.merge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merges two complex structures (by recursively merging their parts).
 Missing-parts do not trigger contradictions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>DictCell</em>) &#8211; DictCell to merge</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">DictCell</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body">Exception, Contradiction</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -123,17 +196,25 @@ Missing-parts do not trigger contradictions.</p>
 <tt class="descname">to_dict</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell.to_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell.to_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method converts the DictCell into a python <cite>dict</cite>.  This is useful
 for JSON serialization.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="dicts.DictCell.to_latex">
-<tt class="descname">to_latex</tt><big>(</big><big>)</big><a class="headerlink" href="#dicts.DictCell.to_latex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">to_latex</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell.to_latex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell.to_latex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a LaTeX representation of an attribute-value matrix</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dicts.DictCell.empty">
-<tt class="descname">empty</tt><big>(</big><big>)</big><a class="headerlink" href="#dicts.DictCell.empty" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">empty</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell.empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell.empty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns True iff the dictionary doesn&#8217;t have any keys</p>
 </dd></dl>
 
@@ -141,18 +222,42 @@ for JSON serialization.</p>
 <dt id="dicts.DictCell.keys">
 <tt class="descname">keys</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell.keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell.keys" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of the top-level keys in the DictCell</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="dicts.DictCell.values">
 <tt class="descname">values</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell.values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell.values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of the top-level values in the DictCell</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="dicts.DictCell.items">
 <tt class="descname">items</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dicts.html#DictCell.items"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicts.DictCell.items" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns both keys and values in dictionary</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list of tuples</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -213,7 +318,7 @@ for JSON serialization.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2013, Dustin Smith, Nicolas Bravo.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

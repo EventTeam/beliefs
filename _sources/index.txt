@@ -160,11 +160,12 @@ Another way to author the referential domain is to use the :class:`.Referent` cl
 	        super(LanguageProducer, self).__init__()
 	        self.language = SetIntersectionCell(['en', 'fr', 'de', 'pt', 'sp'])
 
-	class House(SpatialObject):
+	class House(PhysicalObject):
 	    """A dwelling"""
 	    def __init__(self):
 	        super(House, self).__init__()
 	        self.bathrooms = IntervalCell(0, 1000)
+	        self.bedrooms = IntervalCell(0, 1000)
 
 	class Human(PhysicalObject, LanguageProducer):
 	    """ A physical object that produces language and has a home """
@@ -186,7 +187,7 @@ That `TaxonomyCell.initialize` weirdness at the end will automatically generate 
 
 By calling :meth:`.posets.PartialOrderedCell.to_dotfile`, a DOT file will appear that shows the inheritance structure:
 
-.. image:: TaxonomyCell.png
+.. image:: TaxonomyCell.dot
 
 .. warning::
   You are encouraged to get in the habit of using :meth:`~Cell.merge`: instead of Python's built in assignment operator, :keyword:`=`, to set a value for a cell.  Although :class:`dicts.DictCell` will try to try to treat the assignment as a merge, it will only work for preexisting attributes.  This means, for example, when you use :meth:`.BeliefState.merge`, which has the additional feature of **creating new cells** when they do not exist, you *must* use :meth:`~BeliefState.merge` and not :keyword:`=`.

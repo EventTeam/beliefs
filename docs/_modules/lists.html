@@ -1,4 +1,3 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -54,6 +53,11 @@
 <div class="viewcode-block" id="LinearOrderedCell"><a class="viewcode-back" href="../lists.html#lists.LinearOrderedCell">[docs]</a><span class="k">class</span> <span class="nc">LinearOrderedCell</span><span class="p">(</span><span class="n">Cell</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A generalization of IntervalCell to non-numeric symbols</span>
+
+<span class="sd">    :param ordered_domain: An ordered sequence of symbols. Must not contain duplicate entries.</span>
+<span class="sd">    :type ordered_domain: list</span>
+<span class="sd">    :param low,high: Symbols in the domain that mark the lower and upper bounds</span>
+<span class="sd">    :raises: CellConstructionFailure</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ordered_domain</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -89,13 +93,22 @@
                 <span class="s">&quot;Lower bound must be &lt;= upper &quot;</span>
 
 <div class="viewcode-block" id="LinearOrderedCell.stem"><a class="viewcode-back" href="../lists.html#lists.LinearOrderedCell.stem">[docs]</a>    <span class="k">def</span> <span class="nf">stem</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Creates a new instance without any values &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Creates a new instance without any values</span>
+
+<span class="sd">        :returns: LinearOrderedCell</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="LinearOrderedCell.coerce"><a class="viewcode-back" href="../lists.html#lists.LinearOrderedCell.coerce">[docs]</a>    <span class="k">def</span> <span class="nf">coerce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Takes one or two values in the domain and returns a LinearOrderedCell</span>
-<span class="sd">        with the same domain</span>
+<span class="sd">        Takes one or more values in the domain and returns a LinearOrderedCell with that domain. If the input is a single value, the low and high bounds will both be set to that value. If the input is a list or a tuple, the low and high bounds will be set to the min and max elements of the list or tuple. </span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            Unlike the ``coerce`` methods in many of the other modules, this is **not** a static method.</span>
+
+<span class="sd">        :param value: A single value in the domain, or a list or tuple of values in the domain</span>
+<span class="sd">        :returns: LinearOrderedCell</span>
+<span class="sd">        :raises: Exception</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">LinearOrderedCell</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="o">==</span> <span class="n">value</span><span class="o">.</span><span class="n">domain</span> <span class="ow">or</span> \
             <span class="n">list_diff</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="n">value</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="o">==</span> <span class="p">[]):</span>
@@ -115,14 +128,41 @@
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Cannot coerce </span><span class="si">%s</span><span class="s"> into LinearOrderedCell&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)))</span>
 </div>
 <div class="viewcode-block" id="LinearOrderedCell.to_i"><a class="viewcode-back" href="../lists.html#lists.LinearOrderedCell.to_i">[docs]</a>    <span class="k">def</span> <span class="nf">to_i</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Maps value to position in domain &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Maps value to position in domain</span>
+
+<span class="sd">        :param val: value in the domain</span>
+<span class="sd">        :returns: int -- index of value in the domain. Returns -1 if val is None</span>
+
+<span class="sd">        &gt;&gt;&gt; v = LinearOrderedCell([&#39;animal&#39;,&#39;dog&#39;,&#39;poodle&#39;,&#39;toy poodle&#39;], &#39;animal&#39;, &#39;toy poodle&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; v.to_i(&#39;dog&#39;)</span>
+<span class="sd">        1</span>
+<span class="sd">        &gt;&gt;&gt; v.to_i(&#39;toy poodle&#39;)</span>
+<span class="sd">        3</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="LinearOrderedCell.is_contradictory"><a class="viewcode-back" href="../lists.html#lists.LinearOrderedCell.is_contradictory">[docs]</a>    <span class="k">def</span> <span class="nf">is_contradictory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Whether other and self can coexist</span>
+<span class="sd">        Whether other and self can coexist. Two LinearOrderedCells are contradictory if there is on overlap between their boundaries.</span>
+
+<span class="sd">        :param other: A LinearOrderedCell or coercible value</span>
+<span class="sd">        :returns: bool</span>
+<span class="sd">        :raises: Exception</span>
+
+<span class="sd">        &gt;&gt;&gt; x = LinearOrderedCell([&#39;animal&#39;,&#39;dog&#39;,&#39;poodle&#39;,&#39;toy poodle&#39;], &#39;animal&#39;, &#39;dog&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; y = LinearOrderedCell([&#39;animal&#39;,&#39;dog&#39;,&#39;poodle&#39;,&#39;toy poodle&#39;], &#39;animal&#39;, &#39;toy poodle&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; z = LinearOrderedCell([&#39;animal&#39;,&#39;dog&#39;,&#39;poodle&#39;,&#39;toy poodle&#39;], &#39;poodle&#39;, &#39;toy poodle&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; x.is_contradictory(z)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt; x.is_contradictory(y)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; y.is_contradictory(z)</span>
+<span class="sd">        False</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">other</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="n">to_i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_i</span>
@@ -134,7 +174,24 @@
 </div>
 <div class="viewcode-block" id="LinearOrderedCell.is_entailed_by"><a class="viewcode-back" href="../lists.html#lists.LinearOrderedCell.is_entailed_by">[docs]</a>    <span class="k">def</span> <span class="nf">is_entailed_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Other is more specific than self.   Other is bounded within self.</span>
+<span class="sd">        Returns true if Other is more specific than self or if Other is bounded within self.</span>
+
+<span class="sd">        :param other: A LinearOrderedCell or coercible value</span>
+<span class="sd">        :returns: bool</span>
+<span class="sd">        :raises: Exception</span>
+
+<span class="sd">        &gt;&gt;&gt; x = LinearOrderedCell([&#39;animal&#39;,&#39;dog&#39;,&#39;poodle&#39;,&#39;toy poodle&#39;], &#39;animal&#39;, &#39;poodle&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; y = LinearOrderedCell([&#39;animal&#39;,&#39;dog&#39;,&#39;poodle&#39;,&#39;toy poodle&#39;], &#39;dog&#39;, &#39;dog&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; z = LinearOrderedCell([&#39;animal&#39;,&#39;dog&#39;,&#39;poodle&#39;,&#39;toy poodle&#39;], &#39;poodle&#39;, &#39;toy poodle&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; x.is_entailed_by(z)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; x.is_entailed_by(y)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; y.is_entailedy_by(x)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; z.is_entailed_by(y)</span>
+<span class="sd">        False</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">other</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="n">to_i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_i</span>
@@ -143,22 +200,59 @@
 </div>
 <div class="viewcode-block" id="LinearOrderedCell.is_equal"><a class="viewcode-back" href="../lists.html#lists.LinearOrderedCell.is_equal">[docs]</a>    <span class="k">def</span> <span class="nf">is_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        If two intervals are the same</span>
+<span class="sd">        Determines whether two intervals are the same, i.e. every element of each domain is also an element of the other domain, and the low and high of each domain correspond to the low and high of the other</span>
+
+<span class="sd">        :param other: A LinearOrderedCell or coercible value</span>
+<span class="sd">        :returns: bool</span>
+<span class="sd">        :raises: Exception</span>
+
+<span class="sd">        &gt;&gt;&gt; x = LinearOrderedCell([&#39;animal&#39;,&#39;dog&#39;,&#39;poodle&#39;,&#39;toy poodle&#39;], &#39;animal&#39;, &#39;poodle&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; y = LinearOrderedCell([&#39;animal&#39;,&#39;dog&#39;], &#39;dog&#39;, &#39;dog&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; z = LinearOrderedCell([&#39;dog&#39;,&#39;toy poodle&#39;,&#39;animal&#39;,&#39;poodle&#39;], &#39;animal&#39;, &#39;poodle&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; x.is_equal(y)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; x.is_equal(z)</span>
+<span class="sd">        True</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">other</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">list_diff</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="o">==</span> <span class="p">[]</span> \
                 <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">low</span> \
                 <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">high</span>
 </div>
-<div class="viewcode-block" id="LinearOrderedCell.to_dot"><a class="viewcode-back" href="../lists.html#lists.LinearOrderedCell.to_dot">[docs]</a>    <span class="k">def</span> <span class="nf">to_dot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s">&quot;&quot;</span>
-</div>
+    <span class="sd">&#39;&#39;&#39;def to_dot(self):</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        A string representation of the Cell</span>
+
+<span class="sd">        :returns: If the domain consists of a single value, that value is returned. Otherwise, the empty string is returned.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        if self.low == self.high:</span>
+<span class="sd">            return self.low</span>
+<span class="sd">        else:</span>
+<span class="sd">            return &quot;&quot;&#39;&#39;&#39;</span>
+
 <div class="viewcode-block" id="LinearOrderedCell.merge"><a class="viewcode-back" href="../lists.html#lists.LinearOrderedCell.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Merges the two values</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            This method **will** modify the *self* parameter</span>
+
+<span class="sd">        :param other: A LinearOrderedCell or coercible value</span>
+<span class="sd">        :returns: LinearOrderedCell</span>
+<span class="sd">        :raises: Exception, Contradiction</span>
+
+<span class="sd">        &gt;&gt;&gt; x = LinearOrderedCell([&#39;animal&#39;,&#39;dog&#39;,&#39;poodle&#39;,&#39;toy poodle&#39;], &#39;animal&#39;, &#39;poodle&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; y = LinearOrderedCell([&#39;animal&#39;,&#39;dog&#39;,&#39;poodle&#39;,&#39;toy poodle&#39;], &#39;dog&#39;, &#39;poodle&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; z = LinearOrderedCell([&#39;animal&#39;,&#39;dog&#39;,&#39;poodle&#39;,&#39;toy poodle&#39;], &#39;poodle&#39;, &#39;toy poodle&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; x.merge(y)</span>
+<span class="sd">        [dog,poodle]</span>
+<span class="sd">        &gt;&gt;&gt; x</span>
+<span class="sd">        [dog, poodle]</span>
+<span class="sd">        &gt;&gt;&gt; x.merge(z)</span>
+<span class="sd">        [poodle,poodle]</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">other</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">list_diff</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="o">!=</span> <span class="p">[]:</span>
@@ -191,47 +285,78 @@
     <span class="n">__eq__</span> <span class="o">=</span> <span class="n">is_equal</span>
 
 </div>
-<div class="viewcode-block" id="ListCell"><a class="viewcode-back" href="../lists.html#lists.ListCell">[docs]</a><span class="k">class</span> <span class="nc">ListCell</span><span class="p">(</span><span class="n">Cell</span><span class="p">):</span>
+<div class="viewcode-block" id="PrefixCell"><a class="viewcode-back" href="../lists.html#lists.PrefixCell">[docs]</a><span class="k">class</span> <span class="nc">PrefixCell</span><span class="p">(</span><span class="n">Cell</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    ListCells contain ordered elements</span>
+<span class="sd">    PrefixCells contain ordered elements</span>
+
+<span class="sd">    :param value: Optional parameter specifying initial list. Defaults to the empty list.</span>
+<span class="sd">    :type value: list</span>
+<span class="sd">    :raises: CellContstructionFailure</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Creates a new ListCell, optionally with an initial value.</span>
+<span class="sd">        Creates a new PrefixCell, optionally with an initial value.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">CellConstructionException</span><span class="p">(</span><span class="s">&quot;ListCells must be given a list&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">CellConstructionFailure</span><span class="p">(</span><span class="s">&quot;PrefixCells must be given a list&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="ListCell.coerce"><a class="viewcode-back" href="../lists.html#lists.ListCell.coerce">[docs]</a>    <span class="k">def</span> <span class="nf">coerce</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="PrefixCell.coerce"><a class="viewcode-back" href="../lists.html#lists.PrefixCell.coerce">[docs]</a>    <span class="k">def</span> <span class="nf">coerce</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Turns a value into a list</span>
+<span class="sd">        Turns a value into a PrefixCell</span>
+
+<span class="sd">        :param value: The value to be coerced</span>
+<span class="sd">        :type value: list, PrefixCell</span>
+<span class="sd">        :returns: PrefixCell</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">ListCell</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">PrefixCell</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">value</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">)):</span>
-            <span class="k">return</span> <span class="n">ListCell</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">PrefixCell</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">ListCell</span><span class="p">([</span><span class="n">value</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">PrefixCell</span><span class="p">([</span><span class="n">value</span><span class="p">])</span>
 </div>
-<div class="viewcode-block" id="ListCell.size"><a class="viewcode-back" href="../lists.html#lists.ListCell.size">[docs]</a>    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PrefixCell.size"><a class="viewcode-back" href="../lists.html#lists.PrefixCell.size">[docs]</a>    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the number of elements in the list</span>
+
+<span class="sd">        :returns: int -- number of elements in the list</span>
+
+<span class="sd">        &gt;&gt;&gt; x = PrefixCell([&#39;red&#39;,&#39;blue&#39;,&#39;green&#39;])</span>
+<span class="sd">        &gt;&gt;&gt; x.size()</span>
+<span class="sd">        3</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="mi">0</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="ListCell.is_contradictory"><a class="viewcode-back" href="../lists.html#lists.ListCell.is_contradictory">[docs]</a>    <span class="k">def</span> <span class="nf">is_contradictory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="PrefixCell.is_contradictory"><a class="viewcode-back" href="../lists.html#lists.PrefixCell.is_contradictory">[docs]</a>    <span class="k">def</span> <span class="nf">is_contradictory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Two lists are contradictory if the shorter one is not a prefix of the</span>
-<span class="sd">        other. (Very strict definition -- could be generalized to subsequence)</span>
+<span class="sd">        other. (Very strict definition -- could be generalized to subsequence) It does not matter whether *self* or *other* is the shorter one.</span>
+
+<span class="sd">        Empty lists are never contradictory.</span>
+
+<span class="sd">        :param other: The PrefixCell to test</span>
+<span class="sd">        :type other: list</span>
+<span class="sd">        :returns: bool</span>
+
+<span class="sd">        &gt;&gt;&gt; x = PrefixCell([1,2,3])</span>
+<span class="sd">        &gt;&gt;&gt; y = PrefixCell([1,2])</span>
+<span class="sd">        &gt;&gt;&gt; z = PrefixCell([&#39;a&#39;,&#39;b&#39;,&#39;c&#39;])</span>
+<span class="sd">        &gt;&gt;&gt; x.is_contradictory(y)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; y.is_contradictory(z)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; z.is_contradictory(PrefixCell([]))</span>
+<span class="sd">        False</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">():</span>
             <span class="k">return</span> <span class="n">other</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -251,12 +376,23 @@
                 <span class="k">return</span> <span class="bp">True</span>
         <span class="k">return</span> <span class="bp">False</span>
 </div>
-<div class="viewcode-block" id="ListCell.is_entailed_by"><a class="viewcode-back" href="../lists.html#lists.ListCell.is_entailed_by">[docs]</a>    <span class="k">def</span> <span class="nf">is_entailed_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="PrefixCell.is_entailed_by"><a class="viewcode-back" href="../lists.html#lists.PrefixCell.is_entailed_by">[docs]</a>    <span class="k">def</span> <span class="nf">is_entailed_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns True iff the values in this list can be entailed by the other</span>
 <span class="sd">        list (ie, this list is a prefix of the other)</span>
+
+<span class="sd">        :param other: PrefixCell or coercible value</span>
+<span class="sd">        :returns: bool</span>
+
+<span class="sd">        &gt;&gt;&gt; x = PrefixCell([&#39;red&#39;,&#39;orange&#39;,&#39;yellow&#39;])</span>
+<span class="sd">        &gt;&gt;&gt; y = PrefixCell([&#39;red&#39;,&#39;orange&#39;,&#39;yellow&#39;,&#39;green&#39;,&#39;blue&#39;,&#39;indigo&#39;,&#39;violet&#39;])</span>
+<span class="sd">        &gt;&gt;&gt; x.is_entailed_by(y)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; y.is_entailed_by(x)</span>
+<span class="sd">        False</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">other</span> <span class="o">=</span> <span class="n">ListCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="n">PrefixCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">():</span>
             <span class="c"># other is bigger, can&#39;t be entailed</span>
             <span class="k">return</span> <span class="bp">False</span>
@@ -278,11 +414,21 @@
                 <span class="k">return</span> <span class="bp">False</span> 
         <span class="k">return</span> <span class="bp">True</span> 
         </div>
-<div class="viewcode-block" id="ListCell.is_equal"><a class="viewcode-back" href="../lists.html#lists.ListCell.is_equal">[docs]</a>    <span class="k">def</span> <span class="nf">is_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="PrefixCell.is_equal"><a class="viewcode-back" href="../lists.html#lists.PrefixCell.is_equal">[docs]</a>    <span class="k">def</span> <span class="nf">is_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Whether the lists are equal</span>
+
+<span class="sd">        :param other: The value or PrefixCell to test</span>
+<span class="sd">        :returns: bool</span>
+
+<span class="sd">        &gt;&gt;&gt; x = PrefixCell([1,2])</span>
+<span class="sd">        &gt;&gt;&gt; y = PrefixCell([2,1])</span>
+<span class="sd">        &gt;&gt;&gt; x.is_equal(y)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; x.is_equal([1,2])</span>
+<span class="sd">        True</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">other</span> <span class="o">=</span> <span class="n">ListCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="n">PrefixCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">False</span>
         
@@ -295,11 +441,27 @@
                 <span class="k">return</span> <span class="bp">False</span> 
         <span class="k">return</span> <span class="bp">True</span> 
         </div>
-<div class="viewcode-block" id="ListCell.merge"><a class="viewcode-back" href="../lists.html#lists.ListCell.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="PrefixCell.merge"><a class="viewcode-back" href="../lists.html#lists.PrefixCell.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Merges two Lists </span>
+<span class="sd">        Merges two Lists.</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            This method **will** modify the *self* parameter.</span>
+
+<span class="sd">        :param other: A PrefixCell or coercible value</span>
+<span class="sd">        :returns: PrefixCell</span>
+<span class="sd">        :raises: Contradiction</span>
+
+<span class="sd">        &gt;&gt;&gt; x = PrefixCell([1,2])</span>
+<span class="sd">        &gt;&gt;&gt; y = PrefixCell([1,2,3])</span>
+<span class="sd">        &gt;&gt;&gt; z = x.merge(y)</span>
+<span class="sd">        &gt;&gt;&gt; z</span>
+<span class="sd">        [1,2,3]</span>
+<span class="sd">        &gt;&gt;&gt; x</span>
+<span class="sd">        [1,2,3]</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">other</span> <span class="o">=</span> <span class="n">ListCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="n">PrefixCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
             <span class="c"># pick among dependencies</span>
             <span class="k">return</span> <span class="bp">self</span>
@@ -316,18 +478,29 @@
             <span class="c"># otherwise, return self</span>
         <span class="k">return</span> <span class="bp">self</span>
 </div>
-<div class="viewcode-block" id="ListCell.append"><a class="viewcode-back" href="../lists.html#lists.ListCell.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">el</span><span class="p">):</span>
+<div class="viewcode-block" id="PrefixCell.append"><a class="viewcode-back" href="../lists.html#lists.PrefixCell.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">el</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Idiosynractic method for adding an element to a list</span>
+<span class="sd">        Idiosynractic method for adding an element to a list. Modifies the *self* parameter.</span>
+
+<span class="sd">        &gt;&gt;&gt; x = PrefixCell([&#39;a&#39;,&#39;b&#39;])</span>
+<span class="sd">        &gt;&gt;&gt; x.append(&#39;c&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; x</span>
+<span class="sd">        [a,b,c]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="p">[</span><span class="n">el</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">el</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="ListCell.get_values"><a class="viewcode-back" href="../lists.html#lists.ListCell.get_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PrefixCell.get_values"><a class="viewcode-back" href="../lists.html#lists.PrefixCell.get_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns a list containing the elements</span>
+<span class="sd">        Returns a list containing the elements.</span>
+
+<span class="sd">        :returns: list</span>
+
+<span class="sd">        &gt;&gt;&gt; x = PrefixCell([&#39;big&#39;,&#39;blue&#39;,&#39;ball&#39;])</span>
+<span class="sd">        &gt;&gt;&gt; x.get_values()</span>
+<span class="sd">        [&#39;big&#39;,&#39;blue&#39;,&#39;ball&#39;]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
@@ -341,46 +514,25 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="s">&quot;&quot;</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s">&#39;[&#39;</span> <span class="o">+</span> <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;]&#39;</span>
+            <span class="k">return</span> <span class="s">&#39;[&#39;</span> <span class="o">+</span> <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">])</span> <span class="o">+</span> <span class="s">&#39;]&#39;</span>
 
     <span class="n">__str__</span> <span class="o">=</span> <span class="n">__repr__</span>
     <span class="n">__eq__</span> <span class="o">=</span> <span class="n">is_equal</span>
 
 </div>
-<div class="viewcode-block" id="PrefixCell"><a class="viewcode-back" href="../lists.html#lists.PrefixCell">[docs]</a><span class="k">class</span> <span class="nc">PrefixCell</span><span class="p">(</span><span class="n">ListCell</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    PrefixCells contain lists of paths</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">LinearOrderedCell</span><span class="p">([</span><span class="s">&#39;animal&#39;</span><span class="p">,</span><span class="s">&#39;dog&#39;</span><span class="p">,</span><span class="s">&#39;poodle&#39;</span><span class="p">,</span><span class="s">&#39;toy poodle&#39;</span><span class="p">],</span> <span class="s">&#39;animal&#39;</span><span class="p">,</span> <span class="s">&#39;toy poodle&#39;</span><span class="p">)</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">LinearOrderedCell</span><span class="p">([</span><span class="s">&#39;animal&#39;</span><span class="p">,</span><span class="s">&#39;dog&#39;</span><span class="p">,</span><span class="s">&#39;poodle&#39;</span><span class="p">,</span><span class="s">&#39;toy poodle&#39;</span><span class="p">],</span> <span class="s">&#39;dog&#39;</span><span class="p">,</span> <span class="s">&quot;toy poodle&quot;</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">LinearOrderedCell</span><span class="p">([</span><span class="s">&#39;animal&#39;</span><span class="p">,</span><span class="s">&#39;dog&#39;</span><span class="p">,</span><span class="s">&#39;poodle&#39;</span><span class="p">,</span><span class="s">&#39;toy poodle&#39;</span><span class="p">],</span> <span class="s">&#39;animal&#39;</span><span class="p">,</span> <span class="s">&#39;poodle&#39;</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">LinearOrderedCell</span><span class="p">([</span><span class="s">&#39;animal&#39;</span><span class="p">,</span><span class="s">&#39;dog&#39;</span><span class="p">,</span><span class="s">&#39;poodle&#39;</span><span class="p">,</span><span class="s">&#39;toy poodle&#39;</span><span class="p">],</span> <span class="s">&#39;dog&#39;</span><span class="p">,</span> <span class="s">&#39;dog&#39;</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">LinearOrderedCell</span><span class="p">([</span><span class="s">&#39;animal&#39;</span><span class="p">,</span><span class="s">&#39;dog&#39;</span><span class="p">,</span><span class="s">&#39;poodle&#39;</span><span class="p">,</span><span class="s">&#39;toy poodle&#39;</span><span class="p">],</span> <span class="s">&#39;poodle&#39;</span><span class="p">,</span> <span class="s">&#39;toy poodle&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="PrefixCell.merge"><a class="viewcode-back" href="../lists.html#lists.PrefixCell.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Merges two prefixes</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">other</span> <span class="o">=</span> <span class="n">PrefixCell</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
-            <span class="c"># pick among dependencies</span>
-            <span class="k">return</span> <span class="bp">self</span>
-        <span class="k">elif</span> <span class="n">other</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">self</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">Contradiction</span><span class="p">(</span><span class="s">&quot;Cannot merge prefix &#39;</span><span class="si">%s</span><span class="s">&#39; with &#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span> <span class="o">%</span> \
-                    <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">value</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span><span class="p">[:]</span>
-            <span class="c"># otherwise, return self</span>
-        <span class="k">return</span> <span class="bp">self</span>
-</div>
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s">&quot;&quot;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s">&#39;p[&#39;</span> <span class="o">+</span> <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;]&#39;</span>
-
-    <span class="n">__str__</span> <span class="o">=</span> <span class="n">__repr__</span>
-</pre></div></div>
+    <span class="n">vpc</span> <span class="o">=</span> <span class="n">PrefixCell</span><span class="p">([</span><span class="s">&quot;a&quot;</span><span class="p">,</span> <span class="s">&quot;b&quot;</span><span class="p">,</span> <span class="s">&quot;c&quot;</span><span class="p">,</span><span class="s">&quot;d&quot;</span><span class="p">])</span>
+    <span class="n">wpc</span> <span class="o">=</span> <span class="n">PrefixCell</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+    <span class="n">xpc</span> <span class="o">=</span> <span class="n">PrefixCell</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+    <span class="n">ypc</span> <span class="o">=</span> <span class="n">PrefixCell</span><span class="p">([</span><span class="s">&quot;a&quot;</span><span class="p">,</span> <span class="s">&quot;b&quot;</span><span class="p">,</span><span class="s">&quot;c&quot;</span><span class="p">])</span>
+    <span class="n">zpc</span> <span class="o">=</span> <span class="n">PrefixCell</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+</pre></div>
 
           </div>
         </div>
@@ -419,7 +571,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2013, Dustin Smith, Nicolas Bravo.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

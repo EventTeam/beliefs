@@ -1,4 +1,3 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -14,7 +13,7 @@
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -114,7 +113,7 @@ state reaches the &#8216;pos&#8217;.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last">Exception, Contradiction</p>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last">Exception, Contradiction</p>
 </td>
 </tr>
 </tbody>
@@ -153,7 +152,7 @@ by the &#8216;NN&#8217; pos, then the effect will be triggered by &#8216;NN&#821
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last">Contradiction &#8211; raised if <em>key</em> has already been set to a value other than <em>val</em></p>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last">Contradiction &#8211; raised if <em>key</em> has already been set to a value other than <em>val</em></p>
 </td>
 </tr>
 </tbody>
@@ -184,7 +183,7 @@ by the &#8216;NN&#8217; pos, then the effect will be triggered by &#8216;NN&#821
 
 <dl class="method">
 <dt id="beliefstate.BeliefState.has_referential_domain">
-<tt class="descname">has_referential_domain</tt><big>(</big><big>)</big><a class="headerlink" href="#beliefstate.BeliefState.has_referential_domain" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">has_referential_domain</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.has_referential_domain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.has_referential_domain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns <tt class="docutils literal"><span class="pre">True</span></tt> if the BeliefState has a context set defined &#8211; meaning a set
 of external referents.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -255,7 +254,7 @@ a contradiction if that is out of bounds</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The &#8216;n-1&#8217;th unique value</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last">Contradiction</p>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last">Contradiction</p>
 </td>
 </tr>
 </tbody>
@@ -362,7 +361,7 @@ element in the referential domain and not entail the other because its cell will
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The result of calling the <em>op</em> method of the Cell at the end of <em>keypath</em> on <em>value</em></p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Rasise :</th><td class="field-body"><p class="first last">CellConstructionFailure</p>
+<tr class="field-odd field"><th class="field-name">Rasise:</th><td class="field-body"><p class="first last">CellConstructionFailure</p>
 </td>
 </tr>
 </tbody>
@@ -408,7 +407,7 @@ state must at least have all of the same keys/components.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body">Exception</td>
 </tr>
 </tbody>
 </table>
@@ -433,7 +432,7 @@ structure (for all structures) and all values (for all defined values).</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body">Exception</td>
 </tr>
 </tbody>
 </table>
@@ -463,8 +462,10 @@ of their cell&#8217;s values return True for is_equal().</p>
 <dl class="method">
 <dt id="beliefstate.BeliefState.is_contradictory">
 <tt class="descname">is_contradictory</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.is_contradictory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.is_contradictory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Two beliefstates are incompatible if the other beliefstates&#8217;s entities 
-are not consistent with or accessible from the caller.</p>
+<dd><dl class="docutils">
+<dt>Two beliefstates are incompatible if the other beliefstates&#8217;s entities </dt>
+<dd>are not consistent with or accessible from the caller.</dd>
+</dl>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">this only compares the items in the DictCell, not <cite>pos</cite>, <cite>environment_variables</cite> or <cite>deferred_effects</cite>.</p>
@@ -493,7 +494,7 @@ then there are generally <span class="math">\(2^{n}-1\)</span> valid referents.<
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">int &#8211; Size of the contextset</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body">Exception</td>
 </tr>
 </tbody>
 </table>
@@ -559,7 +560,7 @@ compatible with the current belief state.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">int &#8211; The number of singleton members of the contextset</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body">Exception &#8211; Raised when no contextset is defined for the BeliefState</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body">Exception &#8211; Raised when no contextset is defined for the BeliefState</td>
 </tr>
 </tbody>
 </table>
@@ -575,7 +576,7 @@ compatible with the current belief state.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Generator</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body">Exception</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body">Exception</td>
 </tr>
 </tbody>
 </table>
@@ -585,8 +586,9 @@ compatible with the current belief state.</p>
 <dt id="beliefstate.BeliefState.to_latex">
 <tt class="descname">to_latex</tt><big>(</big><em>number=0</em><big>)</big><a class="reference internal" href="_modules/beliefstate.html#BeliefState.to_latex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beliefstate.BeliefState.to_latex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a raw text string that contains a latex representation of
-the belief state as an attribute-value matrix.  This requires:
-usepackage{avm}</p>
+the belief state as an attribute-value matrix.  This requires:</p>
+<blockquote>
+<div>usepackage{avm}</div></blockquote>
 </dd></dl>
 
 <dl class="method">
@@ -663,7 +665,7 @@ during the interpretation or generation.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2013, Dustin Smith, Nicolas Bravo.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

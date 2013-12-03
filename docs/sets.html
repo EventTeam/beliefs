@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,18 +6,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-<<<<<<< HEAD
     <title>Sets &mdash; beliefs 1.0 documentation</title>
-=======
-    <title>Sets &mdash; AIGRE 1.0 documentation</title>
->>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
     
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -30,13 +24,9 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-<<<<<<< HEAD
     <link rel="top" title="beliefs 1.0 documentation" href="index.html" />
-=======
-    <link rel="top" title="AIGRE 1.0 documentation" href="index.html" />
->>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
-    <link rel="next" title="Spatial" href="spatial.html" />
-    <link rel="prev" title="Posets" href="posets.html" /> 
+    <link rel="next" title="Numeric" href="numeric.html" />
+    <link rel="prev" title="Lists" href="lists.html" /> 
   </head>
   <body>
     <div class="related">
@@ -49,16 +39,12 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="spatial.html" title="Spatial"
+          <a href="numeric.html" title="Numeric"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="posets.html" title="Posets"
+          <a href="lists.html" title="Lists"
              accesskey="P">previous</a> |</li>
-<<<<<<< HEAD
         <li><a href="index.html">beliefs 1.0 documentation</a> &raquo;</li> 
-=======
-        <li><a href="index.html">AIGRE 1.0 documentation</a> &raquo;</li> 
->>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
       </ul>
     </div>  
 
@@ -69,21 +55,70 @@
             
   <div class="section" id="module-setCells">
 <span id="sets"></span><h1>Sets<a class="headerlink" href="#module-setCells" title="Permalink to this headline">¶</a></h1>
-<p>Defines the Set cells</p>
 <dl class="class">
 <dt id="setCells.SetIntersectionCell">
-<em class="property">class </em><tt class="descclassname">setCells.</tt><tt class="descname">SetIntersectionCell</tt><big>(</big><em>domain</em>, <em>value_or_values=None</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descname">SetIntersectionCell</tt><big>(</big><em>domain</em>, <em>value_or_values=None</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents iterable unordered elements.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>domain</strong> (<em>iterable</em>) &#8211; Initial domain</li>
+<li><strong>value_or_values</strong> (<em>list</em>) &#8211; Optional default values. All values must be in the specified domain.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last">Exception</p>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="setCells.SetIntersectionCell.stem">
 <tt class="descname">stem</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.stem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.stem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Spawns a new SetCell of the same domain</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">SetIntersectionCell</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">SetIntersectionCell</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">stem</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span>
+<span class="go">{1,2,3}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="setCells.SetIntersectionCell.coerce">
 <tt class="descname">coerce</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.coerce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.coerce" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures that a value is a SetCell</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> &#8211; A Cell or value in <tt class="docutils literal"><span class="pre">self</span></tt>&#8216;s domain</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">SetIntersectionCell</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body">CellConstructionFailure</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">SetIntersectionCell</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">coerce</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span>
+<span class="go">{1,2}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span>
+<span class="go">{1}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -91,22 +126,81 @@
 <tt class="descname">same_domain</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.same_domain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.same_domain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cheap pointer comparison or symmetric difference operation
 to ensure domains are the same</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>SetCell</em>) &#8211; SetCell to be compared</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">SetIntersectionCell</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">SetIntersectionCell</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">SetIntersectionCell</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">same_domain</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">same_domain</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="setCells.SetIntersectionCell.is_equal">
 <tt class="descname">is_equal</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.is_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.is_equal" title="Permalink to this definition">¶</a></dt>
 <dd><p>True iff all members are the same</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>SetCell</em>) &#8211; SetCell to be compared</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body">CellConstructionFailure</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">SetIntersectionCell</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">SetIntersectionCell</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">SetIntersectionCell</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="setCells.SetIntersectionCell.is_contradictory">
 <tt class="descname">is_contradictory</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.is_contradictory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.is_contradictory" title="Permalink to this definition">¶</a></dt>
-<dd><p>What does it mean for a set to contradict another? If a merge results
-in the empty set &#8211; when both sets are disjoint.</p>
-<p>CONTRADICTION: self = {4} other = {3}
-NOT CONTRADICTION: self = {4} other = {3,4}
-NOT CONTRADICTION: self = {3,4} other = {3}</p>
+<dd><p>What does it mean for one set to contradict another? Two sets are contradictory when they are disjoint.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>SetCell</em>) &#8211; A SetCell to be compared</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body">CellConstructionFailure</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">SetIntersectionCell</span><span class="p">([</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">,</span><span class="s">&#39;c&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">SetIntersectionCell</span><span class="p">([</span><span class="s">&#39;d&#39;</span><span class="p">,</span><span class="s">&#39;e&#39;</span><span class="p">,</span><span class="s">&#39;f&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">SetIntersectionCell</span><span class="p">([</span><span class="s">&#39;c&#39;</span><span class="p">,</span><span class="s">&#39;d&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -114,35 +208,113 @@ NOT CONTRADICTION: self = {3,4} other = {3}</p>
 <tt class="descname">is_entailed_by</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.is_entailed_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.is_entailed_by" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fewer members = more information (exception is empty set, which means
 all members of the domain)</p>
+<p>If the two SetCells do not have the same domain, this method returns <tt class="docutils literal"><span class="pre">False</span></tt>.</p>
+<p>If the two SetCells have the same domain, then <em>self</em> is entailed by <em>other</em> if <tt class="docutils literal"><span class="pre">self.values</span></tt> is a subset of <tt class="docutils literal"><span class="pre">other.values</span></tt>, or if <tt class="docutils literal"><span class="pre">other.values</span></tt> is empty (<tt class="docutils literal"><span class="pre">None</span></tt>).</p>
 <blockquote>
-<div><ol class="arabic simple">
-<li>when self is empty and others is not (equal to containing the</li>
-</ol>
-<blockquote>
-<div>entire domain)</div></blockquote>
-<ol class="arabic simple" start="2">
-<li>when other contains more members than self</li>
-</ol>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param other:</th><td class="field-body">A SetCell to be tested</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type other:</th><td class="field-body">SetCell</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
 </div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">SetIntersectionCell</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">SetIntersectionCell</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">SetIntersectionCell</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="setCells.SetIntersectionCell.contains">
 <tt class="descname">contains</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.contains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.contains" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns True iff value is in the set</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> &#8211; A value that may or may not be in the domain of <em>self</em>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">SetIntersectionCell</span><span class="p">([</span><span class="s">&#39;red&#39;</span><span class="p">,</span><span class="s">&#39;blue&#39;</span><span class="p">,</span><span class="s">&#39;green&#39;</span><span class="p">],[</span><span class="s">&#39;red&#39;</span><span class="p">,</span><span class="s">&#39;blue&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">SetIntersectionCell</span><span class="p">([</span><span class="s">&#39;red&#39;</span><span class="p">,</span><span class="s">&#39;blue&#39;</span><span class="p">,</span><span class="s">&#39;green&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s">&#39;red&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s">&#39;green&#39;</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s">&#39;green&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="setCells.SetIntersectionCell.get_values">
 <tt class="descname">get_values</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.get_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.get_values" title="Permalink to this definition">¶</a></dt>
-<dd><p>The main difference between Intersection/Union</p>
+<dd><p>Returns the values of the set, or the domain as a set if no values were specified at construction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">set</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">SetIntersectionCell</span><span class="p">([</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">,</span><span class="s">&#39;c&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">SetIntersectionCell</span><span class="p">([</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">,</span><span class="s">&#39;c&#39;</span><span class="p">],[</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">get_values</span><span class="p">()</span>
+<span class="go">set([&#39;a&#39;, &#39;c&#39;, &#39;b&#39;])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="o">.</span><span class="n">get_values</span><span class="p">()</span>
+<span class="go">set([&#39;a&#39;, &#39;b&#39;])</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="setCells.SetIntersectionCell.merge">
 <tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetIntersectionCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetIntersectionCell.merge" title="Permalink to this definition">¶</a></dt>
 <dd><p>We can merge unless the merge results in an empty set &#8211; a
-contradiction</p>
+contradiction. This method results in the intersection of the two SetCells.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This method modifies the <em>self</em> argument.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>SetCell</em>) &#8211; SetCell to merge with</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">SetCell</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body">Contradiction, CellConstructionFailure</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">SetIntersectionCell</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">SetIntersectionCell</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="go">{1,2,3}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">SetIntersectionCell</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">),[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="go">{2,3}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -151,24 +323,45 @@ contradiction</p>
 <dd><p>For Graphviz rendering</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="setCells.SetIntersectionCell.to_latex">
+<tt class="descname">to_latex</tt><big>(</big><big>)</big><a class="headerlink" href="#setCells.SetIntersectionCell.to_latex" title="Permalink to this definition">¶</a></dt>
+<dd><p>For Graphviz rendering</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="setCells.SetUnionCell">
-<em class="property">class </em><tt class="descclassname">setCells.</tt><tt class="descname">SetUnionCell</tt><big>(</big><em>domain</em>, <em>value_or_values=None</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetUnionCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetUnionCell" title="Permalink to this definition">¶</a></dt>
-<dd><p>SetUnionCell breaks monotonicity.
+<em class="property">class </em><tt class="descname">SetUnionCell</tt><big>(</big><em>domain</em>, <em>value_or_values=None</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetUnionCell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetUnionCell" title="Permalink to this definition">¶</a></dt>
+<dd><p>SetUnionCell inherits from SetIntersectionCell and breaks monotonicity.
 Initially, its values are equal to its domain, and then after 1 or more updates, its values become the UNION of all of the updates</p>
 <dl class="method">
 <dt id="setCells.SetUnionCell.merge">
 <tt class="descname">merge</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/setCells.html#SetUnionCell.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetUnionCell.merge" title="Permalink to this definition">¶</a></dt>
-<dd><p>We can merge unless the merge results in an empty set &#8211; a
-contradiction</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="setCells.SetUnionCell.get_values">
-<tt class="descname">get_values</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/setCells.html#SetUnionCell.get_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setCells.SetUnionCell.get_values" title="Permalink to this definition">¶</a></dt>
-<dd><p>The main difference between Intersection/Union</p>
+<dd><p>We can merge unless the two sets are contradictory, i.e. they are disjoint. The resulting merge will be the union of the two sets.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This method will modify the <em>self</em> argument.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>SetCell</em>) &#8211; SetCell to merge with</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">SetCell</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body">Contradiction, CellConstructionFailure</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">SetUnionionCell</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">SetUnionionCell</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="go">{0,1,2,3,4,5,6,7,8}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -182,11 +375,11 @@ contradiction</p>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="posets.html"
-                        title="previous chapter">Posets</a></p>
+  <p class="topless"><a href="lists.html"
+                        title="previous chapter">Lists</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="spatial.html"
-                        title="next chapter">Spatial</a></p>
+  <p class="topless"><a href="numeric.html"
+                        title="next chapter">Numeric</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/sets.txt"
@@ -219,21 +412,17 @@ contradiction</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="spatial.html" title="Spatial"
+          <a href="numeric.html" title="Numeric"
              >next</a> |</li>
         <li class="right" >
-          <a href="posets.html" title="Posets"
+          <a href="lists.html" title="Lists"
              >previous</a> |</li>
-<<<<<<< HEAD
         <li><a href="index.html">beliefs 1.0 documentation</a> &raquo;</li> 
-=======
-        <li><a href="index.html">AIGRE 1.0 documentation</a> &raquo;</li> 
->>>>>>> 668d93f7dd435f6a559cbf109baed58421024921
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013, Nicolas Bravo.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+        &copy; Copyright 2013, Dustin Smith, Nicolas Bravo.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

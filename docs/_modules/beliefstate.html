@@ -1,4 +1,3 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -50,32 +49,29 @@
             
   <h1>Source code for beliefstate</h1><div class="highlight"><pre>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span><span class="p">,</span> <span class="n">defaultdict</span>
 <span class="kn">from</span> <span class="nn">beliefs.cells</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">belief_utils</span> <span class="kn">import</span> <span class="n">choose</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
 
 <div class="viewcode-block" id="BeliefState"><a class="viewcode-back" href="../beliefstate.html#beliefstate.BeliefState">[docs]</a><span class="k">class</span> <span class="nc">BeliefState</span><span class="p">(</span><span class="n">DictCell</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Represents a beliefstate, a partial information object *about* specific targets.</span>
-<span class="sd">    A beliefstate is a continuum between individual cells and entire classes of cells.</span>
+<span class="sd">    A beliefstate is a continuum between individual entities and types of entities.</span>
 <span class="sd">        </span>
-<span class="sd">    Suppose the domain has entities/cells: 1,2,3.  A beliefstate represents the</span>
-<span class="sd">    possible groupings of these entities; a single grouping is called a *referent*. </span>
-<span class="sd">    A beliefstate can be about &quot;all referents of size two&quot;, for example, and computing</span>
+<span class="sd">    Suppose the referential domain has entities: 1,2,3.  A beliefstate represents the</span>
+<span class="sd">    possible groupings of these entities; a single grouping is called a *target*. </span>
+<span class="sd">    A beliefstate can be about &quot;all targets of size two&quot;, for example, and computing</span>
 <span class="sd">    the beliefstate&#39;s extension would yield the targets {1,2}, {2,3}, and {1,3}.</span>
 <span class="sd">    </span>
-<span class="sd">    In addition to containing a description of the intended targets, a belief state contains information</span>
-<span class="sd">    about the relational constraints (such as arity size), and linguistic decisions.</span>
+<span class="sd">    In addition to containing a description of the intended targets, a belief state </span>
+<span class="sd">    contains meta-data about combinatoric constraints (such as arity size).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">PRIMES</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">37</span><span class="p">,</span> <span class="mi">41</span><span class="p">,</span>
-          <span class="mi">43</span><span class="p">,</span> <span class="mi">47</span><span class="p">,</span> <span class="mi">53</span><span class="p">,</span> <span class="mi">59</span><span class="p">,</span> <span class="mi">61</span><span class="p">,</span> <span class="mi">67</span><span class="p">,</span> <span class="mi">71</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="mi">79</span><span class="p">,</span> <span class="mi">83</span><span class="p">,</span> <span class="mi">89</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">103</span><span class="p">,</span> <span class="mi">107</span><span class="p">,</span> <span class="mi">109</span><span class="p">,</span>
-          <span class="mi">113</span><span class="p">,</span> <span class="mi">127</span><span class="p">,</span> <span class="mi">131</span><span class="p">,</span> <span class="mi">137</span><span class="p">,</span> <span class="mi">139</span><span class="p">,</span> <span class="mi">149</span><span class="p">,</span> <span class="mi">151</span><span class="p">,</span> <span class="mi">157</span><span class="p">,</span> <span class="mi">163</span><span class="p">,</span> <span class="mi">167</span><span class="p">,</span> <span class="mi">173</span><span class="p">,</span> <span class="mi">179</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contextset</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">referential_domain</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; </span>
-<span class="sd">        Initializes an empty beliefsstate, and stores the contextset (if specified) </span>
-<span class="sd">        into self.contextset. </span>
+<span class="sd">        Initializes an empty beliefsstate, and stores the referential domain (if specified) </span>
+<span class="sd">        into self.referential_domain. </span>
 <span class="sd">         </span>
 <span class="sd">        By default, beliefstates are given the &#39;S&#39; part of speech and an empty</span>
 <span class="sd">        environment variable stack.</span>
@@ -84,7 +80,7 @@
 <span class="sd">        from a previous beliefstate.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">&#39;pos&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;S&#39;</span>  <span class="c"># syntactic state</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">&#39;contextset&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">contextset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">&#39;referential_domain&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">referential_domain</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">&#39;environment_variables&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">&#39;deferred_effects&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -98,8 +94,13 @@
         <span class="n">DictCell</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default_structure</span><span class="p">)</span>
 
 <div class="viewcode-block" id="BeliefState.set_pos"><a class="viewcode-back" href="../beliefstate.html#beliefstate.BeliefState.set_pos">[docs]</a>    <span class="k">def</span> <span class="nf">set_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Sets the beliefstates&#39;s part of speech, `pos`, and then executes</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the beliefstates&#39;s part of speech, `pos`, and then executes</span>
 <span class="sd">        any deferred effects that are keyed by that pos tag.</span>
+
+<span class="sd">        :param pos: The part of speech of the beliefstate</span>
+<span class="sd">        :type pos: str</span>
+<span class="sd">        :returns: int,float -- The cost of the deferred effects associated with this part of speech</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">&#39;pos&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pos</span>
         <span class="c"># if any deferred effects are keyed by this pos tag, evaluate them, and</span>
@@ -107,12 +108,24 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute_deferred_effects</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="BeliefState.get_pos"><a class="viewcode-back" href="../beliefstate.html#beliefstate.BeliefState.get_pos">[docs]</a>    <span class="k">def</span> <span class="nf">get_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Returns Part of Speech&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns Part of Speech</span>
+
+<span class="sd">        :returns: str -- The part of speech for this BeliefState. BeliefStates are initialized with a default pos of &#39;S&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">&#39;pos&#39;</span><span class="p">]</span>
 </div>
 <div class="viewcode-block" id="BeliefState.add_deferred_effect"><a class="viewcode-back" href="../beliefstate.html#beliefstate.BeliefState.add_deferred_effect">[docs]</a>    <span class="k">def</span> <span class="nf">add_deferred_effect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">effect</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Pushes an (pos, effect) tuple onto a stack to later be executed if the</span>
-<span class="sd">        state reaches the &#39;pos&#39;.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Pushes a (pos, effect) tuple onto a stack to later be executed if the</span>
+<span class="sd">        state reaches the &#39;pos&#39;.</span>
+<span class="sd">        </span>
+<span class="sd">        :param effect: A function that takes one argument and returns a number representing the cost associated with this pos</span>
+<span class="sd">        :type effect: function</span>
+<span class="sd">        :param pos: Part of Speech</span>
+<span class="sd">        :type pos: str</span>
+<span class="sd">        :raises: Exception, Contradiction</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="p">(</span><span class="nb">unicode</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Invalid POS tag. Must be string not </span><span class="si">%d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">pos</span><span class="p">)))</span>
         <span class="k">if</span> <span class="bp">self</span><span class="p">[</span><span class="s">&#39;speaker_model&#39;</span><span class="p">][</span><span class="s">&#39;is_syntax_stacked&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="bp">True</span><span class="p">:</span>
@@ -123,9 +136,16 @@
             <span class="k">raise</span> <span class="n">Contradiction</span><span class="p">(</span><span class="s">&quot;Speaker Model undefined&quot;</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="BeliefState.execute_deferred_effects"><a class="viewcode-back" href="../beliefstate.html#beliefstate.BeliefState.execute_deferred_effects">[docs]</a>    <span class="k">def</span> <span class="nf">execute_deferred_effects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Evaluates deferred effects that are triggered by the prefix of the</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluates deferred effects that are triggered by the prefix of the</span>
 <span class="sd">        pos on the current beliefstate. For instance, if the effect is triggered</span>
-<span class="sd">        by the &#39;NN&#39; pos, then the effect will be triggered by &#39;NN&#39; or &#39;NNS&#39;.&quot;&quot;&quot;</span>
+<span class="sd">        by the &#39;NN&#39; pos, then the effect will be triggered by &#39;NN&#39; or &#39;NNS&#39;.</span>
+
+<span class="sd">        :param pos: A part of speech</span>
+<span class="sd">        :type pos: str</span>
+<span class="sd">        :returns: number -- Represents the cost of the deferred effects associated with *pos*. Can be int or float.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">costs</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">to_delete</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">&#39;deferred_effects&#39;</span><span class="p">]:</span>
@@ -140,13 +160,30 @@
         <span class="k">return</span> <span class="n">costs</span>
 </div>
 <div class="viewcode-block" id="BeliefState.set_environment_variable"><a class="viewcode-back" href="../beliefstate.html#beliefstate.BeliefState.set_environment_variable">[docs]</a>    <span class="k">def</span> <span class="nf">set_environment_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Sets a variable if that variable is not already set &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets a variable if that variable has not already been set</span>
+
+<span class="sd">        :param key: The key for the environment variable</span>
+<span class="sd">        :param val: The value that will be assigned to *key*</span>
+<span class="sd">        :raises: Contradiction -- raised if *key* has already been set to a value other than *val*</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_environment_variable</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="n">val</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">&#39;environment_variables&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">Contradiction</span><span class="p">(</span><span class="s">&quot;Could not set environment variable </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">key</span><span class="p">))</span>
 </div>
-    <span class="k">def</span> <span class="nf">get_environment_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">pop</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="BeliefState.get_environment_variable"><a class="viewcode-back" href="../beliefstate.html#beliefstate.BeliefState.get_environment_variable">[docs]</a>    <span class="k">def</span> <span class="nf">get_environment_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">pop</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the value associated with *key*.</span>
+
+<span class="sd">        :param key: The lookup key</span>
+<span class="sd">        :param default: This value is returned in the event that no value is associated with *key*</span>
+<span class="sd">        :param pop: Determines whether *key* is removed from the Environment Variables when it is found.</span>
+<span class="sd">        :type pop: bool</span>
+<span class="sd">        :returns: The value associated with *key*</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
         <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">&#39;environment_variables&#39;</span><span class="p">]:</span>
             <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">&#39;environment_variables&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">pop</span><span class="p">:</span>
@@ -154,16 +191,24 @@
             <span class="k">return</span> <span class="n">val</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">default</span>
-
-<div class="viewcode-block" id="BeliefState.has_contextset"><a class="viewcode-back" href="../beliefstate.html#beliefstate.BeliefState.has_contextset">[docs]</a>    <span class="k">def</span> <span class="nf">has_contextset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</div>
+<div class="viewcode-block" id="BeliefState.has_referential_domain"><a class="viewcode-back" href="../beliefstate.html#beliefstate.BeliefState.has_referential_domain">[docs]</a>    <span class="k">def</span> <span class="nf">has_referential_domain</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns True if the BeliefState has a context set defined -- meaning a </span>
-<span class="sd">        list of external referents.</span>
+<span class="sd">        Returns ``True`` if the BeliefState has a context set defined -- meaning a set</span>
+<span class="sd">        of external referents.</span>
+
+<span class="sd">        :returns: bool -- Whether a contextset is defined</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">&#39;contextset&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">&#39;referential_domain&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span>
 </div>
 <div class="viewcode-block" id="BeliefState.iter_breadth_first"><a class="viewcode-back" href="../beliefstate.html#beliefstate.BeliefState.iter_breadth_first">[docs]</a>    <span class="k">def</span> <span class="nf">iter_breadth_first</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Traverses the belief state&#39;s structure breadth-first &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Traverses the belief state&#39;s structure breadth-first</span>
+
+<span class="sd">        :param root: Optional starting point for the search</span>
+<span class="sd">        :returns: Generator</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">root</span> <span class="o">=</span> <span class="bp">self</span>
         <span class="k">yield</span> <span class="n">root</span>
@@ -179,10 +224,17 @@
 </div>
 <div class="viewcode-block" id="BeliefState.find_path"><a class="viewcode-back" href="../beliefstate.html#beliefstate.BeliefState.find_path">[docs]</a>    <span class="k">def</span> <span class="nf">find_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_function</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">on_targets</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        General helper method that iterates breadth-first over the contextset&#39;s</span>
-<span class="sd">        cells and returns a path where the test_function is True</span>
+<span class="sd">        This general helper method iterates breadth-first over the elements in the</span>
+<span class="sd">        referential domain and yields all paths to the elements  where the *test_function* </span>
+<span class="sd">        evaluates to ``True``</span>
+
+<span class="sd">        :param test_function: A function that takes two arguments and returns a boolean</span>
+<span class="sd">        :type test_function: function</span>
+<span class="sd">        :param on_targets: </span>
+<span class="sd">        :type on_targets: bool</span>
+<span class="sd">        :returns: Generator -- represents the path</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_contextset</span><span class="p">(),</span> <span class="s">&quot;need context set&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_referential_domain</span><span class="p">(),</span> <span class="s">&quot;need context set&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">test_function</span><span class="p">:</span>
             <span class="n">test_function</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="bp">True</span>
@@ -219,10 +271,18 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the `n-1`th unique value, or raises</span>
 <span class="sd">        a contradiction if that is out of bounds</span>
+
+<span class="sd">        :param keypath:</span>
+<span class="sd">        :type keypath: list</span>
+<span class="sd">        :param n: An integer representing which unique value to return</span>
+<span class="sd">        :type n: int</span>
+<span class="sd">        :param reverse: Specifies the ordering of the values</span>
+<span class="sd">        :type reverse: bool</span>
+<span class="sd">        :returns: The &#39;n-1&#39;th unique value</span>
+<span class="sd">        :raises: Contradiction</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">unique_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_ordered_values</span><span class="p">(</span><span class="n">keypath</span><span class="p">,</span> <span class="n">distance_from</span><span class="p">,</span> <span class="n">open_interval</span><span class="p">)</span>
-        <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_values</span><span class="p">):</span>
-            <span class="c">#logging.error(&quot;%i th unique value is %s&quot; % (n, str(unique_values[n])))</span>
+        <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_values</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">unique_values</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">Contradiction</span><span class="p">(</span><span class="s">&quot;n-th Unique value out of range: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
@@ -231,7 +291,14 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieves the referents&#39;s values sorted by their distance from the</span>
 <span class="sd">        min, max, or mid value.</span>
+
+<span class="sd">        :param keypath: </span>
+<span class="sd">        :param reverse: Specifies the ordering of the values</span>
+<span class="sd">        :type reverse: bool</span>
+<span class="sd">        :returns: OrderedDict -- Dictionary of sorted values</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;Looking for values from path&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">keypath</span><span class="p">))</span>
 
         <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="n">keypath</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;target&#39;</span><span class="p">:</span>
@@ -243,7 +310,6 @@
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s">&#39;low&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span><span class="o">.</span><span class="n">low</span> <span class="o">!=</span> <span class="n">value</span><span class="o">.</span><span class="n">high</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">[]</span>
             <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
-
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
         <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
@@ -292,6 +358,10 @@
 <span class="sd">        These paths are not pointers to the objects themselves, but tuples of</span>
 <span class="sd">        attribute names that allow us to (attempt) to look up that object in any</span>
 <span class="sd">        belief state.</span>
+
+<span class="sd">        :param keys: A collection of keys</span>
+<span class="sd">        :type keys: list,set</span>
+<span class="sd">        :returns: Generator</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">set</span><span class="p">)):</span>
             <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">keys</span><span class="p">]</span>
@@ -303,22 +373,42 @@
 <div class="viewcode-block" id="BeliefState.get_parts"><a class="viewcode-back" href="../beliefstate.html#beliefstate.BeliefState.get_parts">[docs]</a>    <span class="k">def</span> <span class="nf">get_parts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Searches for all DictCells (with nested structure)</span>
+
+<span class="sd">        :returns: Generator</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_path</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">DictCell</span><span class="p">),</span> <span class="n">on_targets</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="BeliefState.get_paths_for_attribute"><a class="viewcode-back" href="../beliefstate.html#beliefstate.BeliefState.get_paths_for_attribute">[docs]</a>    <span class="k">def</span> <span class="nf">get_paths_for_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attribute_name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns a path list to all attributes that have with a particular name.</span>
+<span class="sd">        Returns a path list to all attributes that have a particular name.</span>
+
+<span class="sd">        :param attribute_name:</span>
+<span class="sd">        :type attribute_name:</span>
+<span class="sd">        :returns: Generator</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">has_name</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">name</span><span class="p">,</span> <span class="n">structure</span><span class="p">:</span>  <span class="n">name</span> <span class="o">==</span> <span class="n">attribute_name</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_path</span><span class="p">(</span><span class="n">has_name</span><span class="p">,</span> <span class="n">on_targets</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="BeliefState.merge"><a class="viewcode-back" href="../beliefstate.html#beliefstate.BeliefState.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keypath</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="s">&#39;set&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        First gets the cell at BeliefState&#39;s keypath, or creates a new cell </span>
-<span class="sd">        from the first target that has that keypath (This could mess up if the</span>
-<span class="sd">        member its copying from has a different Cell or domain for that keypath.)</span>
-<span class="sd">        Second, this merges that cell with the value</span>
+<span class="sd">        First gets the cell at BeliefState&#39;s keypath, or creates a new cell</span>
+<span class="sd">        from the first element in the referential domain that has that keypath.</span>
+<span class="sd">        Second, this merges that cell with the value.</span>
+
+<span class="sd">        .. warning::</span>
+<span class="sd">            If two elements in the referential domain have the same named attributes (i.e. attribute paths)</span>
+<span class="sd">            but different Cells for the value, then the belief state will arbitrarily acquire the first</span>
+<span class="sd">            element in the referential domain and not entail the other because its cell will be incomparable.</span>
+
+<span class="sd">        :param keypath:</span>
+<span class="sd">        :type keypath: list</span>
+<span class="sd">        :param value:</span>
+<span class="sd">        :type value:</span>
+<span class="sd">        :param op:</span>
+<span class="sd">        :type op:</span>
+<span class="sd">        :returns: The result of calling the *op* method of the Cell at the end of *keypath* on *value*</span>
+<span class="sd">        :rasise: CellConstructionFailure</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">negated</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="n">keypath</span> <span class="o">=</span> <span class="n">keypath</span><span class="p">[:]</span> <span class="c"># copy it </span>
@@ -367,7 +457,15 @@
             <span class="k">raise</span> <span class="n">Contradiction</span><span class="p">(</span><span class="s">&quot;Could not merge </span><span class="si">%s</span><span class="s"> with </span><span class="si">%s</span><span class="s">: </span><span class="si">%s</span><span class="s"> &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">keypath</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">ctrd</span><span class="p">))</span>
    </div>
 <div class="viewcode-block" id="BeliefState.add_cell"><a class="viewcode-back" href="../beliefstate.html#beliefstate.BeliefState.add_cell">[docs]</a>    <span class="k">def</span> <span class="nf">add_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keypath</span><span class="p">,</span> <span class="n">cell</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Adds a new cell to the end of `keypath` of type `cell`&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds a new cell to the end of `keypath` of type `cell`</span>
+
+<span class="sd">        :param keypath: A sequence of keys that specify a path through nested dictionaries</span>
+<span class="sd">        :type keypath: list</span>
+<span class="sd">        :param cell: The cell to be added to the end of keypath</span>
+<span class="sd">        :returns: The *cell* object that was passed in as a parameter</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">keypath</span> <span class="o">=</span> <span class="n">keypath</span><span class="p">[:]</span> <span class="c"># copy</span>
         <span class="n">inner</span> <span class="o">=</span> <span class="bp">self</span>  <span class="c"># the most inner dict where cell is added</span>
         <span class="n">cellname</span> <span class="o">=</span> <span class="n">keypath</span>  <span class="c"># the name of the cell</span>
@@ -385,12 +483,17 @@
 </div>
 <div class="viewcode-block" id="BeliefState.entails"><a class="viewcode-back" href="../beliefstate.html#beliefstate.BeliefState.entails">[docs]</a>    <span class="k">def</span> <span class="nf">entails</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        One beliefstate entails another beliefstate iff the other state&#39;s cells are</span>
+<span class="sd">        One beliefstate entails another beliefstate iff the other state&#39;s entities are</span>
 <span class="sd">        all equal or more general than the caller&#39;s parts.  That means the other </span>
-<span class="sd">        state must have at least all of the same keys/components.  </span>
+<span class="sd">        state must at least have all of the same keys/components.  </span>
 
-<span class="sd">        Note: this only compares the items in the DictCell, not `pos`,</span>
-<span class="sd">        `environment_variables` or `deferred_effects`.</span>
+<span class="sd">        .. note::</span>
+<span class="sd">            this only compares the items in the DictCell, not `pos`,`environment_variables` or `deferred_effects`.</span>
+
+<span class="sd">        :param other: The BeliefState to compare with</span>
+<span class="sd">        :type other: BeliefState</span>
+<span class="sd">        :returns: bool</span>
+<span class="sd">        :raises: Exception</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">other</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </div>
@@ -402,8 +505,13 @@
 <span class="sd">        </span>
 <span class="sd">        Inverse of `entails`.</span>
 
-<span class="sd">        Note: this only compares the items in the DictCell, not `pos`,</span>
-<span class="sd">        `environment_variables` or `deferred_effects`.</span>
+<span class="sd">        .. note::</span>
+<span class="sd">            this only compares the items in the DictCell, not `pos`, `environment_variables` or `deferred_effects`.</span>
+
+<span class="sd">        :param other: BeliefState to compare with</span>
+<span class="sd">        :type other: BeliefState</span>
+<span class="sd">        :returns: bool</span>
+<span class="sd">        :raises: Exception</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="p">(</span><span class="n">s_key</span><span class="p">,</span> <span class="n">s_val</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">s_key</span> <span class="ow">in</span> <span class="n">other</span><span class="p">:</span>
@@ -420,25 +528,33 @@
 <span class="sd">        Two beliefstates are equal if all of their part names are equal and all</span>
 <span class="sd">        of their cell&#39;s values return True for is_equal().</span>
 
-<span class="sd">        Note: this only compares the items in the DictCell, not `pos`,</span>
-<span class="sd">        `environment_variables` or `deferred_effects`.</span>
+<span class="sd">        .. note::</span>
+<span class="sd">            this only compares the items in the DictCell, not `pos`, `environment_variables` or `deferred_effects`.</span>
+
+<span class="sd">        :param other: BeliefState to compare with</span>
+<span class="sd">        :type other: BeliefState</span>
+<span class="sd">        :returns: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">hash</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="k">for</span> <span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">that</span><span class="p">)</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">izip_longest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">that</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">this</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">that</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-                <span class="c"># compare key names</span>
+                <span class="c"># compare attribute names</span>
                 <span class="k">return</span> <span class="bp">False</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">this</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">is_equal</span><span class="p">(</span><span class="n">that</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
-                <span class="c"># compare cells</span>
+                <span class="c"># compare values</span>
                 <span class="k">return</span> <span class="bp">False</span>
         <span class="k">return</span> <span class="bp">True</span>
         </div>
 <div class="viewcode-block" id="BeliefState.is_contradictory"><a class="viewcode-back" href="../beliefstate.html#beliefstate.BeliefState.is_contradictory">[docs]</a>    <span class="k">def</span> <span class="nf">is_contradictory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Two beliefstates are incompatible if the other beliefstates&#39;s cells</span>
+        <span class="sd">&quot;&quot;&quot; Two beliefstates are incompatible if the other beliefstates&#39;s entities </span>
 <span class="sd">         are not consistent with or accessible from the caller.</span>
 <span class="sd">         </span>
-<span class="sd">        Note: this only compares the items in the DictCell, not `pos`,</span>
-<span class="sd">        `environment_variables` or `deferred_effects`.</span>
+<span class="sd">        .. note::</span>
+<span class="sd">            this only compares the items in the DictCell, not `pos`, `environment_variables` or `deferred_effects`.</span>
+
+<span class="sd">        :param other: BeliefState to compare with</span>
+<span class="sd">        :type other: BeliefState</span>
+<span class="sd">        :returns: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="p">(</span><span class="n">s_key</span><span class="p">,</span> <span class="n">s_val</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">s_key</span> <span class="ow">in</span> <span class="n">other</span> <span class="ow">and</span> <span class="n">s_val</span><span class="o">.</span><span class="n">is_contradictory</span><span class="p">(</span><span class="n">other</span><span class="p">[</span><span class="n">s_key</span><span class="p">]):</span>
@@ -446,10 +562,13 @@
         <span class="k">return</span> <span class="bp">False</span> 
 </div>
 <div class="viewcode-block" id="BeliefState.size"><a class="viewcode-back" href="../beliefstate.html#beliefstate.BeliefState.size">[docs]</a>    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Returns the size of the belief state.</span>
+        <span class="sd">&quot;&quot;&quot; Returns the size of the belief state.  This is the number of referents it implicitly represents.</span>
 
-<span class="sd">        Initially if there are $n$ consistent members, (the result of `self.number_of_singleton_referents()`) </span>
-<span class="sd">        then there are generally $2^{n}-1$ valid belief states.</span>
+<span class="sd">        Initially if there are :math:`n` consistent members, (the result of :meth:`number_of_singleton_referents`) </span>
+<span class="sd">        then there are generally :math:`2^{n}-1` valid referents.</span>
+
+<span class="sd">        :returns: int -- Size of the contextset</span>
+<span class="sd">        :raises: Exception</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_singleton_referents</span><span class="p">()</span>
         <span class="n">targets</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iter_referents_tuples</span><span class="p">())</span>
@@ -468,69 +587,84 @@
         <span class="k">return</span> <span class="n">size2</span>
 </div>
 <div class="viewcode-block" id="BeliefState.referents"><a class="viewcode-back" href="../beliefstate.html#beliefstate.BeliefState.referents">[docs]</a>    <span class="k">def</span> <span class="nf">referents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Returns all target sets that are compatible with the current beliefstate.</span>
-<span class="sd">        Warning: the number of referents can be quadradic in elements of singleton referents/cells.  </span>
-<span class="sd">        Call `size()` method instead to compute size only, without enumerating them.</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns all target sets that are compatible with the current beliefstate.</span>
+
+<span class="sd">        .. warning::</span>
+<span class="sd">            the number of referents can be quadratic in the number of elements in the referential domain.</span>
+<span class="sd">            Call `size()` method instead to compute size only, without enumerating them.</span>
+
+<span class="sd">        :returns: list -- Members of contextset that are compatible with beliefstate</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># all groupings of singletons</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iter_referents</span><span class="p">())</span>
     </div>
 <div class="viewcode-block" id="BeliefState.iter_referents"><a class="viewcode-back" href="../beliefstate.html#beliefstate.BeliefState.iter_referents">[docs]</a>    <span class="k">def</span> <span class="nf">iter_referents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Generates target sets that are compatible with the current beliefstate. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Generates target sets that are compatible with the current beliefstate.</span>
+
+<span class="sd">        :returns: Generator</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">tlow</span><span class="p">,</span> <span class="n">thigh</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s">&#39;targetset_arity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get_tuple</span><span class="p">()</span>
         <span class="n">clow</span><span class="p">,</span> <span class="n">chigh</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s">&#39;contrast_arity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get_tuple</span><span class="p">()</span>
 
         <span class="n">referents</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iter_singleton_referents</span><span class="p">())</span>
         <span class="n">t</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">referents</span><span class="p">)</span>
         <span class="n">low</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">tlow</span><span class="p">)</span>
-        <span class="n">high</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">t</span><span class="p">,</span>  <span class="n">thigh</span><span class="p">])</span>
+        <span class="n">high</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">t</span><span class="p">,</span> <span class="n">thigh</span><span class="p">])</span>
 
         <span class="k">for</span> <span class="n">targets</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">referents</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span> \
             <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">xrange</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="o">+</span><span class="mi">1</span><span class="p">))):</span>
             <span class="k">if</span> <span class="n">clow</span> <span class="o">&lt;=</span> <span class="n">t</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">targets</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">chigh</span><span class="p">:</span>
-                <span class="k">yield</span>  <span class="n">targets</span>
+                <span class="k">yield</span> <span class="n">targets</span>
 </div>
 <div class="viewcode-block" id="BeliefState.iter_referents_tuples"><a class="viewcode-back" href="../beliefstate.html#beliefstate.BeliefState.iter_referents_tuples">[docs]</a>    <span class="k">def</span> <span class="nf">iter_referents_tuples</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Generates target sets (as tuples of indicies) that are compatible with</span>
-<span class="sd">        the current beliefstate.&quot;&quot;&quot;</span>
+<span class="sd">        the current beliefstate.</span>
+
+<span class="sd">        :returns: Generator</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">tlow</span><span class="p">,</span> <span class="n">thigh</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s">&#39;targetset_arity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get_tuple</span><span class="p">()</span>
         <span class="n">clow</span><span class="p">,</span> <span class="n">chigh</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s">&#39;contrast_arity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get_tuple</span><span class="p">()</span>
         <span class="n">singletons</span> <span class="o">=</span> <span class="nb">list</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">_</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iter_singleton_referents</span><span class="p">()])</span>
         <span class="n">t</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">singletons</span><span class="p">)</span>
         <span class="n">low</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">tlow</span><span class="p">)</span>
-        <span class="n">high</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">t</span><span class="p">,</span>  <span class="n">thigh</span><span class="p">])</span>
+        <span class="n">high</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">t</span><span class="p">,</span> <span class="n">thigh</span><span class="p">])</span>
         <span class="k">for</span> <span class="n">elements</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">singletons</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span> \
                 <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">xrange</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="o">+</span><span class="mi">1</span><span class="p">))):</span>
             <span class="k">if</span> <span class="n">clow</span> <span class="o">&lt;=</span> <span class="n">t</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">chigh</span><span class="p">:</span>
-                <span class="k">yield</span>  <span class="n">elements</span>
+                <span class="k">yield</span> <span class="n">elements</span>
 </div>
 <div class="viewcode-block" id="BeliefState.number_of_singleton_referents"><a class="viewcode-back" href="../beliefstate.html#beliefstate.BeliefState.number_of_singleton_referents">[docs]</a>    <span class="k">def</span> <span class="nf">number_of_singleton_referents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the number of singleton members of the referring domain (cells) that are</span>
+<span class="sd">        Returns the number of singleton elements of the referential domain that are</span>
 <span class="sd">        compatible with the current belief state.</span>
 
 <span class="sd">        This is the size of the union of all referent sets.</span>
+
+<span class="sd">        :returns: int -- The number of singleton members of the contextset</span>
+<span class="sd">        :raises: Exception -- Raised when no contextset is defined for the BeliefState</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">&#39;contextset&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">&#39;referential_domain&#39;</span><span class="p">]:</span>
             <span class="n">ct</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iter_singleton_referents</span><span class="p">():</span>
                 <span class="n">ct</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">return</span> <span class="n">ct</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;self.contextset must be defined&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;self.referential_domain must be defined&quot;</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="BeliefState.iter_singleton_referents"><a class="viewcode-back" href="../beliefstate.html#beliefstate.BeliefState.iter_singleton_referents">[docs]</a>    <span class="k">def</span> <span class="nf">iter_singleton_referents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Iterator of all of the singleton members of the context set.</span>
 
-<span class="sd">        NOTE: this evaluates cells one-at-a-time, and does not handle relational constraints.</span>
+<span class="sd">        :returns: Generator</span>
+<span class="sd">        :raises: Exception</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">&#39;contextset&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cells</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">&#39;referential_domain&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iter_entities</span><span class="p">():</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="p">[</span><span class="s">&#39;target&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">member</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s">&#39;distractor&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="p">[</span><span class="s">&#39;distractor&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">is_entailed_by</span><span class="p">(</span><span class="n">member</span><span class="p">)):</span>
                     <span class="k">yield</span> <span class="n">member</span><span class="p">[</span><span class="s">&#39;num&#39;</span><span class="p">],</span> <span class="n">member</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;No contextset defined&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;No referential_domain defined&quot;</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="BeliefState.to_latex"><a class="viewcode-back" href="../beliefstate.html#beliefstate.BeliefState.to_latex">[docs]</a>    <span class="k">def</span> <span class="nf">to_latex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns a raw text string that contains a latex representation of</span>
@@ -551,8 +685,10 @@
 <span class="sd">        Copies the BeliefState by recursively deep-copying all of</span>
 <span class="sd">        its parts.  Domains are not copied, as they do not change</span>
 <span class="sd">        during the interpretation or generation.</span>
+
+<span class="sd">        :returns: BeliefState</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">copied</span> <span class="o">=</span> <span class="n">BeliefState</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">&#39;contextset&#39;</span><span class="p">])</span> 
+        <span class="n">copied</span> <span class="o">=</span> <span class="n">BeliefState</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">&#39;referential_domain&#39;</span><span class="p">])</span> 
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;environment_variables&#39;</span><span class="p">,</span> <span class="s">&#39;deferred_effects&#39;</span><span class="p">,</span> <span class="s">&#39;pos&#39;</span><span class="p">,</span> <span class="s">&#39;p&#39;</span><span class="p">]:</span>
             <span class="n">copied</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">copied</span>
@@ -577,7 +713,7 @@
 
         <span class="c"># hash dictionary</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">&#39;p&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-            <span class="n">hashval</span> <span class="o">+=</span> <span class="nb">hash</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">*</span> <span class="nb">hash</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="c"># * BeliefState.PRIMES[i % len(BeliefState.PRIMES)]</span>
+            <span class="n">hashval</span> <span class="o">+=</span> <span class="nb">hash</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">*</span> <span class="nb">hash</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="c"># -2 is a reserved value </span>
         <span class="k">if</span> <span class="n">hashval</span> <span class="o">==</span> <span class="o">-</span><span class="mi">2</span><span class="p">:</span>
             <span class="n">hashval</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
@@ -633,7 +769,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2013, Dustin Smith, Nicolas Bravo.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

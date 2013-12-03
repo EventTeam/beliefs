@@ -1,4 +1,3 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -14,7 +13,7 @@
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -60,7 +59,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Release:</th><td class="field-body">1.0</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Date:</th><td class="field-body">August 06, 2013</td>
+<tr class="field-even field"><th class="field-name">Date:</th><td class="field-body">December 03, 2013</td>
 </tr>
 </tbody>
 </table>
@@ -211,11 +210,12 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">LanguageProducer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">language</span> <span class="o">=</span> <span class="n">SetIntersectionCell</span><span class="p">([</span><span class="s">&#39;en&#39;</span><span class="p">,</span> <span class="s">&#39;fr&#39;</span><span class="p">,</span> <span class="s">&#39;de&#39;</span><span class="p">,</span> <span class="s">&#39;pt&#39;</span><span class="p">,</span> <span class="s">&#39;sp&#39;</span><span class="p">])</span>
 
-<span class="k">class</span> <span class="nc">House</span><span class="p">(</span><span class="n">SpatialObject</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">House</span><span class="p">(</span><span class="n">PhysicalObject</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A dwelling&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">House</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bathrooms</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bedrooms</span> <span class="o">=</span> <span class="n">IntervalCell</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">Human</span><span class="p">(</span><span class="n">PhysicalObject</span><span class="p">,</span> <span class="n">LanguageProducer</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; A physical object that produces language and has a home &quot;&quot;&quot;</span>
@@ -228,15 +228,15 @@
 <span class="n">TaxonomyCell</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">__name__</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>That <cite>TaxonomyCell.initialize</cite> weirdness at the end will automatically generate a <a class="reference internal" href="posets.html#posets.PartialOrderedCell" title="posets.PartialOrderedCell"><tt class="xref py py-class docutils literal"><span class="pre">posets.PartialOrderedCell</span></tt></a> property called <cite>kind</cite> with the inheritance structure of your <tt class="xref py py-class docutils literal"><span class="pre">Referent</span></tt> subclasses. Each entity will be given its class name, its most specific <cite>kind</cite>, as the initial value:</p>
+<p>That <cite>TaxonomyCell.initialize</cite> weirdness at the end will automatically generate a <tt class="xref py py-class docutils literal"><span class="pre">posets.PartialOrderedCell</span></tt> property called <cite>kind</cite> with the inheritance structure of your <tt class="xref py py-class docutils literal"><span class="pre">Referent</span></tt> subclasses. Each entity will be given its class name, its most specific <cite>kind</cite>, as the initial value:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">dustin</span> <span class="o">=</span> <span class="n">Human</span><span class="p">()</span>
 <span class="n">dustin</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="s">&quot;Dustin&quot;</span><span class="p">)</span>  <span class="c"># you can also use (see warning):   dustin[&#39;name&#39;] = &quot;Dustin&quot;</span>
 <span class="n">dustin</span><span class="p">[</span><span class="s">&#39;kind&#39;</span><span class="p">]</span> <span class="c">#=&gt; Human</span>
 <span class="n">dustin</span><span class="p">[</span><span class="s">&#39;kind&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_dotfile</span><span class="p">()</span>  <span class="c">#=&gt; writes TaxonomyCell.dot</span>
 </pre></div>
 </div>
-<p>By calling <a class="reference internal" href="posets.html#posets.PartialOrderedCell.to_dotfile" title="posets.PartialOrderedCell.to_dotfile"><tt class="xref py py-meth docutils literal"><span class="pre">posets.PartialOrderedCell.to_dotfile()</span></tt></a>, a DOT file will appear that shows the inheritance structure:</p>
-<img alt="TaxonomyCell.png" src="TaxonomyCell.png" />
+<p>By calling <tt class="xref py py-meth docutils literal"><span class="pre">posets.PartialOrderedCell.to_dotfile()</span></tt>, a DOT file will appear that shows the inheritance structure:</p>
+<img alt="TaxonomyCell.dot" src="TaxonomyCell.dot" />
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">You are encouraged to get in the habit of using <tt class="xref py py-meth docutils literal"><span class="pre">merge()</span></tt>: instead of Python&#8217;s built in assignment operator, <tt class="xref std std-keyword docutils literal"><span class="pre">=</span></tt>, to set a value for a cell.  Although <a class="reference internal" href="dicts.html#dicts.DictCell" title="dicts.DictCell"><tt class="xref py py-class docutils literal"><span class="pre">dicts.DictCell</span></tt></a> will try to try to treat the assignment as a merge, it will only work for preexisting attributes.  This means, for example, when you use <a class="reference internal" href="beliefstate.html#beliefstate.BeliefState.merge" title="beliefstate.BeliefState.merge"><tt class="xref py py-meth docutils literal"><span class="pre">BeliefState.merge()</span></tt></a>, which has the additional feature of <strong>creating new cells</strong> when they do not exist, you <em>must</em> use <tt class="xref py py-meth docutils literal"><span class="pre">merge()</span></tt> and not <tt class="xref std std-keyword docutils literal"><span class="pre">=</span></tt>.</p>
@@ -251,7 +251,7 @@
 <li><tt class="xref py py-class docutils literal"><span class="pre">sets.SetIntersectionCell</span></tt> a set, unordered collection of symbols, where merges are intersective and information is thereby monotonically decreasing</li>
 <li><a class="reference internal" href="lists.html#lists.LinearOrderedCell" title="lists.LinearOrderedCell"><tt class="xref py py-class docutils literal"><span class="pre">lists.LinearOrderedCell</span></tt></a> a bounded sequence of ordered symbols</li>
 <li><a class="reference internal" href="lists.html#lists.PrefixCell" title="lists.PrefixCell"><tt class="xref py py-class docutils literal"><span class="pre">lists.PrefixCell</span></tt></a> maintains sequences with shared elements</li>
-<li><a class="reference internal" href="posets.html#posets.PartialOrderedCell" title="posets.PartialOrderedCell"><tt class="xref py py-class docutils literal"><span class="pre">posets.PartialOrderedCell</span></tt></a> maintains a taxonomy of information</li>
+<li><tt class="xref py py-class docutils literal"><span class="pre">posets.PartialOrderedCell</span></tt> maintains a taxonomy of information</li>
 </ul>
 <p>Specific types of classes are expected to only be merged with cells of their same type.  There are a few exceptions where the merged value is first converted into a cell of the corresponding type.</p>
 <p>This library is being developed at &lt;<a class="reference external" href="https://github.com/EventTeam/beliefs">https://github.com/EventTeam/beliefs</a>&gt;.</p>
@@ -352,7 +352,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2013, Dustin Smith, Nicolas Bravo.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

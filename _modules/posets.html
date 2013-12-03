@@ -57,10 +57,6 @@
 
 <div class="viewcode-block" id="PartialOrderedCell"><a class="viewcode-back" href="../posets.html#posets.PartialOrderedCell">[docs]</a><span class="k">class</span> <span class="nc">PartialOrderedCell</span><span class="p">(</span><span class="n">Cell</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-
-<span class="sd">    .. Note::</span>
-<span class="sd">        This class should not be instantiated directly, but rather it should be subclassed.</span>
-<span class="sd">        </span>
 <span class="sd">    Generalizes the LinearOrderedCell to include represent po-sets.  Instead of</span>
 <span class="sd">    being initialized with a list, this requires an instance of nx.DiGraph: a</span>
 <span class="sd">    directed graph.</span>
@@ -82,63 +78,6 @@
 
 <span class="sd">    Contradictions mean that there is a directed path between one of the lower</span>
 <span class="sd">    boundaries and the root.</span>
-<span class="sd">    </span>
-<span class="sd">    :parameter dag: Represents the generalization structure</span>
-<span class="sd">    :type dag: nx.DiGraph</span>
-<span class="sd">    :parameter lower: Optional parameter. Defaults to the empty set</span>
-<span class="sd">    :type lower: set</span>
-<span class="sd">    :parameter upper: Optional parameter. Defaults to the empty set</span>
-<span class="sd">    :type upper: set</span>
-
-<span class="sd">    .. Note::</span>
-<span class="sd">        All of the following code examples in this module will be based on the following code block:</span>
-
-<span class="sd">        .. code-block:: python</span>
-<span class="sd">    </span>
-<span class="sd">            class POC_A(PartialOrderedCell):</span>
-<span class="sd">                # partial ordered test</span>
-<span class="sd">                def __init__(self):</span>
-<span class="sd">                    dag = None</span>
-<span class="sd">                    if not self.has_domain():</span>
-<span class="sd">                        # only initialize once</span>
-<span class="sd">                        dag = nx.DiGraph()</span>
-<span class="sd">                        dag.add_edge(&quot;thing&quot;, &quot;vehicle&quot;)</span>
-<span class="sd">                        dag.add_edge(&quot;vehicle&quot;, &quot;car&quot;)</span>
-<span class="sd">                        dag.add_edge(&quot;vehicle&quot;, &quot;truck&quot;)</span>
-<span class="sd">                    PartialOrderedCell.__init__(self, dag)</span>
-<span class="sd">                    </span>
-<span class="sd">            class POC_B(PartialOrderedCell):</span>
-<span class="sd">                # partial ordered test</span>
-<span class="sd">                def __init__(self):</span>
-<span class="sd">                    dag = None</span>
-<span class="sd">                    if not self.has_domain():</span>
-<span class="sd">                        # only initialize once</span>
-<span class="sd">                        dag = nx.DiGraph()</span>
-<span class="sd">                        dag.add_edge(&quot;thing&quot;, &quot;person&quot;)</span>
-<span class="sd">                        dag.add_edge(&quot;person&quot;, &quot;actress&quot;)</span>
-<span class="sd">                        dag.add_edge(&quot;person&quot;, &quot;writer&quot;)</span>
-<span class="sd">                        dag.add_edge(&quot;person&quot;, &quot;producer&quot;)</span>
-<span class="sd">                    PartialOrderedCell.__init__(self, dag)</span>
-
-<span class="sd">            class POC_C(PartialOrderedCell):</span>
-<span class="sd">                # partial ordered test</span>
-<span class="sd">                def __init__(self):</span>
-<span class="sd">                    dag = None</span>
-<span class="sd">                    if not self.has_domain():</span>
-<span class="sd">                        # only initialize once</span>
-<span class="sd">                        dag = nx.DiGraph()</span>
-<span class="sd">                        dag.add_edge(&quot;thing&quot;, &quot;person&quot;)</span>
-<span class="sd">                        dag.add_edge(&quot;person&quot;, &quot;actress&quot;)</span>
-<span class="sd">                        dag.add_edge(&quot;person&quot;, &quot;director&quot;)</span>
-<span class="sd">                        dag.add_edge(&quot;director&quot;, &quot;good-director&quot;)</span>
-<span class="sd">                        dag.add_edge(&quot;director&quot;, &quot;bad-director&quot;)</span>
-<span class="sd">                        dag.add_edge(&quot;person&quot;, &quot;writer&quot;)</span>
-<span class="sd">                        dag.add_edge(&quot;person&quot;, &quot;producer&quot;)</span>
-<span class="sd">                        dag.add_edge(&quot;thing&quot;, &quot;vehicle&quot;)</span>
-<span class="sd">                        dag.add_edge(&quot;vehicle&quot;, &quot;car&quot;)</span>
-<span class="sd">                        dag.add_edge(&quot;vehicle&quot;, &quot;truck&quot;)</span>
-<span class="sd">                </span>
-<span class="sd">                    PartialOrderedCell.__init__(self, dag)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">domain_map</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dag</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -177,14 +116,7 @@
 
     <span class="nd">@classmethod</span>
 <div class="viewcode-block" id="PartialOrderedCell.set_domain"><a class="viewcode-back" href="../posets.html#posets.PartialOrderedCell.set_domain">[docs]</a>    <span class="k">def</span> <span class="nf">set_domain</span><span class="p">(</span><span class="n">clz</span><span class="p">,</span> <span class="n">dag</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Sets the domain.  Should only be called once per class instantiation.</span>
-
-<span class="sd">        :paramater dag:</span>
-<span class="sd">        :type dag: nx.DiGraph</span>
-<span class="sd">        :raises: CellConstructionFailure -- Raised if *dag* is empty, not  directed, not acyclic, or not connected</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Sets the domain.  Should only be called once per class instantiation. &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Setting domain for poset </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">clz</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">nx</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">CellConstructionFailure</span><span class="p">(</span><span class="s">&quot;Empty DAG structure.&quot;</span><span class="p">)</span>
@@ -203,23 +135,12 @@
         </div>
     <span class="nd">@classmethod</span>
 <div class="viewcode-block" id="PartialOrderedCell.has_domain"><a class="viewcode-back" href="../posets.html#posets.PartialOrderedCell.has_domain">[docs]</a>    <span class="k">def</span> <span class="nf">has_domain</span><span class="p">(</span><span class="n">clz</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns True iff the class&#39; domain is specified</span>
-
-<span class="sd">        :returns: bool</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Returns True iff the class&#39; domain is specified &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">clz</span> <span class="ow">in</span> <span class="n">clz</span><span class="o">.</span><span class="n">domain_map</span>
         </div>
 <div class="viewcode-block" id="PartialOrderedCell.get_values"><a class="viewcode-back" href="../posets.html#posets.PartialOrderedCell.get_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns positive members of the poset</span>
-
-<span class="sd">        :returns: set</span>
-
-<span class="sd">        &gt;&gt;&gt; examplePOC = TestPOC()</span>
-<span class="sd">        &gt;&gt;&gt; examplePOC.get_values()</span>
-<span class="sd">        set([&#39;producer&#39;, &#39;thing&#39;, &#39;car&#39;, &#39;writer&#39;, &#39;actress&#39;, &#39;director&#39;, &#39;person&#39;, &#39;bad-director&#39;, &#39;truck&#39;, &#39;vehicle&#39;, &#39;good-director&#39;])</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__values_computed</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__compute_values</span><span class="p">()</span>
@@ -230,12 +151,6 @@
 <span class="sd">        Returns just the upper and lower boundaries</span>
 <span class="sd">        [upper, lower] representing the most general positive</span>
 <span class="sd">        boundaries and the most specific lower boundaries</span>
-
-<span class="sd">        :returns: tuple -- The first item in the tuple is a set representing the upper boundary, and the second item is a set representing the lower boundary</span>
-
-<span class="sd">        &gt;&gt;&gt; examplePOC = TestPOC()</span>
-<span class="sd">        &gt;&gt;&gt; examplePOC.get_boundaries()</span>
-<span class="sd">        (set([]), set([]))     </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__values_computed</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__compute_values</span><span class="p">()</span>
@@ -247,12 +162,6 @@
 <span class="sd">        root nodes.  If a path exists between a root node and another entry in</span>
 <span class="sd">        `self.upper` we can ignore the root node because it has been</span>
 <span class="sd">        specialized by one of its successors.</span>
-
-<span class="sd">        :returns: set -- represents the new upper boundary</span>
-
-<span class="sd">        &gt;&gt;&gt; examplePOC = TestPOC()</span>
-<span class="sd">        &gt;&gt;&gt; examplePOC.compute_upper_bound()</span>
-<span class="sd">        set([&#39;thing&#39;])</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">nub</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">root</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">roots</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">:</span>
@@ -279,7 +188,7 @@
                      <span class="ow">or</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">agenda</span><span class="p">):</span>
                      <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
                      <span class="n">agenda</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
-        <span class="c"># if a node is in both sets, it means our boundary is collapsed</span>
+        <span class="c"># if a node is in both sets, it meens our boundary is collapsed</span>
         <span class="n">conflated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">seen</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">nub</span><span class="p">)</span> <span class="o">-</span> <span class="n">conflated</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__values_computed</span> <span class="o">=</span> <span class="bp">True</span>
@@ -288,30 +197,21 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes whether two Partial Orderings have the same generalization</span>
 <span class="sd">        structure.</span>
-
-<span class="sd">        :param other: The other partial ordering to compare with</span>
-<span class="sd">        :type other: PartialOrderedCell</span>
-<span class="sd">        :returns: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">domain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_domain</span><span class="p">()</span>
         <span class="n">other_domain</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">get_domain</span><span class="p">()</span>
         <span class="c"># if they share the same instance of memory for the domain</span>
-        <span class="k">return</span> <span class="n">domain</span> <span class="o">==</span> <span class="n">other_domain</span>
-        <span class="sd">&#39;&#39;&#39;if domain == other_domain:</span>
-<span class="sd">            return True</span>
-<span class="sd">        else:</span>
-<span class="sd">            return False</span>
-<span class="sd">            # same domain, slow version</span>
-<span class="sd">            # return len(set(domain).symmetric_difference(set(other_domain))) == 0&#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">domain</span> <span class="o">==</span> <span class="n">other_domain</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+            <span class="c"># same domain, slow version</span>
+            <span class="c">#return len(set(domain).symmetric_difference(set(other_domain))) == 0</span>
         
         </div>
 <div class="viewcode-block" id="PartialOrderedCell.is_equal"><a class="viewcode-back" href="../posets.html#posets.PartialOrderedCell.is_equal">[docs]</a>    <span class="k">def</span> <span class="nf">is_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes whether two Partial Orderings contain the same information</span>
-
-<span class="sd">        :param other: The other partial ordering to compare with</span>
-<span class="sd">        :type other: PartialOrderedCell</span>
-<span class="sd">        :returns: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s">&#39;get_domain&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s">&#39;upper&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s">&#39;lower&#39;</span><span class="p">)):</span>
             <span class="n">other</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
@@ -320,13 +220,7 @@
             <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="o">.</span><span class="n">symmetric_difference</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">lower</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">True</span>
         <span class="k">return</span> <span class="bp">False</span>
-</div>
-    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Returns the hash value &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__values_computed</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__compute_values</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">Cell</span><span class="o">.</span><span class="n">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-
+    </div>
 <div class="viewcode-block" id="PartialOrderedCell.is_entailed_by"><a class="viewcode-back" href="../posets.html#posets.PartialOrderedCell.is_entailed_by">[docs]</a>    <span class="k">def</span> <span class="nf">is_entailed_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns True iff Other </span>
@@ -336,11 +230,8 @@
 <span class="sd">        </span>
 <span class="sd">        Approach: Looks for ways to rule out entailment.  If none are found, </span>
 <span class="sd">        returns True</span>
-
-<span class="sd">        :param other: The other partial ordering to compare with</span>
-<span class="sd">        :type other: PartialOrderedCell</span>
-<span class="sd">        :returns: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_domain_equal</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">False</span>
@@ -405,11 +296,7 @@
     </div>
 <div class="viewcode-block" id="PartialOrderedCell.is_contradictory"><a class="viewcode-back" href="../posets.html#posets.PartialOrderedCell.is_contradictory">[docs]</a>    <span class="k">def</span> <span class="nf">is_contradictory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Does the merge yield the empty set?</span>
-
-<span class="sd">        :param other: The other partial ordering to compare with</span>
-<span class="sd">        :type other: PartialOrderedCell</span>
-<span class="sd">        :returns: bool</span>
+<span class="sd">        Does the merge yield the empty set? </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_domain_equal</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">True</span>
@@ -431,12 +318,6 @@
 <div class="viewcode-block" id="PartialOrderedCell.coerce"><a class="viewcode-back" href="../posets.html#posets.PartialOrderedCell.coerce">[docs]</a>    <span class="k">def</span> <span class="nf">coerce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">is_positive</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Only copies a pointer to the new domain&#39;s cell</span>
-
-<span class="sd">        :param other: A compatible cell, or value in *self*&#39;s domain</span>
-<span class="sd">        :param is_positive: Optional parameter. Specifies whether *other* is positive, in which case it becomes an upper bound, or negative, in which case it becomes a lower bound</span>
-<span class="sd">        :type is_positive: bool</span>
-<span class="sd">        :returns: PartialOrderedCell</span>
-<span class="sd">        :raises: CellConstructionFailure</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s">&#39;get_domain&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s">&#39;lower&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s">&#39;upper&#39;</span><span class="p">):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_domain_equal</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
@@ -465,20 +346,11 @@
                     <span class="s">&quot; outside order&#39;s domain . (Other = </span><span class="si">%s</span><span class="s">) &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">),))</span>
 </div>
 <div class="viewcode-block" id="PartialOrderedCell.merge"><a class="viewcode-back" href="../posets.html#posets.PartialOrderedCell.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">is_positive</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Combines the partial order with either (1) a value in the partial </span>
+        <span class="sd">&quot;&quot;&quot; Combines the partial order with either (1) a value in the partial </span>
 <span class="sd">        order&#39;s domain, or (2) another partial order with the same domain.</span>
 
 <span class="sd">        When combining with a value, an optional `is_positive` parameter can</span>
 <span class="sd">        be set to False, meaning that the merged value should be excluded.</span>
-
-<span class="sd">        :param other: Another partial ordering or a value in *self*&#39;s domain</span>
-<span class="sd">        :param is_positive: Optional parameter. Specifies whether *other* is positive, in which case it becomes an upper bound, or negative, in which case it becomes a lower bound</span>
-<span class="sd">        :type is_positive: bool</span>
-<span class="sd">        :returns: PartialOrderedCell</span>
-<span class="sd">        :raises: * CellConstructionFailure -- raised if *other* is not coercible</span>
-<span class="sd">                 * Contradiction -- raised if *self* and *other* cannot be merged</span>
-<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">other</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">is_positive</span><span class="p">)</span>
         <span class="c"># the above coercion forces equal domains, and raises an </span>
@@ -528,23 +400,16 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the number of members in the partial ordering (between and</span>
 <span class="sd">        including the boundaries)</span>
-
-<span class="sd">        :returns: int -- greater than or equal to zero</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_values</span><span class="p">())</span>
 </div>
 <div class="viewcode-block" id="PartialOrderedCell.to_dot"><a class="viewcode-back" href="../posets.html#posets.PartialOrderedCell.to_dot">[docs]</a>    <span class="k">def</span> <span class="nf">to_dot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Outputs a version that can be displayed or seralized</span>
-
-<span class="sd">        :returns: dict -- keys are &#39;upper&#39; and &#39;lower&#39;, values are the corresponding lists</span>
+<span class="sd">        Outputs a version that can be deisplayed or seralized</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span><span class="s">&#39;lower&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">),</span>
                 <span class="s">&#39;upper&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">)}</span>
 </div>
-    <span class="k">def</span> <span class="nf">to_latex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; / &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">)</span>
-
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">output</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
         <span class="n">output</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\t\t</span><span class="s">UPPER = &quot;</span> <span class="o">+</span> <span class="s">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span>
@@ -560,80 +425,36 @@
     <span class="n">__len__</span> <span class="o">=</span> <span class="n">size</span>
 
 <div class="viewcode-block" id="PartialOrderedCell.get_refinement_options"><a class="viewcode-back" href="../posets.html#posets.PartialOrderedCell.get_refinement_options">[docs]</a>    <span class="k">def</span> <span class="nf">get_refinement_options</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns possible specializations for the upper values in the taxonomy</span>
-
-<span class="sd">        :returns: generator</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Returns possible specializations for the upper values in the taxonomy &quot;&quot;&quot;</span>
         <span class="n">domain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_domain</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">upper_value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">suc</span> <span class="ow">in</span> <span class="n">domain</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">upper_value</span><span class="p">):</span>
                 <span class="k">yield</span> <span class="n">suc</span>
 </div>
 <div class="viewcode-block" id="PartialOrderedCell.get_relaxation_options"><a class="viewcode-back" href="../posets.html#posets.PartialOrderedCell.get_relaxation_options">[docs]</a>    <span class="k">def</span> <span class="nf">get_relaxation_options</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns possible generalizations for the upper values in the taxonomy</span>
-
-<span class="sd">        :returns: generator</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Returns possible generalizations for the upper values in the taxonomy &quot;&quot;&quot;</span>
         <span class="n">domain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_domain</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">upper_value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">suc</span> <span class="ow">in</span> <span class="n">domain</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="n">upper_value</span><span class="p">):</span>
                 <span class="k">yield</span> <span class="n">suc</span>
 </div>
 <div class="viewcode-block" id="PartialOrderedCell.most_specific_members"><a class="viewcode-back" href="../posets.html#posets.PartialOrderedCell.most_specific_members">[docs]</a>    <span class="k">def</span> <span class="nf">most_specific_members</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the upper nodes or, if they are empty, the root nodes</span>
-
-<span class="sd">        :returns: set</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Returns the upper nodes or, if they are empty, the root nodes &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> 
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">roots</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span>
 </div>
 <div class="viewcode-block" id="PartialOrderedCell.to_dotfile"><a class="viewcode-back" href="../posets.html#posets.PartialOrderedCell.to_dotfile">[docs]</a>    <span class="k">def</span> <span class="nf">to_dotfile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Writes a DOT graphviz file of the domain structure, and returns the filename</span>
-
-<span class="sd">        :returns: str</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Writes a DOT graphviz file of the domain structure, and returns the filename&quot;&quot;&quot;</span>
         <span class="n">domain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_domain</span><span class="p">()</span>
         <span class="n">filename</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">.dot&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
         <span class="n">nx</span><span class="o">.</span><span class="n">write_dot</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">filename</span>
 </div></div>
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="k">class</span> <span class="nc">POC_A</span><span class="p">(</span><span class="n">PartialOrderedCell</span><span class="p">):</span>
-        <span class="c"># partial ordered test</span>
-        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="n">dag</span> <span class="o">=</span> <span class="bp">None</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_domain</span><span class="p">():</span>
-                <span class="c"># only initialize once</span>
-                <span class="n">dag</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
-                <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;thing&quot;</span><span class="p">,</span> <span class="s">&quot;vehicle&quot;</span><span class="p">)</span>
-                <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;vehicle&quot;</span><span class="p">,</span> <span class="s">&quot;car&quot;</span><span class="p">)</span>
-                <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;vehicle&quot;</span><span class="p">,</span> <span class="s">&quot;truck&quot;</span><span class="p">)</span>
-            <span class="n">PartialOrderedCell</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dag</span><span class="p">)</span>
-                    
-    <span class="k">class</span> <span class="nc">POC_B</span><span class="p">(</span><span class="n">PartialOrderedCell</span><span class="p">):</span>
-        <span class="c"># partial ordered test</span>
-        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="n">dag</span> <span class="o">=</span> <span class="bp">None</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_domain</span><span class="p">():</span>
-                <span class="c"># only initialize once</span>
-                <span class="n">dag</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
-                <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;thing&quot;</span><span class="p">,</span> <span class="s">&quot;person&quot;</span><span class="p">)</span>
-                <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;person&quot;</span><span class="p">,</span> <span class="s">&quot;actress&quot;</span><span class="p">)</span>
-                <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;person&quot;</span><span class="p">,</span> <span class="s">&quot;writer&quot;</span><span class="p">)</span>
-                <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;person&quot;</span><span class="p">,</span> <span class="s">&quot;producer&quot;</span><span class="p">)</span>
-            <span class="n">PartialOrderedCell</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dag</span><span class="p">)</span>
 
-    <span class="k">class</span> <span class="nc">POC_C</span><span class="p">(</span><span class="n">PartialOrderedCell</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">TestPOC</span><span class="p">(</span><span class="n">PartialOrderedCell</span><span class="p">):</span>
         <span class="c"># partial ordered test</span>
         <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="n">dag</span> <span class="o">=</span> <span class="bp">None</span>
@@ -651,22 +472,36 @@
                 <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;vehicle&quot;</span><span class="p">,</span> <span class="s">&quot;car&quot;</span><span class="p">)</span>
                 <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;vehicle&quot;</span><span class="p">,</span> <span class="s">&quot;truck&quot;</span><span class="p">)</span>
                 
-                <span class="n">PartialOrderedCell</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dag</span><span class="p">)</span>
+            <span class="n">PartialOrderedCell</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dag</span><span class="p">)</span>
 
     <span class="n">t</span> <span class="o">=</span> <span class="n">TestPOC</span><span class="p">()</span>
     <span class="n">t</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="s">&quot;person&quot;</span><span class="p">)</span>
-    <span class="k">print</span> <span class="n">t</span>
-    <span class="n">t2</span> <span class="o">=</span> <span class="n">TestPOC</span><span class="p">()</span>
-    <span class="k">print</span> <span class="nb">hash</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-    <span class="k">print</span> <span class="nb">hash</span><span class="p">(</span><span class="n">t2</span><span class="p">)</span>
-    <span class="n">t2</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="s">&quot;thing&quot;</span><span class="p">)</span>
-    <span class="k">print</span> <span class="nb">hash</span><span class="p">(</span><span class="n">t2</span><span class="p">)</span>
-    <span class="k">print</span> <span class="n">t</span> <span class="o">==</span> <span class="n">t2</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="n">POC_A</span><span class="p">()</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="n">POC_B</span><span class="p">()</span>
     <span class="k">print</span> <span class="nb">list</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">get_refinement_options</span><span class="p">())</span>
     <span class="k">print</span> <span class="nb">list</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">get_relaxation_options</span><span class="p">())</span>
-</pre></div>
+    <span class="k">print</span> <span class="n">t</span>
+
+
+<div class="viewcode-block" id="HumanActions"><a class="viewcode-back" href="../posets.html#posets.HumanActions">[docs]</a><span class="k">class</span> <span class="nc">HumanActions</span><span class="p">(</span><span class="n">PartialOrderedCell</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Actions for the goal &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">dag</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_domain</span><span class="p">():</span>
+            <span class="c"># only initialize once</span>
+            <span class="n">dag</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;human-action&quot;</span><span class="p">,</span> <span class="s">&quot;watch&quot;</span><span class="p">)</span> <span class="c"># tv/movies</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;human-action&quot;</span><span class="p">,</span> <span class="s">&quot;play&quot;</span><span class="p">)</span> <span class="c"># game</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;human-action&quot;</span><span class="p">,</span> <span class="s">&quot;listen&quot;</span><span class="p">)</span> <span class="c"># music</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;watch&quot;</span><span class="p">,</span> <span class="s">&quot;watch-movie&quot;</span><span class="p">)</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;watch&quot;</span><span class="p">,</span> <span class="s">&quot;watch-tv&quot;</span><span class="p">)</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;play&quot;</span><span class="p">,</span> <span class="s">&quot;watch-movie&quot;</span><span class="p">)</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;play&quot;</span><span class="p">,</span> <span class="s">&quot;watch-tv&quot;</span><span class="p">)</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;play&quot;</span><span class="p">,</span> <span class="s">&quot;play-game&quot;</span><span class="p">)</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;play&quot;</span><span class="p">,</span> <span class="s">&quot;listen-song&quot;</span><span class="p">)</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;see&quot;</span><span class="p">,</span> <span class="s">&quot;watch-movie&quot;</span><span class="p">)</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">&quot;see&quot;</span><span class="p">,</span> <span class="s">&quot;watch-tv&quot;</span><span class="p">)</span>
+            
+        <span class="n">PartialOrderedCell</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dag</span><span class="p">)</span>
+</pre></div></div>
 
           </div>
         </div>
