@@ -33,6 +33,14 @@ class BeliefState(DictCell):
         self.__dict__['referential_domain'] = referential_domain
         self.__dict__['environment_variables'] = {}
         self.__dict__['deferred_effects'] = []
+        
+        if referential_domain:
+            idx = 0
+            for el in referential_domain.iter_entities():
+                if el['num'] != idx:
+                    raise Exception("%ith entity in referential domain does not have 'num' property set correctly" % idx)
+                idx += 1
+                    
 
         default_structure = {'target': DictCell(),
                              'distractor': DictCell(),
@@ -270,7 +278,7 @@ class BeliefState(DictCell):
         keypath = keypath[:] # copy it 
         if keypath[0] == 'target':
             # only pull negated if it can potentially modify target
-            negated = self.get_environment_variable('negated', pop=True, default=False)
+            negated = self.get_environment_variable('negated', pop=False, default=False)
             if negated:
                 keypath[0] = "distractor"
 
@@ -408,10 +416,9 @@ class BeliefState(DictCell):
         size1 = len(list(self.iter_referents_tuples()))
         tlow, thigh = self['targetset_arity'].get_tuple()
         clow, chigh = self['contrast_arity'].get_tuple()
-        
-        size2 = binomial_range(n, max(tlow,1), min([n-max(clow,0),thigh,n]))
+        return size1
+        #size2 = binomial_range(n, max(tlow,1), min([n-max(clow,0),thigh,n]))
         #assert size1 == size2, "%i != %i" % (size1, size2)
-        return size2
 
     def referents(self):
         """ Returns all target sets that are compatible with the current beliefstate.
@@ -443,8 +450,8 @@ class BeliefState(DictCell):
         clow, chigh = self['contrast_arity'].get_tuple()
         singletons = list([int(i) for i,_ in self.iter_singleton_referents()])
         t = len(singletons)
-        low = max(1, tlow)
-        high = min([t,  thigh])
+        low = int(max(1, tlow))
+        high = int(min([t,  thigh]))
         for elements in itertools.chain.from_iterable(itertools.combinations(singletons, r) \
                 for r in reversed(xrange(low, high+1))):
             if clow <= t-len(elements) <= chigh:
@@ -478,6 +485,19 @@ class BeliefState(DictCell):
         except KeyError:
             raise Exception("No referential_domain defined")
 
+    def iter_singleton_referents_tuples(self):
+        """
+        Iterator of all of the singleton members's id number of the context set.
+
+        NOTE: this evaluates entities one-at-a-time, and does not handle relational constraints.
+        """
+        try:
+            for member in self.__dict__['referential_domain'].iter_entities():
+                if self['target'].is_entailed_by(member) and (self['distractor'].empty() or not self['distractor'].is_entailed_by(member)):
+                    yield member['num'].low
+        except KeyError:
+            raise Exception("No referential_domain defined")
+            
     def to_latex(self, number=0):
         """ Returns a raw text string that contains a latex representation of
         the belief state as an attribute-value matrix.  This requires:
