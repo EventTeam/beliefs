@@ -187,7 +187,7 @@ That `TaxonomyCell.initialize` weirdness at the end will automatically generate 
 
 By calling :meth:`.posets.PartialOrderedCell.to_dotfile`, a DOT file will appear that shows the inheritance structure:
 
-.. image:: TaxonomyCell.dot
+.. image:: TaxonomyCell.png
 
 .. warning::
   You are encouraged to get in the habit of using :meth:`~Cell.merge`: instead of Python's built in assignment operator, :keyword:`=`, to set a value for a cell.  Although :class:`dicts.DictCell` will try to try to treat the assignment as a merge, it will only work for preexisting attributes.  This means, for example, when you use :meth:`.BeliefState.merge`, which has the additional feature of **creating new cells** when they do not exist, you *must* use :meth:`~BeliefState.merge` and not :keyword:`=`.
